@@ -25,6 +25,6 @@ var ProviderSet = wire.NewSet(
 	GetAppName, GetAppVersion, GetBuildVersion, GetBuildTime, GetScmRevision, GetScmBranch, GetGoVersion,
 	// 注入命令
 	command.NewServe, command.NewVersion,
-	// 注入容器
-	NewApplication,
+	// 注入应用程序
+	NewCliApp, NewBootstrap, NewApplication,
 )
