@@ -8,12 +8,15 @@ import (
 	`path/filepath`
 	`strings`
 
+	`github.com/pelletier/go-toml`
 	`github.com/pkg/errors`
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/arg`
 	`github.com/storezhang/pangu/command`
+	`github.com/urfave/cli/v2`
+	`gopkg.in/yaml.v3`
 	`xorm.io/xorm`
 )
 
@@ -78,6 +81,11 @@ func (a *Application) AddMigration(migration fs.FS) {
 // SetConfig 添加一个服务器到应用程序中
 func (a *Application) SetConfig(config interface{}) {
 	a.config = config
+}
+
+// GetConfig 取得解析后的配置
+func (a *Application) GetConfig() interface{} {
+	return a.config
 }
 
 // SetBanner 设置徽标
