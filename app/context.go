@@ -1,4 +1,8 @@
-package command
+package app
+
+import (
+	`github.com/urfave/cli/v2`
+)
 
 // Context 描述上下文
 type Context struct {

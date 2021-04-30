@@ -52,7 +52,7 @@ func (cs *Serve) Add(serve serve) {
 	cs.serverCount++
 }
 
-func (cs *Serve) Run(_ *Context) (err error) {
+func (cs *Serve) Run(_ *app.Context) (err error) {
 	wg := sync.WaitGroup{}
 	worker := cs.serverCount
 	wg.Add(worker)

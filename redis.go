@@ -3,6 +3,7 @@ package pangu
 import (
 	`context`
 
+	`github.com/go-redis/redis/v8`
 	`github.com/storezhang/gox`
 )
 

@@ -47,7 +47,7 @@ func NewVersion(
 	}
 }
 
-func (v *Version) Run(_ *Context) (err error) {
+func (v *Version) Run(_ *app.Context) (err error) {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat("-", 120)))
 	sb.WriteString(fmt.Sprintf("App    GetName: %s\n", v.appName))

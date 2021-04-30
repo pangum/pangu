@@ -3,6 +3,7 @@ package pangu
 import (
 	`crypto/tls`
 
+	`github.com/go-resty/resty/v2`
 	`github.com/storezhang/gox`
 )
 

@@ -129,7 +129,7 @@ func (a *Application) parseCommands() (commands []*cli.Command) {
 			Aliases: cmd.GetAliases(),
 			Usage:   cmd.GetUsage(),
 			Action: func(ctx *cli.Context) error {
-				return cmd.Run(command.NewContext(ctx))
+				return cmd.Run(app.NewContext(ctx))
 			},
 		}
 		commands = append(commands, cc)

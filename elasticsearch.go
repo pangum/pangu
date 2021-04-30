@@ -1,6 +1,7 @@
 package pangu
 
 import (
+	`github.com/olivere/elastic/v7`
 	`github.com/storezhang/gox`
 )
 
