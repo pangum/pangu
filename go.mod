@@ -9,7 +9,6 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/olivere/elastic/v7 v7.0.24
 	github.com/pelletier/go-toml v1.2.0
-	github.com/pkg/errors v0.9.1
 	github.com/rubenv/sql-migrate v0.0.0-20210408115534-a32ed26c37ea
 	github.com/storezhang/glog v1.0.5
 	github.com/storezhang/gox v1.4.1

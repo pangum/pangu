@@ -1,10 +1,12 @@
 package command
 
 import (
+	`io/fs`
 	`sync`
 
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox/field`
+	`github.com/storezhang/pangu`
 	`github.com/storezhang/pangu/app`
 )
 
@@ -25,6 +27,9 @@ type (
 
 		serves      []serve
 		serverCount int
+
+		// 升级
+		migration pangu.migration
 
 		logger glog.Logger
 	}
@@ -47,22 +52,50 @@ func NewServe(logger glog.Logger) *Serve {
 	}
 }
 
-func (cs *Serve) Add(serve serve) {
-	cs.serves = append(cs.serves, serve)
-	cs.serverCount++
+func (s *Serve) Add(serve serve) {
+	s.serves = append(s.serves, serve)
+	s.serverCount++
 }
 
-func (cs *Serve) Run(_ *app.Context) (err error) {
+func (s *Serve) AddMigration(migration fs.FS) {
+	s.migration.addMigration(migration)
+}
+
+func (s *Serve) Run(ctx *app.Context) (err error) {
+	if s.migration.shouldMigration() {
+		s.logger.Info("执行升级开始")
+
+		if err = s.migration.migrate(); nil != err {
+			return
+		}
+
+		s.logger.Info("执行升级成功")
+	}
+
+	if 0 != len(s.serves) {
+		s.logger.Info("启动服务开始", field.Int("count", s.serverCount))
+
+		if err = s.runServes(ctx); nil != err {
+			return
+		}
+
+		s.logger.Info("启动服务成功", field.Int("count", s.serverCount))
+	}
+
+	return
+}
+
+func (s *Serve) runServes(_ *app.Context) (err error) {
 	wg := sync.WaitGroup{}
-	worker := cs.serverCount
+	worker := s.serverCount
 	wg.Add(worker)
 
-	for _, server := range cs.serves {
+	for _, server := range s.serves {
 		server := server
 		go func() {
 			defer wg.Done()
 
-			cs.logger.Info("启动服务器成功", field.String("name", server.Name()))
+			s.logger.Info("启动服务器成功", field.String("name", server.Name()))
 			// 服务器不允许中途有服务器启动错误，如果有，应该立即关掉容器
 			// 如果调用者想并行执行，可以使用recover机制来阻止程序退出
 			if err = server.Run(); nil != err {

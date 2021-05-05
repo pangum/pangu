@@ -1,4 +1,4 @@
-package pangu
+package command
 
 import (
 	`io/fs`

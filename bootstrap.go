@@ -10,27 +10,52 @@ import (
 
 	`github.com/pelletier/go-toml`
 	`github.com/storezhang/gox`
+	`github.com/storezhang/pangu/app`
+	`github.com/storezhang/pangu/command`
 	`github.com/urfave/cli/v2`
 	`gopkg.in/yaml.v3`
 )
 
 type Bootstrap struct {
+	application Application
+	// 内置命令
+	serve   *command.Serve
+	version *command.Version
+
 	// 存储配置
 	config interface{}
+
+	// 应用程序本身的配置
+	// 徽标
+	banner string
 
 	cli *cli.App
 }
 
 // NewBootstrap 创建启动器
-func NewBootstrap(cli *cli.App) Bootstrap {
+func NewBootstrap(
+	application Application,
+	serve *command.Serve, version *command.Version,
+	cli *cli.App,
+) Bootstrap {
 	return Bootstrap{
+		application: application,
+		serve:       serve,
+		version:     version,
+
 		cli: cli,
 	}
 }
 
 // Start 开始执行
 func (b *Bootstrap) Start() error {
+	// 添加内置命令
+	b.addInternalFlags()
+	b.addInternalCommands()
+
+	// 指定初始行为是加载配置文件
 	b.cli.Action = b.loadConfig
+	// 应用程序
 
 	return b.cli.Run(os.Args)
 }
@@ -43,6 +68,46 @@ func (b *Bootstrap) SetConfig(config interface{}) {
 // GetConfig 取得解析后的配置
 func (b *Bootstrap) GetConfig() interface{} {
 	return b.config
+}
+
+// SetBanner 设置徽标
+func (b *Bootstrap) SetBanner(banner string) {
+	b.banner = banner
+}
+
+func (b *Bootstrap) addInternalCommands() {
+	b.cli.Commands = append(b.cli.Commands, &cli.Command{
+		Name:    b.serve.GetName(),
+		Aliases: b.serve.GetAliases(),
+		Usage:   b.serve.GetUsage(),
+		Action: func(ctx *cli.Context) error {
+			return b.serve.Run(app.NewContext(ctx))
+		},
+	})
+	b.cli.Commands = append(b.cli.Commands, &cli.Command{
+		Name:    b.version.GetName(),
+		Aliases: b.version.GetAliases(),
+		Usage:   b.version.GetUsage(),
+		Action: func(ctx *cli.Context) error {
+			return b.version.Run(app.NewContext(ctx))
+		},
+	})
+}
+
+func (b *Bootstrap) addInternalFlags() {
+	b.cli.Flags = append(b.cli.Flags, &cli.StringFlag{
+		Name:        "conf",
+		Aliases:     []string{"c", "config", "configuration"},
+		Usage:       "",
+		Value:       "./conf/application.yaml",
+		DefaultText: "./conf/application.yaml",
+	})
+}
+
+func (b *Bootstrap) parseArgs() (flags []cli.Flag) {
+	// 添加内置参数
+
+	return
 }
 
 func (b *Bootstrap) loadConfig(ctx *cli.Context) (err error) {
