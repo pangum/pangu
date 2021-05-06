@@ -26,5 +26,5 @@ var ProviderSet = wire.NewSet(
 	// 注入命令
 	command.NewServe, command.NewVersion,
 	// 注入应用程序
-	NewCliApp, NewBootstrap, NewApplication,
+	NewZapLogger, NewCliApp, NewApplication,
 )

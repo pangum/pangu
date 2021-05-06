@@ -6,7 +6,6 @@ import (
 
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox/field`
-	`github.com/storezhang/pangu`
 	`github.com/storezhang/pangu/app`
 )
 
@@ -25,18 +24,16 @@ type (
 	Serve struct {
 		Command
 
-		serves      []serve
-		serverCount int
-
+		serves []serve
 		// 升级
-		migration pangu.migration
+		migration migration
 
-		logger glog.Logger
+		logger *glog.ZapLogger
 	}
 )
 
 // NewServe 创建服务命令
-func NewServe(logger glog.Logger) *Serve {
+func NewServe(logger *glog.ZapLogger) *Serve {
 	return &Serve{
 		Command: Command{
 			Name:    "serve",
@@ -45,8 +42,7 @@ func NewServe(logger glog.Logger) *Serve {
 		},
 
 		// 至少有一个服务器必须加入
-		serves:      make([]serve, 0, 1),
-		serverCount: 0,
+		serves: make([]serve, 0, 1),
 
 		logger: logger,
 	}
@@ -54,7 +50,6 @@ func NewServe(logger glog.Logger) *Serve {
 
 func (s *Serve) Add(serve serve) {
 	s.serves = append(s.serves, serve)
-	s.serverCount++
 }
 
 func (s *Serve) AddMigration(migration fs.FS) {
@@ -72,14 +67,15 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 		s.logger.Info("执行升级成功")
 	}
 
-	if 0 != len(s.serves) {
-		s.logger.Info("启动服务开始", field.Int("count", s.serverCount))
+	serverCount := len(s.serves)
+	if 0 != serverCount {
+		s.logger.Info("启动服务开始", field.Int("count", serverCount))
 
 		if err = s.runServes(ctx); nil != err {
 			return
 		}
 
-		s.logger.Info("启动服务成功", field.Int("count", s.serverCount))
+		s.logger.Info("启动服务成功", field.Int("count", serverCount))
 	}
 
 	return
@@ -87,7 +83,7 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 
 func (s *Serve) runServes(_ *app.Context) (err error) {
 	wg := sync.WaitGroup{}
-	worker := s.serverCount
+	worker := len(s.serves)
 	wg.Add(worker)
 
 	for _, server := range s.serves {
