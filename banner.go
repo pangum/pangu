@@ -13,14 +13,16 @@ import (
 const (
 	// BannerTypeTxt 文本文件
 	BannerTypeTxt BannerType = "txt"
-	// BannerTypeFile 图片文件
-	BannerTypeFile BannerType = "file"
+	// BannerTypeFilepath 图片文件
+	BannerTypeFilepath BannerType = "filepath"
 	// BannerTypeString 直接显示
 	BannerTypeString BannerType = "string"
 	// BannerTypeAscii 内部转换
 	BannerTypeAscii BannerType = "ascii"
 	// BannerTypeBinary 二进制文件数据
 	BannerTypeBinary BannerType = "binary"
+	// BannerTypeFile 文件数据
+	BannerTypeFile BannerType = "file"
 
 	ascii = "MND8OZ$7I?+=~:,.."
 )
@@ -47,8 +49,10 @@ func (b *banner) print() (err error) {
 		content = b.content
 	case BannerTypeAscii:
 		content = b.content
-	case BannerTypeFile:
+	case BannerTypeFilepath:
 		content, err = b.convertToAscii(b.content)
+	case BannerTypeBinary:
+	case BannerTypeFile:
 	}
 	if nil != err {
 		return
