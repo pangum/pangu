@@ -76,3 +76,28 @@ func (b *bootstrap) inject() (err error) {
 
 ```
 
+### 启动程序
+
+```shell
+./example serve
+```
+
+## 内置命令
+
+### 配置文件 -c --conf --config --configuration
+
+配置文件有默认值，顺序依次是
+
+- ./conf/application.yaml
+- ./conf/application.yml
+- ./conf/application.toml
+- ./conf/application.json
+- ./application.yaml
+- ./application.yml
+- ./application.toml
+- ./application.json
+- 参数指定
+
+### 输出版本号 v version Version
+
+### 提供服务 s serve Serve
