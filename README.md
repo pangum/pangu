@@ -24,7 +24,10 @@ import (
 )
 
 func main(){
-	panic(pangu.New().Run(newBootstrap))
+	panic(pangu.New(
+		pangu.Name("example"),
+		pangu.Banner("./banner.txt", pangu.BannerTypeFile),
+	).Run(newBootstrap))
 }
 ```
 
