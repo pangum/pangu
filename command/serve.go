@@ -42,8 +42,8 @@ func NewServe(logger glog.Logger) *Serve {
 	}
 }
 
-func (s *Serve) Add(serve serve) {
-	s.serves = append(s.serves, serve)
+func (s *Serve) Adds(serves ...serve) {
+	s.serves = append(s.serves, serves...)
 }
 
 func (s *Serve) Run(ctx *app.Context) (err error) {

@@ -54,55 +54,64 @@ func New(opts ...option) (application *Application) {
 	return
 }
 
-// AddServe 添加一个服务器到应用程序中
-func (a *Application) AddServe(serve Serve) error {
+// AddServes 添加一个服务器到应用程序中
+func (a *Application) AddServes(serves ...Serve) error {
 	return a.container.Invoke(func(cmd *command.Serve) {
-		cmd.Add(serve)
+		for _, serve := range serves {
+			// 为了防止包循环引用不得已的办法
+			cmd.Adds(serve)
+		}
 	})
 }
 
-// AddCommand 添加一个可以被执行的命令到应用程序中
-func (a *Application) AddCommand(command app.Command) error {
+// AddCommands 添加一个可以被执行的命令到应用程序中
+func (a *Application) AddCommands(commands ...app.Command) error {
 	return a.container.Invoke(func(a *cli.App) {
-		a.Commands = append(a.Commands, &cli.Command{
-			Name:    command.GetName(),
-			Aliases: command.GetAliases(),
-			Usage:   command.GetUsage(),
-			Action: func(ctx *cli.Context) error {
-				return command.Run(app.NewContext(ctx))
-			},
-		})
+		for _, c := range commands {
+			cmd := c
+			a.Commands = append(a.Commands, &cli.Command{
+				Name:    cmd.GetName(),
+				Aliases: cmd.GetAliases(),
+				Usage:   cmd.GetUsage(),
+				Action: func(ctx *cli.Context) error {
+					return cmd.Run(app.NewContext(ctx))
+				},
+			})
+		}
 	})
 }
 
 // AddArgs 添加参数
-func (a *Application) AddArgs(arg app.Arg) error {
+func (a *Application) AddArgs(args ...app.Arg) error {
 	return a.container.Invoke(func(app *cli.App) {
-		switch arg.GetValue().(type) {
-		case string:
-			app.Flags = append(app.Flags, &cli.StringFlag{
-				Name:        arg.GetName(),
-				Aliases:     arg.GetAliases(),
-				Usage:       arg.GetUsage(),
-				Value:       arg.GetValue().(string),
-				DefaultText: arg.GetDefaultText(),
-			})
-		case bool:
-			app.Flags = append(app.Flags, &cli.BoolFlag{
-				Name:        arg.GetName(),
-				Aliases:     arg.GetAliases(),
-				Usage:       arg.GetUsage(),
-				Value:       arg.GetValue().(bool),
-				DefaultText: arg.GetDefaultText(),
-			})
-		case int:
-			app.Flags = append(app.Flags, &cli.IntFlag{
-				Name:        arg.GetName(),
-				Aliases:     arg.GetAliases(),
-				Usage:       arg.GetUsage(),
-				Value:       arg.GetValue().(int),
-				DefaultText: arg.GetDefaultText(),
-			})
+		for _, argument := range args {
+			parameter := argument
+			switch argument.GetValue().(type) {
+			case string:
+				app.Flags = append(app.Flags, &cli.StringFlag{
+					Name:        parameter.GetName(),
+					Aliases:     parameter.GetAliases(),
+					Usage:       parameter.GetUsage(),
+					Value:       parameter.GetValue().(string),
+					DefaultText: parameter.GetDefaultText(),
+				})
+			case bool:
+				app.Flags = append(app.Flags, &cli.BoolFlag{
+					Name:        parameter.GetName(),
+					Aliases:     parameter.GetAliases(),
+					Usage:       parameter.GetUsage(),
+					Value:       parameter.GetValue().(bool),
+					DefaultText: parameter.GetDefaultText(),
+				})
+			case int:
+				app.Flags = append(app.Flags, &cli.IntFlag{
+					Name:        parameter.GetName(),
+					Aliases:     parameter.GetAliases(),
+					Usage:       parameter.GetUsage(),
+					Value:       parameter.GetValue().(int),
+					DefaultText: parameter.GetDefaultText(),
+				})
+			}
 		}
 	})
 }
@@ -325,6 +334,12 @@ func (a *Application) addProvides() (err error) {
 	}
 
 	if err = a.Sets(newApp, newMigration, newZapLogger); nil != err {
+		return
+	}
+
+	// 注入快捷方式
+	// 解包Http对象
+	if err = a.Sets(getClientConfig, getServerConfig); nil != err {
 		return
 	}
 
