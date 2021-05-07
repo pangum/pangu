@@ -5,8 +5,7 @@ import (
 	`go.uber.org/zap`
 )
 
-// NewZapLogger 创建Zap日志
-func NewZapLogger() (logger *glog.ZapLogger, err error) {
+func newZapLogger() (logger *glog.ZapLogger, err error) {
 	var zapLogger *zap.Logger
 	if zapLogger, err = zap.NewProduction(); nil != err {
 		return

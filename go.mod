@@ -13,6 +13,7 @@ require (
 	github.com/storezhang/glog v1.0.5
 	github.com/storezhang/gox v1.4.1
 	github.com/urfave/cli/v2 v2.3.0
+	go.uber.org/dig v1.10.0
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 	xorm.io/builder v0.3.7
 	xorm.io/core v0.7.3
@@ -21,8 +22,7 @@ require (
 
 replace xorm.io/xorm => gitea.com/storezhang/xorm v1.0.7
 
-replace github.com/storezhang/gox => ../gox
-
+// replace github.com/storezhang/gox => ../gox
 // replace github.com/storezhang/glog => ../glog
 // replace github.com/class100/sdk-go => ../../class100/sdk-go
 // replace github.com/storezhang/validatorx => ../../storezhang/validatorx

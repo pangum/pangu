@@ -23,30 +23,30 @@ var (
 	GoVersion = runtime.Version()
 )
 
-func GetAppName() info.AppName {
+func appName() info.AppName {
 	return info.AppName(AppName)
 }
 
-func GetAppVersion() info.AppVersion {
+func appVersion() info.AppVersion {
 	return info.AppVersion(AppVersion)
 }
 
-func GetBuildVersion() info.BuildVersion {
+func buildVersion() info.BuildVersion {
 	return info.BuildVersion(BuildVersion)
 }
 
-func GetBuildTime() info.BuildTime {
+func buildTime() info.BuildTime {
 	return info.BuildTime(BuildTime)
 }
 
-func GetScmRevision() info.ScmRevision {
+func scmRevision() info.ScmRevision {
 	return info.ScmRevision(ScmRevision)
 }
 
-func GetScmBranch() info.ScmBranch {
+func scmBranch() info.ScmBranch {
 	return info.ScmBranch(ScmBranch)
 }
 
-func GetGoVersion() info.GoVersion {
+func goVersion() info.GoVersion {
 	return info.GoVersion(GoVersion)
 }

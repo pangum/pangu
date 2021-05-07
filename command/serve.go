@@ -28,7 +28,7 @@ type (
 		// 升级
 		migration migration
 
-		logger *glog.ZapLogger
+		logger glog.Logger
 	}
 )
 
@@ -41,9 +41,7 @@ func NewServe(logger *glog.ZapLogger) *Serve {
 			Usage:   "启动服务",
 		},
 
-		// 至少有一个服务器必须加入
 		serves: make([]serve, 0, 1),
-
 		logger: logger,
 	}
 }
@@ -67,15 +65,15 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 		s.logger.Info("执行升级成功")
 	}
 
-	serverCount := len(s.serves)
-	if 0 != serverCount {
-		s.logger.Info("启动服务开始", field.Int("count", serverCount))
+	serveCount := len(s.serves)
+	if 0 != len(s.serves) {
+		s.logger.Info("启动服务开始", field.Int("count", serveCount))
 
 		if err = s.runServes(ctx); nil != err {
 			return
 		}
 
-		s.logger.Info("启动服务成功", field.Int("count", serverCount))
+		s.logger.Info("启动服务成功", field.Int("count", serveCount))
 	}
 
 	return
@@ -86,15 +84,15 @@ func (s *Serve) runServes(_ *app.Context) (err error) {
 	worker := len(s.serves)
 	wg.Add(worker)
 
-	for _, server := range s.serves {
-		server := server
+	for _, serve := range s.serves {
+		serve := serve
 		go func() {
 			defer wg.Done()
 
-			s.logger.Info("启动服务器成功", field.String("name", server.Name()))
+			s.logger.Info("启动服务器成功", field.String("name", serve.Name()))
 			// 服务器不允许中途有服务器启动错误，如果有，应该立即关掉容器
 			// 如果调用者想并行执行，可以使用recover机制来阻止程序退出
-			if err = server.Run(); nil != err {
+			if err = serve.Run(); nil != err {
 				panic(err)
 			}
 		}()
