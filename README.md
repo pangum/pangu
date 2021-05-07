@@ -103,4 +103,18 @@ func (b *bootstrap) inject() (err error) {
 
 ### 输出版本号 v version V Version
 
+```shell
+./example version
+```
+
+需要在编译的时候注入版本信息，使用方法
+
+```shell
+go build -ldflags "-s -X 'github.com/storezhang/pangu.AppName=$APP_NAME"
+```
+
 ### 提供服务 s serve S Serve
+
+```shell
+./example serve
+```
