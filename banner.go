@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	// BannerTypeFile 文件
+	// BannerTypeTxt 文本文件
+	BannerTypeTxt BannerType = "txt"
+	// BannerTypeFile 图片文件
 	BannerTypeFile BannerType = "file"
-	// BannerTypePicture 图片
-	BannerTypePicture BannerType = "picture"
 	// BannerTypeString 直接显示
 	BannerTypeString BannerType = "string"
 	// BannerTypeAscii 内部转换
@@ -39,7 +39,7 @@ func (b *banner) print() (err error) {
 	var content string
 
 	switch b.bannerType {
-	case BannerTypeFile:
+	case BannerTypeTxt:
 		var data []byte
 		data, err = ioutil.ReadFile(b.content)
 		content = string(data)
@@ -47,7 +47,7 @@ func (b *banner) print() (err error) {
 		content = b.content
 	case BannerTypeAscii:
 		content = b.content
-	case BannerTypePicture:
+	case BannerTypeFile:
 		content, err = b.convertToAscii(b.content)
 	}
 	if nil != err {
