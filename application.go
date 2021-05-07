@@ -26,18 +26,32 @@ import (
 // Serve 用于描述应用程序内的服务
 // Command 用于描述应用程序内可以被执行的命令
 type Application struct {
-	// 应用程序本身的配置
-	// 徽标
-	banner string
+	options options
 
 	container *dig.Container
 }
 
 // New 创建一个应用程序
-func New() *Application {
-	return &Application{
-		container: dig.New(),
+func New(opts ...option) (application *Application) {
+	var once sync.Once
+	once.Do(func() {
+		application = &Application{
+			container: dig.New(),
+		}
+	})
+
+	var appliedOptions options
+	if nil == application {
+		appliedOptions = defaultOptions()
+	} else {
+		appliedOptions = application.options
 	}
+	for _, opt := range opts {
+		opt.apply(&appliedOptions)
+	}
+	application.options = appliedOptions
+
+	return
 }
 
 // AddServe 添加一个服务器到应用程序中
@@ -94,15 +108,10 @@ func (a *Application) AddArgs(arg app.Arg) error {
 }
 
 // AddMigration 添加一个升级脚本到系统中
-func (a *Application) AddMigration(migration fs.FS) error {
-	return a.container.Invoke(func(cmd *command.Serve) {
-		cmd.AddMigration(migration)
+func (a *Application) AddMigration(source fs.FS) error {
+	return a.container.Invoke(func(migration migration) {
+		migration.addSource(source)
 	})
-}
-
-// SetBanner 设置徽标
-func (a *Application) SetBanner(banner string) {
-	a.banner = banner
 }
 
 func (a *Application) Set(constructor interface{}) (err error) {
@@ -125,6 +134,13 @@ func (a *Application) Get(function interface{}) error {
 
 // Run 启动应用程序
 func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
+	// 输出标志信息
+	if "" != a.options.banner.content {
+		if err = a.options.banner.print(); nil != err {
+			return
+		}
+	}
+
 	if err = a.addProvides(); nil != err {
 		return
 	}
@@ -145,6 +161,13 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	// 加载用户启动器并做好配置
 	if err = a.container.Invoke(func(bootstrap Bootstrap) error {
 		return bootstrap.Setup()
+	}); nil != err {
+		return
+	}
+
+	// 执行升级
+	if err = a.container.Invoke(func(migration migration) error {
+		return migration.migrate()
 	}); nil != err {
 		return
 	}
@@ -180,6 +203,12 @@ func (a *Application) GetConfig(config interface{}) (err error) {
 	}
 
 	return
+}
+
+func (a *Application) setup() error {
+	return a.container.Invoke(func(startup *cli.App) {
+		startup.Name = a.options.name
+	})
 }
 
 func (a *Application) addInternalCommands() error {
@@ -295,7 +324,7 @@ func (a *Application) addProvides() (err error) {
 		return
 	}
 
-	if err = a.Sets(newApp, newZapLogger); nil != err {
+	if err = a.Sets(newApp, newMigration, newZapLogger); nil != err {
 		return
 	}
 

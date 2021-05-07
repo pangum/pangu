@@ -98,6 +98,6 @@ func (b *bootstrap) inject() (err error) {
 - ./application.json
 - 参数指定
 
-### 输出版本号 v version Version
+### 输出版本号 v version V Version
 
-### 提供服务 s serve Serve
+### 提供服务 s serve S Serve

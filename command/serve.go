@@ -1,7 +1,6 @@
 package command
 
 import (
-	`io/fs`
 	`sync`
 
 	`github.com/storezhang/glog`
@@ -25,9 +24,6 @@ type (
 		Command
 
 		serves []serve
-		// 升级
-		migration migration
-
 		logger glog.Logger
 	}
 )
@@ -50,21 +46,7 @@ func (s *Serve) Add(serve serve) {
 	s.serves = append(s.serves, serve)
 }
 
-func (s *Serve) AddMigration(migration fs.FS) {
-	s.migration.addMigration(migration)
-}
-
 func (s *Serve) Run(ctx *app.Context) (err error) {
-	if s.migration.shouldMigration() {
-		s.logger.Info("执行升级开始")
-
-		if err = s.migration.migrate(); nil != err {
-			return
-		}
-
-		s.logger.Info("执行升级成功")
-	}
-
 	serveCount := len(s.serves)
 	if 0 != len(s.serves) {
 		s.logger.Info("启动服务开始", field.Int("count", serveCount))
