@@ -14,6 +14,7 @@ require (
 	github.com/storezhang/gox v1.4.1
 	github.com/urfave/cli/v2 v2.3.0
 	go.uber.org/dig v1.10.0
+	go.uber.org/zap v1.16.0
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 	xorm.io/builder v0.3.7
 	xorm.io/core v0.7.3

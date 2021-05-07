@@ -5,7 +5,7 @@ import (
 	`net/http`
 
 	`github.com/go-sql-driver/mysql`
-	migrate `github.com/rubenv/sql-migrate`
+	`github.com/rubenv/sql-migrate`
 	`github.com/storezhang/gox`
 	`xorm.io/builder`
 	`xorm.io/xorm`
