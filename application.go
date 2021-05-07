@@ -313,13 +313,7 @@ func (a *Application) findConfigFilepath(conf string) (path string, err error) {
 }
 
 func (a *Application) addProvides() (err error) {
-	if err = a.Set(glog.NewLogger); nil != err {
-		return
-	}
-	if err = a.Set(gox.NewSnowflake); nil != err {
-		return
-	}
-	if err = a.Set(NewResty); nil != err {
+	if err = a.Sets(glog.NewLogger, gox.NewSnowflake, NewResty); nil != err {
 		return
 	}
 	if err = a.Sets(NewRedis, NewXormEngine, NewElasticsearch); nil != err {
@@ -333,7 +327,7 @@ func (a *Application) addProvides() (err error) {
 		return
 	}
 
-	if err = a.Sets(newApp, newMigration, newZapLogger); nil != err {
+	if err = a.Sets(newApp, newMigration, app.NewDefaultService); nil != err {
 		return
 	}
 
