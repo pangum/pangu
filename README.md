@@ -31,7 +31,7 @@ func main(){
 }
 ```
 
-### 创建程序启动器
+### 创建程序启动器bootstrap.go
 
 ```go
 package main
