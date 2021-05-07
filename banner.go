@@ -17,8 +17,10 @@ const (
 	BannerTypePicture BannerType = "picture"
 	// BannerTypeString 直接显示
 	BannerTypeString BannerType = "string"
-	// BannerTypeConvert 内部转换
-	BannerTypeConvert BannerType = "convert"
+	// BannerTypeAscii 内部转换
+	BannerTypeAscii BannerType = "ascii"
+	// BannerTypeBinary 二进制文件数据
+	BannerTypeBinary BannerType = "binary"
 
 	ascii = "MND8OZ$7I?+=~:,.."
 )
@@ -43,7 +45,7 @@ func (b *banner) print() (err error) {
 		content = string(data)
 	case BannerTypeString:
 		content = b.content
-	case BannerTypeConvert:
+	case BannerTypeAscii:
 		content = b.content
 	case BannerTypePicture:
 		content, err = b.convertToAscii(b.content)
