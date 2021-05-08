@@ -3,21 +3,21 @@ package pangu
 var _ option = (*optionBanner)(nil)
 
 type optionBanner struct {
-	content    string
+	data       interface{}
 	bannerType BannerType
 }
 
 // Banner 配置标志
-func Banner(content string, bannerType BannerType) *optionBanner {
+func Banner(data interface{}, bannerType BannerType) *optionBanner {
 	return &optionBanner{
-		content:    content,
+		data:       data,
 		bannerType: bannerType,
 	}
 }
 
 func (b *optionBanner) apply(options *options) {
 	options.banner = banner{
-		content:    b.content,
+		data:       b.data,
 		bannerType: b.bannerType,
 	}
 }

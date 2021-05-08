@@ -144,7 +144,7 @@ func (a *Application) Get(function interface{}) error {
 // Run 启动应用程序
 func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	// 输出标志信息
-	if "" != a.options.banner.content {
+	if "" != a.options.banner.data {
 		if err = a.options.banner.print(); nil != err {
 			return
 		}
@@ -327,7 +327,7 @@ func (a *Application) addProvides() (err error) {
 		return
 	}
 
-	if err = a.Sets(newApp, newMigration, app.NewDefaultService); nil != err {
+	if err = a.Sets(newApp, newMigration, newZapLogger, app.NewDefaultService); nil != err {
 		return
 	}
 

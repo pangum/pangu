@@ -5,9 +5,12 @@ import (
 	`fmt`
 	`image`
 	`image/color`
+	`io`
 	`io/ioutil`
 	`os`
 	`reflect`
+
+	`github.com/common-nighthawk/go-figure`
 )
 
 const (
@@ -32,7 +35,7 @@ type (
 	BannerType string
 
 	banner struct {
-		content    string
+		data       interface{}
 		bannerType BannerType
 	}
 )
@@ -43,16 +46,18 @@ func (b *banner) print() (err error) {
 	switch b.bannerType {
 	case BannerTypeTxt:
 		var data []byte
-		data, err = ioutil.ReadFile(b.content)
+		data, err = ioutil.ReadFile(b.data.(string))
 		content = string(data)
 	case BannerTypeString:
-		content = b.content
+		content = b.data.(string)
 	case BannerTypeAscii:
-		content = b.content
+		content = figure.NewFigure(b.data.(string), "", true).String()
 	case BannerTypeFilepath:
-		content, err = b.convertToAscii(b.content)
+		content, err = b.asciiFromFilepath(b.data.(string))
 	case BannerTypeBinary:
+		content, err = b.asciiFromBytes(b.data.([]byte))
 	case BannerTypeFile:
+		content, err = b.asciiFromReader(b.data.(*os.File))
 	}
 	if nil != err {
 		return
@@ -64,26 +69,36 @@ func (b *banner) print() (err error) {
 	return
 }
 
-func (b *banner) convertToAscii(path string) (data string, err error) {
-	var (
-		imgFile *os.File
-		conf    image.Config
-		img     image.Image
-	)
+func (b *banner) asciiFromFilepath(path string) (data string, err error) {
+	var imgFile *os.File
 
 	if imgFile, err = os.Open(path); nil != err {
-		return
-	}
-
-	if conf, _, err = image.DecodeConfig(imgFile); nil != err {
-		return
-	}
-	if img, _, err = image.Decode(imgFile); nil != err {
 		return
 	}
 	defer func() {
 		_ = imgFile.Close()
 	}()
+	data, err = b.asciiFromReader(imgFile)
+
+	return
+}
+
+func (b *banner) asciiFromBytes(fileBytes []byte) (string, error) {
+	return b.asciiFromReader(bytes.NewReader(fileBytes))
+}
+
+func (b *banner) asciiFromReader(reader io.Reader) (data string, err error) {
+	var (
+		conf image.Config
+		img  image.Image
+	)
+
+	if conf, _, err = image.DecodeConfig(reader); nil != err {
+		return
+	}
+	if img, _, err = image.Decode(reader); nil != err {
+		return
+	}
 
 	table := []byte(ascii)
 	buffer := new(bytes.Buffer)

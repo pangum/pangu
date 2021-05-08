@@ -29,7 +29,7 @@ type (
 )
 
 // NewServe 创建服务命令
-func NewServe(logger glog.Logger) *Serve {
+func NewServe(logger *glog.ZapLogger) *Serve {
 	return &Serve{
 		Command: Command{
 			Name:    "serve",
