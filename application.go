@@ -12,6 +12,7 @@ import (
 	`strings`
 	`sync`
 
+	`github.com/mcuadros/go-defaults`
 	`github.com/pelletier/go-toml`
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
@@ -263,6 +264,10 @@ func (a *Application) loadConfig(config interface{}, path string) (err error) {
 		return
 	}
 
+	// 处理默认值
+	if a.options.isDefault {
+		defaults.SetDefaults(config)
+	}
 	switch strings.ToLower(filepath.Ext(path)) {
 	case "yml":
 		fallthrough

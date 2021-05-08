@@ -8,6 +8,7 @@ require (
 	github.com/go-resty/resty/v2 v2.5.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/wire v0.5.0
+	github.com/mcuadros/go-defaults v1.2.0
 	github.com/olivere/elastic/v7 v7.0.24
 	github.com/pelletier/go-toml v1.2.0
 	github.com/rubenv/sql-migrate v0.0.0-20210408115534-a32ed26c37ea
