@@ -7,10 +7,13 @@ type options struct {
 	banner banner
 	// 是否处理默认值
 	isDefault bool
+	// 是否验证数据
+	isValidate bool
 }
 
 func defaultOptions() options {
 	return options{
-		isDefault: true,
+		isDefault:  true,
+		isValidate: true,
 	}
 }

@@ -18,6 +18,7 @@ import (
 	`github.com/storezhang/gox`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
+	`github.com/storezhang/validatorx`
 	`github.com/urfave/cli/v2`
 	`go.uber.org/dig`
 	`gopkg.in/yaml.v3`
@@ -279,6 +280,14 @@ func (a *Application) loadConfig(config interface{}, path string) (err error) {
 		err = toml.Unmarshal(data, config)
 	default:
 		err = yaml.Unmarshal(data, config)
+	}
+	if nil != err {
+		return
+	}
+
+	// 验证数据
+	if a.options.isValidate {
+		err = validatorx.Validate(config)
 	}
 
 	return
