@@ -12,7 +12,7 @@ var _ app.Command = (*Version)(nil)
 
 // Version 描述一个打印版本信息的命令
 type Version struct {
-	Command
+	Base
 
 	appName      info.AppName
 	appVersion   info.AppVersion
@@ -31,7 +31,7 @@ func NewVersion(
 	goVersion info.GoVersion,
 ) *Version {
 	return &Version{
-		Command: Command{
+		Base: Base{
 			Name:    "version",
 			Aliases: []string{"v", "V", "Version"},
 			Usage:   "打印版本信息",

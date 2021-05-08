@@ -21,7 +21,7 @@ type (
 
 	// Serve 描述一个提供服务的命令
 	Serve struct {
-		Command
+		Base
 
 		serves []serve
 		logger glog.Logger
@@ -31,7 +31,7 @@ type (
 // NewServe 创建服务命令
 func NewServe(logger *glog.ZapLogger) *Serve {
 	return &Serve{
-		Command: Command{
+		Base: Base{
 			Name:    "serve",
 			Aliases: []string{"s", "S", "Serve"},
 			Usage:   "启动服务",
