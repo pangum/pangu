@@ -28,6 +28,8 @@ const (
 	BannerTypeFile BannerType = "file"
 
 	ascii = "MND8OZ$7I?+=~:,.."
+	sep   = `______________________________________________________________________O/_______________________________________
+                                                                      O\`
 )
 
 type (
@@ -63,8 +65,9 @@ func (b *banner) print() (err error) {
 		return
 	}
 
-	fmt.Println(content)
-	fmt.Print("\n\n")
+	fmt.Print(content)
+	fmt.Print(sep)
+	fmt.Print("\n")
 
 	return
 }
