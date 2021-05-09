@@ -2,6 +2,7 @@ package pangu
 
 import (
 	`bytes`
+	_ `embed`
 	`fmt`
 	`image`
 	`image/color`
@@ -28,9 +29,10 @@ const (
 	BannerTypeFile BannerType = "file"
 
 	ascii = "MND8OZ$7I?+=~:,.."
-	sep   = `______________________________________________________________________O/_______________________________________
-                                                                      O\`
 )
+
+//go:embed asset/dividing_line.txt
+var dividingLine string
 
 type (
 	// BannerType 标志类型
@@ -66,7 +68,7 @@ func (b *banner) print() (err error) {
 	}
 
 	fmt.Print(content)
-	fmt.Print(sep)
+	fmt.Print(dividingLine)
 	fmt.Print("\n")
 
 	return
