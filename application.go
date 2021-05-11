@@ -33,9 +33,14 @@ type Application struct {
 	container *dig.Container
 }
 
+var (
+	once        sync.Once
+	application *Application
+)
+
 // New 创建一个应用程序
-func New(opts ...option) (application *Application) {
-	var once sync.Once
+// 使用单例模式
+func New(opts ...option) *Application {
 	once.Do(func() {
 		application = &Application{
 			options: defaultOptions(),
@@ -48,7 +53,7 @@ func New(opts ...option) (application *Application) {
 		opt.apply(&application.options)
 	}
 
-	return
+	return application
 }
 
 // AddServes 添加一个服务器到应用程序中
