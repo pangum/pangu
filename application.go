@@ -38,20 +38,15 @@ func New(opts ...option) (application *Application) {
 	var once sync.Once
 	once.Do(func() {
 		application = &Application{
+			options: defaultOptions(),
+
 			container: dig.New(),
 		}
 	})
 
-	var appliedOptions options
-	if nil == application {
-		appliedOptions = defaultOptions()
-	} else {
-		appliedOptions = application.options
-	}
 	for _, opt := range opts {
-		opt.apply(&appliedOptions)
+		opt.apply(&application.options)
 	}
-	application.options = appliedOptions
 
 	return
 }
