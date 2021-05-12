@@ -23,8 +23,9 @@ type migration struct {
 	application *Application `xorm:"-"`
 }
 
-func newMigration(application *Application) migration {
-	return migration{
+func newMigration(application *Application) *migration {
+	return &migration{
+		migrations:  make([]fs.FS, 0, 0),
 		application: application,
 	}
 }

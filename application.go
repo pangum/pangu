@@ -120,7 +120,7 @@ func (a *Application) AddArgs(args ...app.Arg) error {
 
 // AddMigration 添加一个升级脚本到系统中
 func (a *Application) AddMigration(source fs.FS) error {
-	return a.container.Invoke(func(migration migration) {
+	return a.container.Invoke(func(migration *migration) {
 		migration.addSource(source)
 	})
 }
@@ -177,7 +177,7 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	}
 
 	// 执行升级
-	if err = a.container.Invoke(func(migration migration) error {
+	if err = a.container.Invoke(func(migration *migration) error {
 		return migration.migrate()
 	}); nil != err {
 		return
