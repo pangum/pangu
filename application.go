@@ -219,6 +219,7 @@ func (a *Application) GetConfig(config interface{}) (err error) {
 func (a *Application) setup() error {
 	return a.container.Invoke(func(startup *cli.App) {
 		startup.Name = a.options.name
+		startup.Description = a.options.description
 	})
 }
 

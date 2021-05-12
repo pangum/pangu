@@ -3,6 +3,8 @@ package pangu
 type options struct {
 	// 应用名称
 	name string
+	// 应用描述
+	description string
 	// 标志
 	banner banner
 	// 是否处理默认值
