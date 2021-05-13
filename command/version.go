@@ -2,7 +2,6 @@ package command
 
 import (
 	`fmt`
-	`runtime`
 	`strings`
 
 	`github.com/storezhang/pangu/app`
@@ -61,7 +60,6 @@ func (v *Version) Run(_ *app.Context) (err error) {
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat("-", 120)))
 
 	fmt.Print(sb.String())
-	runtime.Goexit()
 
 	return
 }

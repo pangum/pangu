@@ -188,6 +188,9 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 		return startup.Run(os.Args)
 	})
 
+	// 退出程序，解决最外层panic报错的问题
+	os.Exit(0)
+
 	return
 }
 

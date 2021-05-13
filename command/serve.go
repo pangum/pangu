@@ -1,7 +1,6 @@
 package command
 
 import (
-	`runtime`
 	`sync`
 
 	`github.com/storezhang/glog`
@@ -58,7 +57,6 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 
 		s.logger.Info("启动服务成功", field.Int("count", serveCount))
 	}
-	runtime.Goexit()
 
 	return
 }
