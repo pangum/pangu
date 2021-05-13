@@ -54,8 +54,8 @@ func (v *Version) Run(_ *app.Context) (err error) {
 	sb.WriteString(fmt.Sprintf("App    Version: %s\n", v.appVersion))
 	sb.WriteString(fmt.Sprintf("Build  Version: %s\n", v.buildVersion))
 	sb.WriteString(fmt.Sprintf("Build  Time: %s\n", v.buildTime))
-	sb.WriteString(fmt.Sprintf("Git    Revision: %s\n", v.scmRevision))
-	sb.WriteString(fmt.Sprintf("Git    Branch: %s\n", v.scmBranch))
+	sb.WriteString(fmt.Sprintf("Scm    Revision: %s\n", v.scmRevision))
+	sb.WriteString(fmt.Sprintf("Scm    Branch: %s\n", v.scmBranch))
 	sb.WriteString(fmt.Sprintf("Golang Version: %s\n", v.goVersion))
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat("-", 120)))
 
