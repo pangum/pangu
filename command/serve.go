@@ -23,8 +23,9 @@ type (
 	Serve struct {
 		Base
 
-		serves []serve
-		logger glog.Logger
+		migration migration
+		serves    []serve
+		logger    glog.Logger
 	}
 )
 
@@ -46,7 +47,21 @@ func (s *Serve) Adds(serves ...serve) {
 	s.serves = append(s.serves, serves...)
 }
 
+func (s *Serve) SetMigration(migration migration) {
+	s.migration = migration
+}
+
 func (s *Serve) Run(ctx *app.Context) (err error) {
+	if s.migration.ShouldMigrate() {
+		s.logger.Info("服务升级开始", field.Int("count", s.migration.NeedMigrateCount()))
+
+		if err = s.migration.Migrate(); nil != err {
+			return
+		}
+
+		s.logger.Info("服务升级成功", field.Int("count", s.migration.NeedMigrateCount()))
+	}
+
 	serveCount := len(s.serves)
 	if 0 != len(s.serves) {
 		s.logger.Info("启动服务开始", field.Int("count", serveCount))

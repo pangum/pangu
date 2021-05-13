@@ -30,8 +30,8 @@ func newMigration(application *Application) *migration {
 	}
 }
 
-func (m *migration) migrate() (err error) {
-	if 0 == len(m.migrations) {
+func (m *migration) Migrate() (err error) {
+	if !m.ShouldMigrate() {
 		return
 	}
 
@@ -58,6 +58,14 @@ func (m *migration) migrate() (err error) {
 	})
 
 	return
+}
+
+func (m *migration) ShouldMigrate() bool {
+	return 0 != len(m.migrations)
+}
+
+func (m *migration) NeedMigrateCount() int {
+	return len(m.migrations)
 }
 
 func (m *migration) addSource(migration fs.FS) {

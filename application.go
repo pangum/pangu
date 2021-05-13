@@ -157,7 +157,7 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	}
 
 	// 添加启动器到依赖关系中
-	if err = a.container.Provide(bootstrap); nil != err {
+	if err = a.Set(bootstrap); nil != err {
 		return
 	}
 
@@ -170,21 +170,14 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	}
 
 	// 加载用户启动器并做好配置
-	if err = a.container.Invoke(func(bootstrap Bootstrap) error {
+	if err = a.Get(func(bootstrap Bootstrap) error {
 		return bootstrap.Setup()
 	}); nil != err {
 		return
 	}
 
-	// 执行升级
-	if err = a.container.Invoke(func(migration *migration) error {
-		return migration.migrate()
-	}); nil != err {
-		return
-	}
-
 	// 启动应用
-	err = a.container.Invoke(func(startup *cli.App) error {
+	err = a.Get(func(startup *cli.App) error {
 		return startup.Run(os.Args)
 	})
 
@@ -227,21 +220,31 @@ func (a *Application) setup() error {
 }
 
 func (a *Application) addInternalCommands() error {
-	return a.container.Invoke(func(startup *cli.App, serve *command.Serve, version *command.Version) {
-		startup.Commands = append(startup.Commands, &cli.Command{
-			Name:    serve.GetName(),
-			Aliases: serve.GetAliases(),
-			Usage:   serve.GetUsage(),
+	type commandsIn struct {
+		In
+
+		Startup   *cli.App
+		Serve     *command.Serve
+		Version   *command.Version
+		Migration *migration
+	}
+
+	return a.container.Invoke(func(in commandsIn) {
+		in.Serve.SetMigration(in.Migration)
+		in.Startup.Commands = append(in.Startup.Commands, &cli.Command{
+			Name:    in.Serve.GetName(),
+			Aliases: in.Serve.GetAliases(),
+			Usage:   in.Serve.GetUsage(),
 			Action: func(ctx *cli.Context) error {
-				return serve.Run(app.NewContext(ctx))
+				return in.Serve.Run(app.NewContext(ctx))
 			},
 		})
-		startup.Commands = append(startup.Commands, &cli.Command{
-			Name:    version.GetName(),
-			Aliases: version.GetAliases(),
-			Usage:   version.GetUsage(),
+		in.Startup.Commands = append(in.Startup.Commands, &cli.Command{
+			Name:    in.Version.GetName(),
+			Aliases: in.Version.GetAliases(),
+			Usage:   in.Version.GetUsage(),
 			Action: func(ctx *cli.Context) error {
-				return version.Run(app.NewContext(ctx))
+				return in.Version.Run(app.NewContext(ctx))
 			},
 		})
 	})
