@@ -1,14 +1,14 @@
 名称:
    {{.Name}} - {{.Usage}}
 使用方法:
-   {{.HelpName}} {{if .VisibleFlags}}[全局参数]{{end}}{{if .Commands}} 命令 [命令参数]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[参数...]{{end}}
+   {{.HelpName}} {{if .VisibleFlags}}[全局选项]{{end}}{{if .Commands}} 命令 [命令选项]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[参数...]{{end}}
    {{if len .Authors}}
 作者:
    {{range .Authors}}{{ . }}{{end}}
    {{end}}{{if .Commands}}
 命令:
 {{range .Commands}}{{if not .HideHelp}}   {{join .Names ", "}}{{ "\t"}}{{.Usage}}{{ "\n" }}{{end}}{{end}}{{end}}{{if .VisibleFlags}}
-全局参数:
+全局选项:
    {{range .VisibleFlags}}{{.}}
    {{end}}{{end}}{{if .Copyright }}
 版权:

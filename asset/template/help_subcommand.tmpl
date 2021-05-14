@@ -2,7 +2,7 @@
    {{.HelpName}} - {{.Usage}}
 
 使用方式:
-   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} command{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if .Description}}
+   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} 命令{{if .VisibleFlags}} [命令选项]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[参数...]{{end}}{{end}}{{if .Description}}
 
 描述:
    {{.Description | nindent 3 | trim}}{{end}}
