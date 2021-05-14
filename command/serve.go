@@ -52,14 +52,8 @@ func (s *Serve) SetMigration(migration migration) {
 }
 
 func (s *Serve) Run(ctx *app.Context) (err error) {
-	if s.migration.ShouldMigrate() {
-		s.logger.Info("服务升级开始", field.Int("count", s.migration.NeedMigrateCount()))
-
-		if err = s.migration.Migrate(); nil != err {
-			return
-		}
-
-		s.logger.Info("服务升级成功", field.Int("count", s.migration.NeedMigrateCount()))
+	if err = s.migration.Migrate(); nil != err {
+		return
 	}
 
 	serveCount := len(s.serves)

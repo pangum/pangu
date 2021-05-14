@@ -5,8 +5,9 @@ import (
 	`net/http`
 
 	`github.com/go-sql-driver/mysql`
-	`github.com/rubenv/sql-migrate`
+	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
+	`github.com/storezhang/gox/field`
 	`xorm.io/builder`
 	`xorm.io/xorm`
 )
@@ -19,25 +20,28 @@ type migration struct {
 	// AppliedAt 升级时间
 	AppliedAt gox.Timestamp `xorm:"created default('2020-02-04 09:55:52')"`
 
-	migrations  []fs.FS      `xorm:"-"`
-	application *Application `xorm:"-"`
+	migrations  []fs.FS         `xorm:"-"`
+	application *Application    `xorm:"-"`
+	logger      *glog.ZapLogger `xorm:"-"`
 }
 
-func newMigration(application *Application) *migration {
+func newMigration(application *Application, logger *glog.ZapLogger) *migration {
 	return &migration{
 		migrations:  make([]fs.FS, 0, 0),
 		application: application,
+		logger:      logger,
 	}
 }
 
 func (m *migration) Migrate() (err error) {
-	if !m.ShouldMigrate() {
+	if 0 == len(m.migrations) {
 		return
 	}
 
 	err = m.application.Get(func(database gox.DatabaseConfig, engine *xorm.Engine) (err error) {
 		var migrations migrate.MigrationSource
 
+		m.logger.Info("数据迁移开始", field.Int("count", len(m.migrations)))
 		// 设置升级记录的表名，默认值是grop_migrations
 		migrate.SetTable(database.MigrationTableName)
 		migrate.SetIgnoreUnknown(true)
@@ -53,19 +57,12 @@ func (m *migration) Migrate() (err error) {
 			return
 		}
 		_, err = migrate.Exec(engine.DB().DB, database.Type, migrations, migrate.Up)
+		m.logger.Info("数据迁移成功", field.Int("count", len(m.migrations)))
 
 		return
 	})
 
 	return
-}
-
-func (m *migration) ShouldMigrate() bool {
-	return 0 != len(m.migrations)
-}
-
-func (m *migration) NeedMigrateCount() int {
-	return len(m.migrations)
 }
 
 func (m *migration) addSource(migration fs.FS) {

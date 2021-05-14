@@ -6,8 +6,4 @@ package command
 type migration interface {
 	// Migrate 执行升级
 	Migrate() error
-	// ShouldMigrate 是否有升级
-	ShouldMigrate() bool
-	// NeedMigrateCount 升级个数
-	NeedMigrateCount() int
 }

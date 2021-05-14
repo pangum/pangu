@@ -12,16 +12,12 @@ import (
 	`strings`
 	`sync`
 
-	`github.com/mcuadros/go-defaults`
-	`github.com/pelletier/go-toml`
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
 	`github.com/storezhang/validatorx`
-	`github.com/urfave/cli/v2`
 	`go.uber.org/dig`
-	`gopkg.in/yaml.v3`
 )
 
 // Application 应用程序，可以加入两种种类型的程序
@@ -68,10 +64,10 @@ func (a *Application) AddServes(serves ...Serve) error {
 
 // AddCommands 添加一个可以被执行的命令到应用程序中
 func (a *Application) AddCommands(commands ...app.Command) error {
-	return a.container.Invoke(func(a *cli.App) {
-		for _, c := range commands {
-			cmd := c
-			a.Commands = append(a.Commands, &cli.Command{
+	return a.container.Invoke(func(startup *cli.App) {
+		for _, cmd := range commands {
+			cmd := cmd
+			startup.Commands = append(startup.Commands, &cli.Command{
 				Name:    cmd.GetName(),
 				Aliases: cmd.GetAliases(),
 				Usage:   cmd.GetUsage(),
@@ -85,12 +81,12 @@ func (a *Application) AddCommands(commands ...app.Command) error {
 
 // AddArgs 添加参数
 func (a *Application) AddArgs(args ...app.Arg) error {
-	return a.container.Invoke(func(app *cli.App) {
+	return a.container.Invoke(func(startup *cli.App) {
 		for _, argument := range args {
 			parameter := argument
 			switch argument.GetValue().(type) {
 			case string:
-				app.Flags = append(app.Flags, &cli.StringFlag{
+				startup.Flags = append(startup.Flags, &cli.StringFlag{
 					Name:        parameter.GetName(),
 					Aliases:     parameter.GetAliases(),
 					Usage:       parameter.GetUsage(),
@@ -98,7 +94,7 @@ func (a *Application) AddArgs(args ...app.Arg) error {
 					DefaultText: parameter.GetDefaultText(),
 				})
 			case bool:
-				app.Flags = append(app.Flags, &cli.BoolFlag{
+				startup.Flags = append(startup.Flags, &cli.BoolFlag{
 					Name:        parameter.GetName(),
 					Aliases:     parameter.GetAliases(),
 					Usage:       parameter.GetUsage(),
@@ -106,7 +102,7 @@ func (a *Application) AddArgs(args ...app.Arg) error {
 					DefaultText: parameter.GetDefaultText(),
 				})
 			case int:
-				app.Flags = append(app.Flags, &cli.IntFlag{
+				startup.Flags = append(startup.Flags, &cli.IntFlag{
 					Name:        parameter.GetName(),
 					Aliases:     parameter.GetAliases(),
 					Usage:       parameter.GetUsage(),
@@ -182,6 +178,8 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	})
 
 	// 退出程序，解决最外层panic报错的问题
+	// 原理：如果到这个地方还没有发生错误，程序正常退出，外层panic得不到执行
+	// 如果发生错误，则所有代码都会返回error直到panic检测到，然后程序整体panic
 	os.Exit(0)
 
 	return
@@ -223,30 +221,17 @@ func (a *Application) addInternalCommands() error {
 	type commandsIn struct {
 		In
 
-		Startup   *cli.App
 		Serve     *command.Serve
 		Version   *command.Version
+		Migrate   *command.Migrate
 		Migration *migration
 	}
 
-	return a.container.Invoke(func(in commandsIn) {
+	return a.container.Invoke(func(in commandsIn) error {
 		in.Serve.SetMigration(in.Migration)
-		in.Startup.Commands = append(in.Startup.Commands, &cli.Command{
-			Name:    in.Serve.GetName(),
-			Aliases: in.Serve.GetAliases(),
-			Usage:   in.Serve.GetUsage(),
-			Action: func(ctx *cli.Context) error {
-				return in.Serve.Run(app.NewContext(ctx))
-			},
-		})
-		in.Startup.Commands = append(in.Startup.Commands, &cli.Command{
-			Name:    in.Version.GetName(),
-			Aliases: in.Version.GetAliases(),
-			Usage:   in.Version.GetUsage(),
-			Action: func(ctx *cli.Context) error {
-				return in.Version.Run(app.NewContext(ctx))
-			},
-		})
+		in.Migrate.SetMigration(in.Migration)
+
+		return a.AddCommands(in.Serve, in.Migrate, in.Version)
 	})
 }
 
@@ -340,7 +325,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Sets(NewRedis, NewXormEngine, NewElasticsearch); nil != err {
 		return
 	}
-	if err = a.Sets(command.NewServe, command.NewVersion); nil != err {
+	if err = a.Sets(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
 		return
 	}
 
