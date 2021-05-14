@@ -23,8 +23,6 @@ require (
 	xorm.io/xorm v1.0.5
 )
 
-replace xorm.io/xorm => gitea.com/storezhang/xorm v1.0.7
-
 // replace github.com/storezhang/gox => ../gox
 // replace github.com/storezhang/glog => ../glog
 // replace github.com/class100/sdk-go => ../../class100/sdk-go
