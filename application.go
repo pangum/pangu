@@ -1,7 +1,6 @@
 package pangu
 
 import (
-	_ `embed`
 	`encoding/json`
 	`errors`
 	`flag`
@@ -219,11 +218,13 @@ func (a *Application) GetConfig(config interface{}) (err error) {
 }
 
 func (a *Application) setup() error {
+	cli.AppHelpTemplate = a.options.helpAppTemplate
+	cli.CommandHelpTemplate = a.options.helpCommandTemplate
+	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
 	return a.container.Invoke(func(startup *cli.App) {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
-		startup.CustomAppHelpTemplate = a.options.helpTemplate
 	})
 }
 

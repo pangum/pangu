@@ -13,7 +13,6 @@ func newApp() (app *cli.App) {
 		Name:        "help",
 		Aliases:     []string{"h", "Help"},
 		Usage:       "显示命令或者帮助信息",
-		Destination: nil,
 	}
 
 	return
