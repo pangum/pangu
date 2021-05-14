@@ -5,6 +5,7 @@ import (
 	`net/http`
 
 	`github.com/go-sql-driver/mysql`
+	`github.com/rubenv/sql-migrate`
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/gox/field`

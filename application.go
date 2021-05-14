@@ -12,12 +12,16 @@ import (
 	`strings`
 	`sync`
 
+	`github.com/mcuadros/go-defaults`
+	`github.com/pelletier/go-toml`
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
 	`github.com/storezhang/validatorx`
+	`github.com/urfave/cli/v2`
 	`go.uber.org/dig`
+	`gopkg.in/yaml.v3`
 )
 
 // Application 应用程序，可以加入两种种类型的程序
