@@ -222,6 +222,7 @@ func (a *Application) setup() error {
 	return a.container.Invoke(func(startup *cli.App) {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
+		startup.Usage = a.options.usage
 		startup.CustomAppHelpTemplate = a.options.helpTemplate
 	})
 }
