@@ -1,0 +1,19 @@
+名称:
+   {{.Name}} - {{.Usage}}
+使用方法:
+   {{.HelpName}} {{if .VisibleFlags}}[全局参数]{{end}}{{if .Commands}} 命令 [命令参数]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[参数...]{{end}}
+   {{if len .Authors}}
+作者:
+   {{range .Authors}}{{ . }}{{end}}
+   {{end}}{{if .Commands}}
+命令:
+{{range .Commands}}{{if not .HideHelp}}   {{join .Names ", "}}{{ "\t"}}{{.Usage}}{{ "\n" }}{{end}}{{end}}{{end}}{{if .VisibleFlags}}
+全局参数:
+   {{range .VisibleFlags}}{{.}}
+   {{end}}{{end}}{{if .Copyright }}
+版权:
+   {{.Copyright}}
+   {{end}}{{if .Version}}
+版本:
+   {{.Version}}
+   {{end}}

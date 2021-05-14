@@ -1,6 +1,7 @@
 package pangu
 
 import (
+	_ `embed`
 	`encoding/json`
 	`errors`
 	`flag`
@@ -155,6 +156,9 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	if err = a.addProvides(); nil != err {
 		return
 	}
+	if err = a.setup(); nil != err {
+		return
+	}
 
 	// 添加启动器到依赖关系中
 	if err = a.Set(bootstrap); nil != err {
@@ -218,6 +222,7 @@ func (a *Application) setup() error {
 	return a.container.Invoke(func(startup *cli.App) {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
+		startup.CustomAppHelpTemplate = a.options.helpTemplate
 	})
 }
 
