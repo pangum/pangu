@@ -50,8 +50,8 @@ func NewVersion(
 func (v *Version) Run(_ *app.Context) (err error) {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat("-", 120)))
-	sb.WriteString(fmt.Sprintf("Startup    GetName: %s\n", v.appName))
-	sb.WriteString(fmt.Sprintf("Startup    Version: %s\n", v.appVersion))
+	sb.WriteString(fmt.Sprintf("App    GetName: %s\n", v.appName))
+	sb.WriteString(fmt.Sprintf("App    Version: %s\n", v.appVersion))
 	sb.WriteString(fmt.Sprintf("Build  Version: %s\n", v.buildVersion))
 	sb.WriteString(fmt.Sprintf("Build  Time: %s\n", v.buildTime))
 	sb.WriteString(fmt.Sprintf("Scm    Revision: %s\n", v.scmRevision))
