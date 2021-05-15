@@ -219,6 +219,7 @@ func (a *Application) setup() error {
 	cli.AppHelpTemplate = a.options.helpAppTemplate
 	cli.CommandHelpTemplate = a.options.helpCommandTemplate
 	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
+
 	return a.container.Invoke(func(startup *cli.App) {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
