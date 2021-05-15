@@ -224,6 +224,13 @@ func (a *Application) setup() error {
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
 		startup.Copyright = a.options.copyright
+		if 0 != len(a.options.authors) {
+			authors := make([]*cli.Author, 0, len(a.options.authors))
+			for _, author := range a.options.authors {
+				authors = append(authors, &cli.Author{Name: author.Name, Email: author.Email})
+			}
+			startup.Authors = authors
+		}
 	})
 }
 

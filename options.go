@@ -21,6 +21,8 @@ type options struct {
 	banner banner
 	// 版权
 	copyright string
+	// 作者
+	authors []Author
 	// 是否处理默认值
 	isDefault bool
 	// 是否验证数据
@@ -38,10 +40,23 @@ var helpSubcommandTemplate string
 
 func defaultOptions() options {
 	return options{
-		usage:                  "一个新式的命令行程序",
+		usage: "一个功能强大的命令行应用程序框架",
+
+		// 帮助信息
 		helpAppTemplate:        helpAppTemplate,
 		helpCommandTemplate:    helpCommandTemplate,
 		helpSubcommandTemplate: helpSubcommandTemplate,
+
+		// 版权
+		copyright: "https://pangu.archtech.studio",
+		authors: []Author{{
+			Name:  "storezhang",
+			Email: "storezhang@gmail.com",
+		}},
+		banner: banner{
+			data:       "pangu",
+			bannerType: BannerTypeAscii,
+		},
 
 		isDefault:  true,
 		isValidate: true,
