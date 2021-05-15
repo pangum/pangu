@@ -34,7 +34,7 @@ func NewServe(logger *glog.ZapLogger) *Serve {
 	return &Serve{
 		Base: Base{
 			Name:    "serve",
-			Aliases: []string{"s", "S", "Serve"},
+			Aliases: []string{"s"},
 			Usage:   "启动服务",
 		},
 

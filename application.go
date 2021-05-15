@@ -203,8 +203,6 @@ func (a *Application) GetConfig(config interface{}) (err error) {
 	once.Do(func() {
 		path = flag.String("conf", "./conf/application.yaml", "指定配置文件路径")
 		flag.StringVar(path, "c", *path, "指定配置文件路径")
-		flag.StringVar(path, "config", *path, "指定配置文件路径")
-		flag.StringVar(path, "configuration", *path, "指定配置文件路径")
 		flag.Parse()
 	})
 
@@ -225,6 +223,7 @@ func (a *Application) setup() error {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
+		startup.Copyright = a.options.copyright
 	})
 }
 
@@ -250,7 +249,7 @@ func (a *Application) addInternalFlags() error {
 	return a.container.Invoke(func(startup *cli.App) {
 		startup.Flags = append(startup.Flags, &cli.StringFlag{
 			Name:        "conf",
-			Aliases:     []string{"c", "Config", "configuration"},
+			Aliases:     []string{"c"},
 			Usage:       "指定配置文件路径",
 			Value:       "./conf/application.yaml",
 			DefaultText: "./conf/application.yaml",

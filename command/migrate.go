@@ -20,7 +20,7 @@ func NewMigrate(logger *glog.ZapLogger) *Migrate {
 	return &Migrate{
 		Base: Base{
 			Name:    "migrate",
-			Aliases: []string{"m", "M", "Migrate"},
+			Aliases: []string{"m"},
 			Usage:   "数据迁移",
 		},
 

@@ -33,7 +33,7 @@ func NewVersion(
 	return &Version{
 		Base: Base{
 			Name:    "version",
-			Aliases: []string{"v", "V", "Version"},
+			Aliases: []string{"v"},
 			Usage:   "打印版本信息",
 		},
 

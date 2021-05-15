@@ -19,6 +19,8 @@ type options struct {
 	helpSubcommandTemplate string
 	// 标志
 	banner banner
+	// 版权
+	copyright string
 	// 是否处理默认值
 	isDefault bool
 	// 是否验证数据
