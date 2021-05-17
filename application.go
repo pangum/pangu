@@ -219,8 +219,13 @@ func (a *Application) setup() error {
 	cli.AppHelpTemplate = a.options.helpAppTemplate
 	cli.CommandHelpTemplate = a.options.helpCommandTemplate
 	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
+	cli.VersionPrinter = func(ctx *cli.Context) {
+		_ = a.Get(func(version *command.Version) error {
+			return version.Run(app.NewContext(ctx))
+		})
+	}
 
-	return a.container.Invoke(func(startup *cli.App) {
+	return a.Get(func(startup *cli.App) {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
@@ -245,7 +250,7 @@ func (a *Application) addInternalCommands() error {
 		Migration *migration
 	}
 
-	return a.container.Invoke(func(in commandsIn) error {
+	return a.Get(func(in commandsIn) error {
 		in.Serve.SetMigration(in.Migration)
 		in.Migrate.SetMigration(in.Migration)
 
@@ -254,7 +259,7 @@ func (a *Application) addInternalCommands() error {
 }
 
 func (a *Application) addInternalFlags() error {
-	return a.container.Invoke(func(startup *cli.App) {
+	return a.Get(func(startup *cli.App) {
 		startup.Flags = append(startup.Flags, &cli.StringFlag{
 			Name:        "conf",
 			Aliases:     []string{"c"},
