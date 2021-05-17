@@ -10,9 +10,9 @@ func newApp() (app *cli.App) {
 	app.UseShortOptionHandling = true
 	// 定制帮助信息
 	cli.HelpFlag = &cli.BoolFlag{
-		Name:        "help",
-		Aliases:     []string{"h", "Help"},
-		Usage:       "显示命令或者帮助信息",
+		Name:    "help",
+		Aliases: []string{"h"},
+		Usage:   "显示所有命令或者帮助信息",
 	}
 
 	return
