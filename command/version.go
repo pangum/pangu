@@ -32,9 +32,9 @@ func NewVersion(
 ) *Version {
 	return &Version{
 		Base: Base{
-			Name:    "version",
-			Aliases: []string{"v"},
-			Usage:   "打印版本信息",
+			name:    "version",
+			aliases: []string{"v"},
+			usage:   "打印版本信息",
 		},
 
 		appName:      appName,

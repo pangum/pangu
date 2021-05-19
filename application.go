@@ -72,9 +72,9 @@ func (a *Application) AddCommands(commands ...app.Command) error {
 		for _, cmd := range commands {
 			cmd := cmd
 			startup.Commands = append(startup.Commands, &cli.Command{
-				Name:    cmd.GetName(),
-				Aliases: cmd.GetAliases(),
-				Usage:   cmd.GetUsage(),
+				Name:    cmd.Name(),
+				Aliases: cmd.Aliases(),
+				Usage:   cmd.Usage(),
 				Action: func(ctx *cli.Context) error {
 					return cmd.Run(app.NewContext(ctx))
 				},

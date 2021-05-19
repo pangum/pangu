@@ -8,16 +8,16 @@ import (
 var _ app.Arg = (*int64Arg)(nil)
 
 type int64Arg struct {
-	arg
+	*base
 
 	// 值
 	value int64
 }
 
 // NewInt64 创建一个整形参数
-func NewInt64(arg arg, value int64) *int64Arg {
+func NewInt64(base *base, value int64) *int64Arg {
 	return &int64Arg{
-		arg:   arg,
+		base:  base,
 		value: value,
 	}
 }

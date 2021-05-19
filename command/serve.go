@@ -33,9 +33,9 @@ type (
 func NewServe(logger *glog.ZapLogger) *Serve {
 	return &Serve{
 		Base: Base{
-			Name:    "serve",
-			Aliases: []string{"s"},
-			Usage:   "启动服务",
+			name:    "serve",
+			aliases: []string{"s"},
+			usage:   "启动服务",
 		},
 
 		serves: make([]serve, 0, 1),

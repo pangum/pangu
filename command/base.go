@@ -7,23 +7,23 @@ import (
 // Base 命令基类
 type Base struct {
 	// 名称
-	Name string
+	name string
 	// 别名
-	Aliases []string
+	aliases []string
 	// 使用方法
-	Usage string
+	usage string
 }
 
-func (c *Base) GetName() string {
-	return c.Name
+func (c *Base) Name() string {
+	return c.name
 }
 
-func (c *Base) GetAliases() []string {
-	return c.Aliases
+func (c *Base) Aliases() []string {
+	return c.aliases
 }
 
-func (c *Base) GetUsage() string {
-	return c.Usage
+func (c *Base) Usage() string {
+	return c.usage
 }
 
 func (c *Base) SubCommands() (commands []app.Command) {

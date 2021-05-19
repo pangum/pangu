@@ -8,16 +8,16 @@ import (
 var _ app.Arg = (*stringsArg)(nil)
 
 type stringsArg struct {
-	arg
+	*base
 
 	// 值
 	value []string
 }
 
 // NewStringSlice 创建一个字符串数组参数
-func NewStringSlice(arg arg, values ...string) *stringsArg {
+func NewStringSlice(base *base, values ...string) *stringsArg {
 	return &stringsArg{
-		arg:   arg,
+		base:  base,
 		value: values,
 	}
 }

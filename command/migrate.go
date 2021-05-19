@@ -19,9 +19,9 @@ type Migrate struct {
 func NewMigrate(logger *glog.ZapLogger) *Migrate {
 	return &Migrate{
 		Base: Base{
-			Name:    "migrate",
-			Aliases: []string{"m"},
-			Usage:   "数据迁移",
+			name:    "migrate",
+			aliases: []string{"m"},
+			usage:   "数据迁移",
 		},
 
 		logger: logger,

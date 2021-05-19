@@ -8,16 +8,16 @@ import (
 var _ app.Arg = (*boolArg)(nil)
 
 type boolArg struct {
-	arg
+	*base
 
 	// 值
 	value bool
 }
 
 // NewBool 创建布尔参数
-func NewBool(arg arg, value bool) *boolArg {
+func NewBool(base *base, value bool) *boolArg {
 	return &boolArg{
-		arg:   arg,
+		base:  base,
 		value: value,
 	}
 }

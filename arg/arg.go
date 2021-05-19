@@ -1,6 +1,6 @@
 package arg
 
-type arg struct {
+type base struct {
 	// 名称
 	name string
 	// 别名
@@ -18,13 +18,13 @@ type arg struct {
 }
 
 // DefaultArg 创建默认参数
-func DefaultArg(name string, usage string, aliases ...string) arg {
+func DefaultArg(name string, usage string, aliases ...string) *base {
 	return NewArg(name, usage, false, false, "", []string{}, aliases...)
 }
 
 // NewArg 创建参数
-func NewArg(name string, usage string, required bool, hidden bool, defaultText string, envs []string, aliases ...string) arg {
-	return arg{
+func NewArg(name string, usage string, required bool, hidden bool, defaultText string, envs []string, aliases ...string) *base {
+	return &base{
 		name:        name,
 		aliases:     aliases,
 		usage:       usage,
@@ -35,18 +35,18 @@ func NewArg(name string, usage string, required bool, hidden bool, defaultText s
 	}
 }
 
-func (a *arg) Name() string {
+func (a *base) Name() string {
 	return a.name
 }
 
-func (a *arg) Aliases() []string {
+func (a *base) Aliases() []string {
 	return a.aliases
 }
 
-func (a *arg) Usage() string {
+func (a *base) Usage() string {
 	return a.usage
 }
 
-func (a *arg) DefaultText() string {
+func (a *base) DefaultText() string {
 	return a.defaultText
 }

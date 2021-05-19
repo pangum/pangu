@@ -8,16 +8,16 @@ import (
 var _ app.Arg = (*intSliceArg)(nil)
 
 type intSliceArg struct {
-	arg
+	*base
 
 	// 值
 	value []int
 }
 
 // NewIntSlice 创建一个整形数组参数
-func NewIntSlice(arg arg, values ...int) *intSliceArg {
+func NewIntSlice(base *base, values ...int) *intSliceArg {
 	return &intSliceArg{
-		arg:   arg,
+		base:  base,
 		value: values,
 	}
 }
