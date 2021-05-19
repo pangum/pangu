@@ -1,35 +1,52 @@
 package arg
 
-// Arg 描述一个参数
-type Arg struct {
+type arg struct {
 	// 名称
-	Name string
+	name string
 	// 别名
-	Aliases []string
+	aliases []string
 	// 使用方法
-	Usage string
+	usage string
 	// 环境变量
-	EnvVars []string
+	envVars []string
 	// 是否是必须
-	Required bool
+	required bool
 	// 是否隐藏
-	Hidden bool
+	hidden bool
 	// 默认值
-	DefaultText string
+	defaultText string
 }
 
-func (a *Arg) GetName() string {
-	return a.Name
+// DefaultArg 创建默认参数
+func DefaultArg(name string, usage string, aliases ...string) arg {
+	return NewArg(name, usage, false, false, "", []string{}, aliases...)
 }
 
-func (a *Arg) GetAliases() []string {
-	return a.Aliases
+// NewArg 创建参数
+func NewArg(name string, usage string, required bool, hidden bool, defaultText string, envs []string, aliases ...string) arg {
+	return arg{
+		name:        name,
+		aliases:     aliases,
+		usage:       usage,
+		envVars:     envs,
+		required:    required,
+		hidden:      hidden,
+		defaultText: defaultText,
+	}
 }
 
-func (a *Arg) GetUsage() string {
-	return a.Usage
+func (a *arg) Name() string {
+	return a.name
 }
 
-func (a *Arg) GetDefaultText() string {
-	return a.DefaultText
+func (a *arg) Aliases() []string {
+	return a.aliases
+}
+
+func (a *arg) Usage() string {
+	return a.usage
+}
+
+func (a *arg) DefaultText() string {
+	return a.defaultText
 }

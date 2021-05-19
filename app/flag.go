@@ -1,12 +1,18 @@
 package app
 
-type flag interface {
-	// GetAliases 别名，可以是短名称也可以是长名称，比如一个叫version的命令，别名可以是[v,V,Version]
-	GetAliases() []string
+import (
+	`flag`
+	`fmt`
+)
 
-	// GetName 名称
-	GetName() string
+// Flag 描述一个可以被解析的参数或者选项
+type Flag interface {
+	fmt.Stringer
 
-	// GetUsage 描述使用方法
-	GetUsage() string
+	// Apply 解析参数
+	Apply(set *flag.FlagSet) error
+	// Names 别名列表
+	Names() []string
+	// IsSet 是否被设置
+	IsSet() bool
 }

@@ -88,32 +88,7 @@ func (a *Application) AddArgs(args ...app.Arg) error {
 	return a.container.Invoke(func(startup *cli.App) {
 		for _, argument := range args {
 			parameter := argument
-			switch argument.GetValue().(type) {
-			case string:
-				startup.Flags = append(startup.Flags, &cli.StringFlag{
-					Name:        parameter.GetName(),
-					Aliases:     parameter.GetAliases(),
-					Usage:       parameter.GetUsage(),
-					Value:       parameter.GetValue().(string),
-					DefaultText: parameter.GetDefaultText(),
-				})
-			case bool:
-				startup.Flags = append(startup.Flags, &cli.BoolFlag{
-					Name:        parameter.GetName(),
-					Aliases:     parameter.GetAliases(),
-					Usage:       parameter.GetUsage(),
-					Value:       parameter.GetValue().(bool),
-					DefaultText: parameter.GetDefaultText(),
-				})
-			case int:
-				startup.Flags = append(startup.Flags, &cli.IntFlag{
-					Name:        parameter.GetName(),
-					Aliases:     parameter.GetAliases(),
-					Usage:       parameter.GetUsage(),
-					Value:       parameter.GetValue().(int),
-					DefaultText: parameter.GetDefaultText(),
-				})
-			}
+			startup.Flags = append(startup.Flags, parameter.ParseFlag())
 		}
 	})
 }

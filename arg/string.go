@@ -2,18 +2,36 @@ package arg
 
 import (
 	`github.com/storezhang/pangu/app`
+	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*String)(nil)
+var _ app.Arg = (*stringArg)(nil)
 
-// String 描述一个字符串参数
-type String struct {
-	Arg
+type stringArg struct {
+	arg
 
 	// 值
-	Value string
+	value string
 }
 
-func (s *String) GetValue() interface{} {
-	return s.Value
+// NewString 创建一个字符串参数
+func NewString(arg arg, value string) *stringArg {
+	return &stringArg{
+		arg:   arg,
+		value: value,
+	}
+}
+
+func (s *stringArg) Value() interface{} {
+	return s.value
+}
+
+func (s *stringArg) ParseFlag() app.Flag {
+	return &cli.StringFlag{
+		Name:        s.Name(),
+		Aliases:     s.Aliases(),
+		Usage:       s.Usage(),
+		Value:       s.Value().(string),
+		DefaultText: s.DefaultText(),
+	}
 }

@@ -1,10 +1,14 @@
 package app
 
 type Arg interface {
-	flag
+	parameter
 
-	// GetValue 参数值
-	GetValue() interface{}
-	// GetDefaultText 默认值
-	GetDefaultText() string
+	// Value 参数值
+	Value() interface{}
+
+	// DefaultText 默认值
+	DefaultText() string
+
+	// ParseFlag 解析出真正使用的参数
+	ParseFlag() Flag
 }
