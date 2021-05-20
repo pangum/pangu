@@ -4,7 +4,7 @@ import (
 	`go.uber.org/dig`
 )
 
-// Out 描述返回值
+// Out 返回值集合
 type Out struct {
 	dig.Out
 }
