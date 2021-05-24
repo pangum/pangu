@@ -320,7 +320,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Sets(glog.NewLogger, gox.NewSnowflake, NewResty); nil != err {
 		return
 	}
-	if err = a.Sets(NewRedis, NewXormEngine, NewElasticsearch); nil != err {
+	if err = a.Sets(NewXormEngine, NewSession, NewRedis, NewElasticsearch); nil != err {
 		return
 	}
 	if err = a.Sets(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {

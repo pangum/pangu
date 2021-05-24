@@ -11,18 +11,45 @@ import (
 
 // Session 事务控制
 type Session struct {
+	engine *xorm.Engine
 	logger glog.Logger
 }
 
 // NewSession 事务控制
-func NewSession(logger glog.Logger) Session {
+func NewSession(engine *xorm.Engine, logger glog.Logger) Session {
 	return Session{
+		engine: engine,
 		logger: logger,
 	}
 }
 
-// Close 关闭事务
-func (s *Session) Close(tx *xorm.Session, fields ...gox.Field) {
+func (s *Session) Tx(fun func(tx *xorm.Session) error, fields ...gox.Field) (err error) {
+	tx := s.engine.NewSession()
+	defer s.close(tx, fields...)
+
+	if err = fun(tx); nil != err {
+		s.rollback(tx, fields...)
+	} else {
+		s.commit(tx, fields...)
+	}
+
+	return
+}
+
+func (s *Session) commit(tx *xorm.Session, fields ...gox.Field) {
+	if err := tx.Commit(); nil != err {
+		fun, _, line, _ := runtime.Caller(1)
+
+		logFields := make([]gox.Field, 0, len(fields)+4)
+		logFields = append(logFields, field.String("fun", runtime.FuncForPC(fun).Name()))
+		logFields = append(logFields, field.Int("line", line))
+		logFields = append(logFields, fields...)
+		logFields = append(logFields, field.Error(err))
+		s.logger.Error("提交数据库事务出错", logFields...)
+	}
+}
+
+func (s *Session) close(tx *xorm.Session, fields ...gox.Field) {
 	if err := tx.Close(); nil != err {
 		fun, _, line, _ := runtime.Caller(1)
 
@@ -35,8 +62,7 @@ func (s *Session) Close(tx *xorm.Session, fields ...gox.Field) {
 	}
 }
 
-// Rollback 回退事务
-func (s *Session) Rollback(tx *xorm.Session, fields ...gox.Field) {
+func (s *Session) rollback(tx *xorm.Session, fields ...gox.Field) {
 	if err := tx.Rollback(); nil != err {
 		fun, _, line, _ := runtime.Caller(1)
 
