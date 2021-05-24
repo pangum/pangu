@@ -12,7 +12,7 @@ require (
 	github.com/pelletier/go-toml v1.2.0
 	github.com/rubenv/sql-migrate v0.0.0-20210408115534-a32ed26c37ea
 	github.com/storezhang/glog v1.0.5
-	github.com/storezhang/gox v1.4.1
+	github.com/storezhang/gox v1.4.9
 	github.com/storezhang/validatorx v1.0.2
 	github.com/urfave/cli/v2 v2.3.0
 	go.uber.org/dig v1.10.0
