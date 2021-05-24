@@ -320,17 +320,12 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Sets(glog.NewLogger, gox.NewSnowflake, NewResty); nil != err {
 		return
 	}
-	if err = a.Sets(NewXormEngine, NewTx, NewRedis, NewElasticsearch); nil != err {
-		return
-	}
 	if err = a.Sets(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
 		return
 	}
-
 	if err = a.Sets(appName, appVersion, buildVersion, buildTime, scmRevision, scmBranch, goVersion); nil != err {
 		return
 	}
-
 	if err = a.Sets(newApp, newMigration, newZapLogger, app.NewDefaultService); nil != err {
 		return
 	}
@@ -342,7 +337,7 @@ func (a *Application) addProvides() (err error) {
 	}
 
 	// 注入自身
-	if err = a.container.Provide(func() *Application {
+	if err = a.Set(func() *Application {
 		return a
 	}); nil != err {
 		return
