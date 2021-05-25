@@ -52,6 +52,9 @@ func defaultOptions() options {
 		authors: []Author{{
 			Name:  "storezhang",
 			Email: "storezhang@gmail.com",
+		}, {
+			Name:  "yangteng",
+			Email: "yt443556@163.com",
 		}},
 		banner: banner{
 			data:       "pangu",
