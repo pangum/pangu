@@ -277,7 +277,7 @@ func (a *Application) loadConfig(config interface{}, path string) (err error) {
 
 	// 验证数据
 	if a.options.isValidate {
-		err = validatorx.Validate(config)
+		err = validatorx.Struct(config)
 	}
 
 	return
