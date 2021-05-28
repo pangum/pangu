@@ -21,6 +21,7 @@
 # Dependency directories (remove the comment below to include it)
 vendor/
 scripts/
+node_modules/
 
 # 自动生成的中间文件
 go.sum
