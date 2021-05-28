@@ -1,6 +1,9 @@
 # 快速下手
 
-::: warning 前提条件 Golang需要1.16及以上版本
+::: warning 前提条件
+<!--@formatter:off-->
+Golang需要1.16及以上版本
+<!--@formatter:on-->
 :::
 
 本文会帮助你从头搭建一个简单的Golang应用
