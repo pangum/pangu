@@ -1,5 +1,9 @@
 ---
-title: database metaTitle: 数据库插件 | Pangu
+
+# @formatter:off
+title: 数据库
+metaTitle: 数据库插件 | Pangu
+# @formatter:on
 ---
 
 # [@pangu/plugin-database](https://github.com/storezhang/pangu-database)
@@ -15,8 +19,8 @@ title: database metaTitle: 数据库插件 | Pangu
 在使用这个插件之前，我们强烈建议你先阅读 [Getting Started](https://vuepress-plugin-blog.ulivz.com/guide/getting-started.html)。
 
 ```bash
-yarn add -D @vuepress/plugin-blog
-# OR npm install -D @vuepress/plugin-blog
+yarn add -D @vuepress/plugin.md-blog
+# OR npm install -D @vuepress/plugin.md-blog
 ```
 
 ## 使用

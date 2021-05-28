@@ -94,23 +94,14 @@ function getGuideSidebar(groupA, groupB) {
             children: [
                 '',
                 'getting-started',
-                'directory-structure',
-                'basic-config',
-                'assets',
-                'markdown',
-                'using-vue',
-                'i18n',
-                'deploy'
+                'concept',
             ]
         },
         {
             title: groupB,
             collapsable: false,
             children: [
-                'frontmatter',
-                'permalinks',
-                'markdown-slot',
-                'global-computed'
+                'plugin',
             ]
         }
     ]

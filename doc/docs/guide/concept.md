@@ -1,0 +1,47 @@
+# 概念
+
+本文主要介绍`盘古框架`的核心概念术语，有助于在使用中更准确的使用框架完成应用程序的快速开发
+
+## 依赖
+
+依赖注入是`盘古框架`的核心，依赖是指调用者依赖系统的组件（可以是结构体、方法或者变量），如果系统中有这个依赖，那么`盘古框架`就会提供正确的组件给调用方，使用方法
+
+``` go
+if err = b.application.Invoke(func(server *rest.Server) error {
+	return b.application.AddServes(server)
+}); nil != err {
+	return
+}
+```
+
+## 注入
+
+依赖注入是`盘古框架`的核心，依赖是指向`盘古框架`提供可以让别人使用的依赖组件（可以是结构体、方法或者变量），使用方法
+
+``` go
+func Provides(app *pangu.Application) error {
+	return app.Provides(
+		GetConfig, GetGlog, GetHttp, GetDatabase, GetTencentyun, GetEmail, GetChuangcache,
+		GetArchtech, GetDebug, GetNodeId, GetEnvironment, GetUoa,
+	)
+}
+```
+
+## 服务
+
+泛指一个可以长期执行的服务，可以是任何形式的服务，比如
+
+- Http/RESTFul服务器
+- gRPC服务器
+- RocketMQ消费者
+
+## 命令
+
+泛指一个可以被执行的命令，该命令可以在命令行中使用，比如
+
+- 打印版本号
+- 数据迁移
+- 帮助信息
+- 启动服务
+
+## 参数
