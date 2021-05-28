@@ -28,7 +28,7 @@ import (
 // Serve 用于描述应用程序内的服务
 // Command 用于描述应用程序内可以被执行的命令
 type Application struct {
-	options options
+	options *options
 
 	container *dig.Container
 }
@@ -50,7 +50,7 @@ func New(opts ...option) *Application {
 	})
 
 	for _, opt := range opts {
-		opt.apply(&application.options)
+		opt.apply(application.options)
 	}
 
 	return application
@@ -100,11 +100,16 @@ func (a *Application) AddMigration(source fs.FS) error {
 	})
 }
 
-func (a *Application) Set(constructor interface{}) (err error) {
+func (a *Application) Provide(constructor interface{}, opts ...provideOption) (err error) {
+	options := defaultProvideOptions()
+	for _, opt := range opts {
+		opt.applyProvide(options)
+	}
+
 	return a.container.Provide(constructor)
 }
 
-func (a *Application) Sets(constructors ...interface{}) (err error) {
+func (a *Application) Provides(constructors ...interface{}) (err error) {
 	for _, constructor := range constructors {
 		if err = a.container.Provide(constructor); nil != err {
 			return
@@ -114,7 +119,12 @@ func (a *Application) Sets(constructors ...interface{}) (err error) {
 	return
 }
 
-func (a *Application) Get(function interface{}) error {
+func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
+	options := defaultInvokeOptions()
+	for _, opt := range opts {
+		opt.applyInvoke(options)
+	}
+
 	return a.container.Invoke(function)
 }
 
@@ -135,7 +145,7 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	}
 
 	// 添加启动器到依赖关系中
-	if err = a.Set(bootstrap); nil != err {
+	if err = a.Provide(bootstrap); nil != err {
 		return
 	}
 
@@ -148,14 +158,14 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	}
 
 	// 加载用户启动器并做好配置
-	if err = a.Get(func(bootstrap Bootstrap) error {
+	if err = a.Invoke(func(bootstrap Bootstrap) error {
 		return bootstrap.Setup()
 	}); nil != err {
 		return
 	}
 
 	// 启动应用
-	err = a.Get(func(startup *cli.App) error {
+	err = a.Invoke(func(startup *cli.App) error {
 		return startup.Run(os.Args)
 	})
 
@@ -195,12 +205,12 @@ func (a *Application) setup() error {
 	cli.CommandHelpTemplate = a.options.helpCommandTemplate
 	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
 	cli.VersionPrinter = func(ctx *cli.Context) {
-		_ = a.Get(func(version *command.Version) error {
+		_ = a.Invoke(func(version *command.Version) error {
 			return version.Run(app.NewContext(ctx))
 		})
 	}
 
-	return a.Get(func(startup *cli.App) {
+	return a.Invoke(func(startup *cli.App) {
 		startup.Name = a.options.name
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
@@ -225,7 +235,7 @@ func (a *Application) addInternalCommands() error {
 		Migration *migration
 	}
 
-	return a.Get(func(in commandsIn) error {
+	return a.Invoke(func(in commandsIn) error {
 		in.Serve.SetMigration(in.Migration)
 		in.Migrate.SetMigration(in.Migration)
 
@@ -234,7 +244,7 @@ func (a *Application) addInternalCommands() error {
 }
 
 func (a *Application) addInternalFlags() error {
-	return a.Get(func(startup *cli.App) {
+	return a.Invoke(func(startup *cli.App) {
 		startup.Flags = append(startup.Flags, &cli.StringFlag{
 			Name:        "conf",
 			Aliases:     []string{"c"},
@@ -317,27 +327,27 @@ func (a *Application) findConfigFilepath(conf string) (path string, err error) {
 }
 
 func (a *Application) addProvides() (err error) {
-	if err = a.Sets(glog.NewLogger, gox.NewSnowflake, NewResty); nil != err {
+	if err = a.Provides(glog.NewLogger, gox.NewSnowflake, NewResty); nil != err {
 		return
 	}
-	if err = a.Sets(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
+	if err = a.Provides(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
 		return
 	}
-	if err = a.Sets(appName, appVersion, buildVersion, buildTime, scmRevision, scmBranch, goVersion); nil != err {
+	if err = a.Provides(appName, appVersion, buildVersion, buildTime, scmRevision, scmBranch, goVersion); nil != err {
 		return
 	}
-	if err = a.Sets(newApp, newMigration, newZapLogger, app.NewDefaultService); nil != err {
+	if err = a.Provides(newApp, newMigration, newZapLogger, app.NewDefaultService); nil != err {
 		return
 	}
 
 	// 注入快捷方式
 	// 解包Http对象
-	if err = a.Sets(getClientConfig, getServerConfig); nil != err {
+	if err = a.Provides(getClientConfig, getServerConfig); nil != err {
 		return
 	}
 
 	// 注入自身
-	if err = a.Set(func() *Application {
+	if err = a.Provide(func() *Application {
 		return a
 	}); nil != err {
 		return

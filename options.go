@@ -38,8 +38,8 @@ var helpCommandTemplate string
 //go:embed asset/template/help_subcommand.tmpl
 var helpSubcommandTemplate string
 
-func defaultOptions() options {
-	return options{
+func defaultOptions() *options {
+	return &options{
 		usage: "一个功能强大的命令行应用程序框架",
 
 		// 帮助信息

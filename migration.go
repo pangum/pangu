@@ -39,7 +39,7 @@ func (m *migration) Migrate() (err error) {
 		return
 	}
 
-	err = m.application.Get(func(database gox.DatabaseConfig, engine *xorm.Engine) (err error) {
+	err = m.application.Invoke(func(database gox.DatabaseConfig, engine *xorm.Engine) (err error) {
 		var migrations migrate.MigrationSource
 
 		m.logger.Info("数据迁移开始", field.Int("count", len(m.migrations)))

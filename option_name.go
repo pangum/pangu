@@ -13,6 +13,14 @@ func Name(name string) *optionName {
 	}
 }
 
-func (b *optionName) apply(options *options) {
-	options.name = b.name
+func (n *optionName) apply(options *options) {
+	options.name = n.name
+}
+
+func (n *optionName) applyProvide(options *provideOptions) {
+	options.name = n.name
+}
+
+func (n *optionName) applyInvoke(options *invokeOptions) {
+	options.name = n.name
 }
