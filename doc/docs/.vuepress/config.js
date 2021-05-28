@@ -95,6 +95,7 @@ function getGuideSidebar(groupA, groupB) {
                 '',
                 'getting-started',
                 'concept',
+                'migration',
             ]
         },
         {
