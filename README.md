@@ -112,7 +112,7 @@ func (b *bootstrap) inject() (err error) {
 ```shell
 go build -ldflags "-s -X 'github.com/storezhang/pangu.AppName=$APP_NAME"
 ```
-![version](doc/image/version.png)
+![version](doc/docs/.vuepress/public/version.png)
 
 ### 提供服务 s serve S Serve
 
