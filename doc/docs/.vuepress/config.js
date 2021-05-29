@@ -22,6 +22,9 @@ module.exports = ctx => ({
         ['meta', {name: 'msapplication-TileImage', content: '/icons/pangu-144x144.png'}],
         ['meta', {name: 'msapplication-TileColor', content: '#000000'}]
     ],
+    markdown: {
+        lineNumbers: true
+    },
     themeConfig: {
         repo: 'storezhang/pangu',
         editLinks: true,
