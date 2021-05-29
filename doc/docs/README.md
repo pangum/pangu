@@ -20,29 +20,20 @@ features:
     details: 应用内单例，可以很方便的任何地方获得整个框架入口并作出配置而不用担心线程安全
   - title: 语义化
     details: 不需要记太多命令和参数以及配置项，语义化设计
+  - title: 内置支持配置文件
+    details: 支持Yaml、Toml、Json以及XML配置文件，且配置文件类型还在扩展中
+  - title: 内置支持数据验证
+    details: 配置文件内置支持数据验证，防止错误的配置被系统使用使系统问题越来越重
 footer: MIT Licensed | Copyright © 2021-present Storezhang
 # @formatter:on
 ---
 
 # 简单得不能再简单
 
-```go
-// @formatter:off
-package main
+<<< @/../example/main.go
 
-import (
-	`github.com/storezhang/pangu`
-	_ `github.com/storezhang/pangu-database`
-)
-
-func main() {
-	panic(pangu.New(
-		pangu.Name("archtech"),
-		pangu.Banner("archtech", pangu.BannerTypeAscii),
-	).Run(newBootstrap))
-}
-// @formatter:on
-```
-
-::: warning 警告 请使用Golang 1.16以上版本
+::: warning 警告
+<!--@formatter:off-->
+Golang需要1.16及以上版本
+<!--@formatter:on-->
 :::
