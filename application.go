@@ -4,6 +4,7 @@ import (
 	`encoding/json`
 	`errors`
 	`flag`
+	`fmt`
 	`io/fs`
 	`io/ioutil`
 	`os`
@@ -60,8 +61,8 @@ func New(opts ...option) *Application {
 func (a *Application) Adds(components ...interface{}) (err error) {
 	for _, component := range components {
 		switch component.(type) {
-		case Serve:
-			err = a.AddServes(component.(Serve))
+		case app.Serve:
+			err = a.AddServes(component.(app.Serve))
 		case app.Command:
 			err = a.AddCommands(component.(app.Command))
 		case app.Arg:
@@ -79,7 +80,7 @@ func (a *Application) Adds(components ...interface{}) (err error) {
 }
 
 // AddServes 添加一个服务器到应用程序中
-func (a *Application) AddServes(serves ...Serve) error {
+func (a *Application) AddServes(serves ...app.Serve) error {
 	return a.container.Invoke(func(cmd *command.Serve) {
 		for _, serve := range serves {
 			// 为了防止包循环引用不得已的办法
@@ -317,33 +318,55 @@ func (a *Application) loadConfig(config interface{}, path string) (err error) {
 
 func (a *Application) findConfigFilepath(conf string) (path string, err error) {
 	path = conf
-	if "" == path {
-		path = "./application.yml"
-	}
-	if gox.IsFileExist(path) {
+	if "" != path && gox.IsFileExist(path) {
 		return
 	}
 
-	path = "./application.yaml"
-	if gox.IsFileExist(path) {
+	var notExists bool
+	if path, notExists = a.findConfigFilepathWithExt("./application"); !notExists {
 		return
 	}
-
-	path = "./application.toml"
-	if gox.IsFileExist(path) {
+	if path, notExists = a.findConfigFilepathWithExt("./conf/application"); !notExists {
 		return
 	}
-
-	path = "./conf/application.yml"
-	if gox.IsFileExist(path) {
+	if path, notExists = a.findConfigFilepathWithExt("./app"); !notExists {
 		return
 	}
-
-	path = "./conf/application.yaml"
-	if gox.IsFileExist(path) {
+	if path, notExists = a.findConfigFilepathWithExt("./conf/app"); !notExists {
 		return
 	}
 	err = errors.New("找不到配置文件")
+
+	return
+}
+
+// 之所以命名为notExists，是为了少对notExists赋值
+func (a *Application) findConfigFilepathWithExt(filename string) (path string, notExists bool) {
+	path = fmt.Sprintf("%s.%s", filename, "yaml")
+	if gox.IsFileExist(path) {
+		return
+	}
+
+	path = fmt.Sprintf("%s.%s", filename, "yml")
+	if gox.IsFileExist(path) {
+		return
+	}
+
+	path = fmt.Sprintf("%s.%s", filename, "toml")
+	if gox.IsFileExist(path) {
+		return
+	}
+
+	path = fmt.Sprintf("%s.%s", filename, "json")
+	if gox.IsFileExist(path) {
+		return
+	}
+
+	path = fmt.Sprintf("%s.%s", filename, "xml")
+	if gox.IsFileExist(path) {
+		return
+	}
+	notExists = true
 
 	return
 }

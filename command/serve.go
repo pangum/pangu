@@ -10,24 +10,14 @@ import (
 
 var _ app.Command = (*Serve)(nil)
 
-type (
-	// serve 保持和pangu.Serve接口一致，纯粹是方便外部调用而设
-	serve interface {
-		// Run 运行服务器
-		Run() (err error)
-		// Name 服务器名称
-		Name() string
-	}
+// Serve 描述一个提供服务的命令
+type Serve struct {
+	Base
 
-	// Serve 描述一个提供服务的命令
-	Serve struct {
-		Base
-
-		migration migration
-		serves    []serve
-		logger    glog.Logger
-	}
-)
+	migration migration
+	serves    []app.Serve
+	logger    glog.Logger
+}
 
 // NewServe 创建服务命令
 func NewServe(logger *glog.ZapLogger) *Serve {
@@ -38,12 +28,12 @@ func NewServe(logger *glog.ZapLogger) *Serve {
 			usage:   "启动服务",
 		},
 
-		serves: make([]serve, 0, 1),
+		serves: make([]app.Serve, 0, 1),
 		logger: logger,
 	}
 }
 
-func (s *Serve) Adds(serves ...serve) {
+func (s *Serve) Adds(serves ...app.Serve) {
 	s.serves = append(s.serves, serves...)
 }
 

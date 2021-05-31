@@ -18,12 +18,12 @@
 
 ## 命令实例
 
-例子代码里面实现了一个简单的RESTFul服务，要实现复杂一点的服务，只需要在这上面增加即可
+例子代码里面实现了一个简单的测试命令（只打印了测试字符串），要实现复杂一点的服务，只需要在这上面增加即可
 
-<<< @/../example/rest/server.go
+<<< @/../example/command/test.go
 
 建议
 
-- 分包`controller`和`handler`，这在Java或者其它语言的Web开发中比较常见
-- 使用[Echox](https://github.com/storezhang/echox)来开发RESTFul服务器
-- 增加一个`pangu.go`来组织依赖
+- 命令别名是一个数组，可以是任何你想要的别名，区分大小写
+- 命令上下文使用`pangu.app.Context`，可以使用该上下文来获取所有的命令信息
+- 命令的执行可以是长期的（一直不退出），完全按用户方的使用来定

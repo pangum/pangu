@@ -6,32 +6,32 @@ import (
 	`github.com/storezhang/pangu/app`
 )
 
-var _ app.Command = (*test)(nil)
+var _ app.Command = (*Test)(nil)
 
-type test struct{}
+type Test struct{}
 
-func newTest() test {
-	return test{}
+func newTest() *Test {
+	return &Test{}
 }
 
-func (t *test) Aliases() []string {
+func (t *Test) Aliases() []string {
 	return []string{"t"}
 }
 
-func (t *test) Name() string {
-	return "test"
+func (t *Test) Name() string {
+	return "Test"
 }
 
-func (t *test) Usage() string {
+func (t *Test) Usage() string {
 	return "测试命令"
 }
 
-func (t *test) Run(_ *app.Context) (err error) {
+func (t *Test) Run(_ *app.Context) (err error) {
 	fmt.Println("Test Command")
 
 	return
 }
 
-func (t *test) SubCommands() (commands []app.Command) {
+func (t *Test) SubCommands() (commands []app.Command) {
 	return
 }

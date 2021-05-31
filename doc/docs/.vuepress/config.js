@@ -109,7 +109,8 @@ function getGuideSidebar(groupA, groupB) {
                 'di',
                 'serve',
                 'command',
-                'arg'
+                'arg',
+                'plugin'
             ]
         }
     ]
