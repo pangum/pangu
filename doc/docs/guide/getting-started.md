@@ -8,28 +8,34 @@ Golang需要1.16及以上版本
 
 本文会帮助你从头搭建一个简单的Golang应用
 
-1. 创建并进入一个新目录
+## 创建并进入一个新目录
 
-``` bash
+``` shell
 mkdir pangu-app && cd pangu-app
 ```
 
-2. 初始化Go Module
+## 初始化Go Module
 
-``` bash
+``` shell
 go mod init
 ```
 
-3. 创建启动器
+## 创建启动器
 
 <<< @/../example/bootstrap.go
 
-4. 创建启动文件
+## 创建启动文件
 
 <<< @/../example/main.go
 
-5. 启动本运行服务器
+## 编译
 
-``` bash
+``` shell
 go build
+```
+
+## 运行
+
+``` shell
+./example serve
 ```

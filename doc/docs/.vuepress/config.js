@@ -90,30 +90,27 @@ function getApiSidebar() {
 }
 
 function getGuideSidebar(groupA, groupB) {
-    return [
-        {
-            title: groupA,
-            collapsable: false,
-            children: [
-                '',
-                'getting-started',
-                'concept',
-                'config',
-                'migration',
-            ]
-        },
-        {
-            title: groupB,
-            collapsable: false,
-            children: [
-                'di',
-                'serve',
-                'command',
-                'arg',
-                'plugin'
-            ]
-        }
-    ]
+    return [{
+        title: groupA,
+        collapsable: false,
+        children: [
+            '',
+            'getting-started',
+            'concept',
+            'config',
+            'migration',
+        ]
+    }, {
+        title: groupB,
+        collapsable: false,
+        children: [
+            'di',
+            'serve',
+            'command',
+            'arg',
+            'plugin'
+        ]
+    }]
 }
 
 const officialPlugins = fs
@@ -122,42 +119,38 @@ const officialPlugins = fs
     .sort()
 
 function getPluginSidebar(pluginTitle, pluginIntro, officialPluginTitle) {
-    return [
-        {
-            title: pluginTitle,
-            collapsable: false,
-            children: [
-                ['', pluginIntro],
-                'using-a-plugin',
-                'writing-a-plugin',
-                'life-cycle',
-                'option-api',
-                'context-api'
-            ]
-        },
-        {
-            title: officialPluginTitle,
-            collapsable: false,
-            children: officialPlugins
-        }
-    ]
+    return [{
+        title: pluginTitle,
+        collapsable: false,
+        children: [
+            ['', pluginIntro],
+            'using-a-plugin',
+            'writing-a-plugin',
+            'life-cycle',
+            'option-api',
+            'context-api'
+        ]
+    }, {
+        title: officialPluginTitle,
+        collapsable: false,
+        children: officialPlugins
+    }]
 }
 
 function getThemeSidebar(groupA, introductionA) {
-    return [
-        {
-            title: groupA,
-            collapsable: false,
-            sidebarDepth: 2,
-            children: [
-                ['', introductionA],
-                'using-a-theme',
-                'writing-a-theme',
-                'option-api',
-                'default-theme-config',
-                'blog-theme',
-                'inheritance'
-            ]
-        }
+    return [{
+        title: groupA,
+        collapsable: false,
+        sidebarDepth: 2,
+        children: [
+            ['', introductionA],
+            'using-a-theme',
+            'writing-a-theme',
+            'option-api',
+            'default-theme-config',
+            'blog-theme',
+            'inheritance'
+        ]
+    }
     ]
 }
