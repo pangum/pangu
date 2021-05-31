@@ -50,7 +50,6 @@ module.exports = ctx => ({
                     '/guide/': getGuideSidebar('指南', '深入'),
                     '/config/': getConfigSidebar('系统', '命令行'),
                     '/plugin/': getPluginSidebar('插件', '介绍', '官方插件'),
-                    '/theme/': getThemeSidebar('主题', '介绍')
                 }
             }
         }
@@ -109,6 +108,7 @@ function getGuideSidebar(groupA, groupB) {
             'serve',
             'command',
             'arg',
+            'version',
             'plugin'
         ]
     }]
@@ -158,22 +158,5 @@ function getPluginSidebar(pluginTitle, pluginIntro, officialPluginTitle) {
         title: officialPluginTitle,
         collapsable: false,
         children: officialPlugins
-    }]
-}
-
-function getThemeSidebar(groupA, introductionA) {
-    return [{
-        title: groupA,
-        collapsable: false,
-        sidebarDepth: 2,
-        children: [
-            ['', introductionA],
-            'using-a-theme',
-            'writing-a-theme',
-            'option-api',
-            'default-theme-config',
-            'blog-theme',
-            'inheritance'
-        ]
     }]
 }

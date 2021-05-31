@@ -1,75 +1,50 @@
-module.exports = [
-    {
-        text: '指南',
-        link: '/guide/'
-    },
-    {
-        text: '配置',
-        link: '/config/'
-    },
-    {
-        text: '插件',
-        link: '/plugin/'
-    },
-    {
-        text: '主题',
-        link: '/theme/'
-    },
-    {
-        text: '了解更多',
-        ariaLabel: '了解更多',
-        items: [
-            {
-                text: 'API',
-                items: [
-                    {
-                        text: 'CLI',
-                        link: '/zh/api/cli.html'
-                    },
-                    {
-                        text: 'Node',
-                        link: '/zh/api/node.html'
-                    }
-                ]
-            },
-            {
-                text: '开发指南',
-                items: [
-                    {
-                        text: '本地开发',
-                        link: '/zh/miscellaneous/local-development.html'
-                    },
-                    {
-                        text: '设计理念',
-                        link: '/zh/miscellaneous/design-concepts.html'
-                    },
-                    {
-                        text: 'FAQ',
-                        link: '/zh/faq/'
-                    },
-                    {
-                        text: '术语',
-                        link: '/zh/miscellaneous/glossary.html'
-                    }
-                ]
-            },
-            {
-                text: '其他',
-                items: [
-                    {
-                        text: '从 0.x 迁移',
-                        link: '/zh/miscellaneous/migration-guide.html'
-                    },
-                    {
-                        text: 'Changelog',
-                        link: 'https://github.com/vuejs/vuepress/blob/master/CHANGELOG.md'
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        text: '0.x',
-        link: 'https://v0.vuepress.vuejs.org/'
-    }
-]
+module.exports = [{
+    text: '指南',
+    link: '/guide/'
+}, {
+    text: '配置',
+    link: '/config/'
+}, {
+    text: '插件',
+    link: '/plugin/'
+}, {
+    text: '了解更多',
+    ariaLabel: '了解更多',
+    items: [{
+        text: 'API',
+        items: [{
+            text: 'CLI',
+            link: '/zh/api/cli.html'
+        }, {
+            text: 'Node',
+            link: '/zh/api/node.html'
+        }]
+    }, {
+        text: '官方插件',
+        items: [{
+            text: '数据库',
+            link: 'https://github.com/storezhang/pangu-database'
+        }, {
+            text: '统一对象存储',
+            link: 'https://github.com/storezhang/uoa'
+        }, {
+            text: '统一直播',
+            link: 'https://github.com/storezhang/ula'
+        }, {
+            text: '统一通知',
+            link: 'https://github.com/storezhang/una'
+        }, {
+            text: 'Echox',
+            link: 'https://github.com/storezhang/echox'
+        }]
+    }, {
+        text: '其他',
+        items: [{
+            text: '从 0.x 迁移',
+            link: '/zh/miscellaneous/migration-guide.html'
+        }, {
+            text: 'Changelog',
+            link: 'https://github.com/vuejs/vuepress/blob/master/CHANGELOG.md'
+        }]
+    }]
+}]
