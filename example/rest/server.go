@@ -14,8 +14,8 @@ type Server struct {
 	config gox.HttpServerConfig
 }
 
-func newServer(config gox.HttpServerConfig) Server {
-	return Server{config: config}
+func newServer(config gox.HttpServerConfig) *Server {
+	return &Server{config: config}
 }
 
 func (s *Server) Run() error {

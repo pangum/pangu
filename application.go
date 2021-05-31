@@ -56,6 +56,28 @@ func New(opts ...option) *Application {
 	return application
 }
 
+// Adds 添加各种组件到系统中
+func (a *Application) Adds(components ...interface{}) (err error) {
+	for _, component := range components {
+		switch component.(type) {
+		case Serve:
+			err = a.AddServes(component.(Serve))
+		case app.Command:
+			err = a.AddCommands(component.(app.Command))
+		case app.Arg:
+			err = a.AddArgs(component.(app.Arg))
+		default:
+			err = errors.New("不支持的类型")
+		}
+
+		if nil != err {
+			break
+		}
+	}
+
+	return
+}
+
 // AddServes 添加一个服务器到应用程序中
 func (a *Application) AddServes(serves ...Serve) error {
 	return a.container.Invoke(func(cmd *command.Serve) {

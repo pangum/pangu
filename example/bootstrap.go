@@ -2,6 +2,7 @@ package main
 
 import (
 	`github.com/storezhang/pangu`
+	`github.com/storezhang/pangu/example/command`
 	`github.com/storezhang/pangu/example/conf`
 	`github.com/storezhang/pangu/example/rest`
 )
@@ -17,11 +18,11 @@ func newBootstrap(application *pangu.Application) pangu.Bootstrap {
 }
 
 func (b *bootstrap) Setup() (err error) {
-	if err = b.provides(conf.Provides, rest.Provides); nil != err {
+	if err = b.provides(conf.Provides, rest.Provides, command.Provides); nil != err {
 		return
 	}
-	if err = b.application.Invoke(func(rest rest.Server) error {
-		return rest.Run()
+	if err = b.application.Invoke(func(rest *rest.Server) error {
+		return b.application.AddServes(rest)
 	}); nil != err {
 		return
 	}
