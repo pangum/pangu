@@ -105,7 +105,9 @@ function getGuideSidebar(groupA, groupB) {
             title: groupB,
             collapsable: false,
             children: [
-                'plugin',
+                'di',
+                'command',
+                'arg'
             ]
         }
     ]
