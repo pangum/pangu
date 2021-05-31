@@ -6,10 +6,10 @@ type optionValidate struct {
 	isValidate bool
 }
 
-// Validate 配置是否处理默认值
-func Validate(isValidate bool) *optionValidate {
+// DisableValidate 配置是否处理默认值
+func DisableValidate() *optionValidate {
 	return &optionValidate{
-		isValidate: isValidate,
+		isValidate: false,
 	}
 }
 

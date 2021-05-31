@@ -48,6 +48,7 @@ module.exports = ctx => ({
                 sidebar: {
                     '/api/': getApiSidebar(),
                     '/guide/': getGuideSidebar('指南', '深入'),
+                    '/config/': getConfigSidebar('系统', '命令行'),
                     '/plugin/': getPluginSidebar('插件', '介绍', '官方插件'),
                     '/theme/': getThemeSidebar('主题', '介绍')
                 }
@@ -113,6 +114,29 @@ function getGuideSidebar(groupA, groupB) {
     }]
 }
 
+function getConfigSidebar(groupA, groupB) {
+    return [{
+        title: groupA,
+        collapsable: false,
+        children: [
+            '',
+            'banner',
+            'default',
+            'validator'
+        ]
+    }, {
+        title: groupB,
+        collapsable: false,
+        children: [
+            'name',
+            'usage',
+            'description',
+            'authors',
+            'copyright'
+        ]
+    }]
+}
+
 const officialPlugins = fs
     .readdirSync(path.resolve(__dirname, '../plugin/official'))
     .map(filename => 'official/' + filename.slice(0, -3))
@@ -151,6 +175,5 @@ function getThemeSidebar(groupA, introductionA) {
             'blog-theme',
             'inheritance'
         ]
-    }
-    ]
+    }]
 }

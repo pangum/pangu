@@ -6,10 +6,10 @@ type optionDefault struct {
 	isDefault bool
 }
 
-// Default 配置是否处理默认值
-func Default(isDefault bool) *optionDefault {
+// DisableDefault 配置是否处理默认值
+func DisableDefault() *optionDefault {
 	return &optionDefault{
-		isDefault: isDefault,
+		isDefault: false,
 	}
 }
 
