@@ -4,34 +4,28 @@ import (
 	`fmt`
 
 	`github.com/storezhang/pangu/app`
+	`github.com/storezhang/pangu/command`
+	`github.com/storezhang/pangu/example/plugin`
 )
 
 var _ app.Command = (*Test)(nil)
 
-type Test struct{}
+type Test struct {
+	command.Base
 
-func newTest() *Test {
-	return &Test{}
+	test plugin.Test
 }
 
-func (t *Test) Aliases() []string {
-	return []string{"t"}
-}
-
-func (t *Test) Name() string {
-	return "Test"
-}
-
-func (t *Test) Usage() string {
-	return "测试命令"
+func newTest(test plugin.Test) *Test {
+	return &Test{
+		Base: command.NewBase("test", "测试命令", "t"),
+		test: test,
+	}
 }
 
 func (t *Test) Run(_ *app.Context) (err error) {
 	fmt.Println("Test Command")
+	t.test.Test()
 
-	return
-}
-
-func (t *Test) SubCommands() (commands []app.Command) {
 	return
 }

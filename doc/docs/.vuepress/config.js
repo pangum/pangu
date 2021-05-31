@@ -148,11 +148,8 @@ function getPluginSidebar(pluginTitle, pluginIntro, officialPluginTitle) {
         collapsable: false,
         children: [
             ['', pluginIntro],
-            'using-a-plugin',
-            'writing-a-plugin',
-            'life-cycle',
-            'option-api',
-            'context-api'
+            'using',
+            'writing'
         ]
     }, {
         title: officialPluginTitle,

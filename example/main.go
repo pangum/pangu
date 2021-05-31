@@ -2,6 +2,7 @@ package main
 
 import (
 	`github.com/storezhang/pangu`
+	_ `github.com/storezhang/pangu/example/plugin`
 )
 
 func main() {

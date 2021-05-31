@@ -14,6 +14,15 @@ type Base struct {
 	usage string
 }
 
+// NewBase 创建命令基类
+func NewBase(name string, usage string, aliases ...string) Base {
+	return Base{
+		name:    name,
+		aliases: aliases,
+		usage:   usage,
+	}
+}
+
 func (c *Base) Name() string {
 	return c.name
 }
