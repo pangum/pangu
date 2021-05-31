@@ -11,13 +11,10 @@ module.exports = [{
     text: '了解更多',
     ariaLabel: '了解更多',
     items: [{
-        text: 'API',
+        text: '客户',
         items: [{
-            text: 'CLI',
-            link: '/zh/api/cli.html'
-        }, {
-            text: 'Node',
-            link: '/zh/api/node.html'
+            text: 'Archtech',
+            link: 'https://archtech.studio'
         }]
     }, {
         text: '官方插件',
