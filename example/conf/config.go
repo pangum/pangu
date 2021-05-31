@@ -13,9 +13,9 @@ import (
 // XML
 type Config struct {
 	// 本应用程序配置
-	Example Example
+	Example Example `validate:"required"`
 	// Http配置
-	Http gox.HttpConfig
+	Http gox.HttpConfig `validate:"required"`
 }
 
 // 暴露配置，可以是私有也可以仅有方法，建议私有，尽量隐藏现实

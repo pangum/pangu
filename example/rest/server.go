@@ -20,6 +20,7 @@ func newServer(config gox.HttpServerConfig) Server {
 
 func (s *Server) Run() error {
 	http.HandleFunc("/", s.indexHandler)
+
 	return http.ListenAndServe(":8000", nil)
 }
 
