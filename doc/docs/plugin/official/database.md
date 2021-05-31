@@ -19,8 +19,8 @@ metaTitle: 数据库插件 | Pangu
 在使用这个插件之前，我们强烈建议你先阅读 [Getting Started](https://vuepress-plugin-blog.ulivz.com/guide/getting-started.html)。
 
 ```bash
-yarn add -D @vuepress/plugin.md-blog
-# OR npm install -D @vuepress/plugin.md-blog
+yarn add -D @vuepress/options.md-blog
+# OR npm install -D @vuepress/options.md-blog
 ```
 
 ## 使用
