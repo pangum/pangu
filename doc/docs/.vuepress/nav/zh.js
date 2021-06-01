@@ -34,14 +34,5 @@ module.exports = [{
             text: 'Echox',
             link: 'https://github.com/storezhang/echox'
         }]
-    }, {
-        text: '其他',
-        items: [{
-            text: '从 0.x 迁移',
-            link: '/zh/miscellaneous/migration-guide.html'
-        }, {
-            text: 'Changelog',
-            link: 'https://github.com/vuejs/vuepress/blob/master/CHANGELOG.md'
-        }]
     }]
 }]

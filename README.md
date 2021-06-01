@@ -1,121 +1,32 @@
-# pangu Golang应用程序框架
+# 盘古 Golang应用程序框架
 
-实际开发过程中，会写很多**八股文**代码，比如各种初始化
+一个Golang应用程序快速开发框架，有以下特性
 
-- 数据库
-- Redis
-- Elasticsearch
-- 日志
-- Http客户端
-- 数据库Session操作
-- 分布式ID生成器
+- 快速开发
+- 内置配置文件加载（支持`Yaml`、`Toml`、`Json`以及`XML`）
+- 内置强大的数据验证
+- 强大的扩展功能
+- 强大的配置功能
+- 线程安全
+- 内置依赖注入
+- 语义化
 
-本代码库就是集合这些八股文代码，在基本Google Wire的基础上，提供开箱即用的功能
+## 文档
 
-## 使用方法
+`盘古`的所有文档都集中在[文档](https://pangu.archtech.studio)
 
-### 创建主方法main.go
+## 使用者
 
-```go
-package main
+目前使用者比较少，只集中在官方插件中，包括
 
-import (
-	`github.com/storezhang/pangu`
-)
+- [数据库](https://github.com/storezhang/pangu)
+- [统一对象存储接入](https://github.com/storezhang/uoa)
+- [统一通知接入](https://github.com/storezhang/una)
+- [统一直播接入](https://github.com/storezhang/ula)
 
-func main(){
-	panic(pangu.New(
-		pangu.Name("example"),
-		pangu.Banner("./banner.txt", pangu.BannerTypeFile),
-	).Run(newBootstrap))
-}
-```
+## 其它项目推荐
 
-### 创建程序启动器bootstrap.go
+作者主观认为的比较好的项目
 
-```go
-package main
-
-import (
-	`example/conf`
-	`example/rest`
-
-	`github.com/storezhang/pangu`
-)
-
-type bootstrap struct {
-	application *pangu.Application
-}
-
-func newBootstrap(application *pangu.Application) pangu.Bootstrap {
-	return &bootstrap{
-		application: application,
-	}
-}
-
-func (b *bootstrap) Setup() (err error) {
-	if err = b.inject(); nil != err {
-		return
-	}
-	if err = b.application.Get(func(server *rest.Server) error {
-		return b.application.AddServe(server)
-	}); nil != err {
-		return
-	}
-
-	return
-}
-
-func (b *bootstrap) inject() (err error) {
-	if err = conf.Provide(b.application); nil != err {
-		return
-	}
-	if err = rest.Provide(b.application); nil != err {
-		return
-	}
-
-	return
-}
-
-```
-
-### 启动程序
-
-```shell
-./example serve
-```
-
-## 内置命令
-
-### 配置文件 -c --conf --config --configuration
-
-配置文件有默认值，顺序依次是
-
-- ./conf/application.yaml
-- ./conf/application.yml
-- ./conf/application.toml
-- ./conf/application.json
-- ./application.yaml
-- ./application.yml
-- ./application.toml
-- ./application.json
-- 参数指定
-
-### 输出版本号 v version V Version
-
-```shell
-./example version
-```
-
-需要在编译的时候注入版本信息，使用方法
-
-```shell
-go build -ldflags "-s -X 'github.com/storezhang/pangu.AppName=$APP_NAME"
-```
-![version](doc/docs/.vuepress/public/version.png)
-
-### 提供服务 s serve S Serve
-
-```shell
-./example serve
-```
+- [Http服务器](https://github.com/storezhang/echox)
+- [数据验证](https://github.com/storezhang/validatorx)

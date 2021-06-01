@@ -1,5 +1,3 @@
-const {fs, path} = require('@vuepress/shared-utils')
-
 module.exports = ctx => ({
     dest: '../../vuepress',
     locales: {
@@ -49,7 +47,7 @@ module.exports = ctx => ({
                     '/api/': getApiSidebar(),
                     '/guide/': getGuideSidebar('指南', '深入'),
                     '/config/': getConfigSidebar('系统', '命令行'),
-                    '/plugin/': getPluginSidebar('插件', '介绍', '官方插件'),
+                    '/plugin/': getPluginSidebar('插件', '官方插件'),
                 }
             }
         }
@@ -137,23 +135,20 @@ function getConfigSidebar(groupA, groupB) {
     }]
 }
 
-const officialPlugins = fs
-    .readdirSync(path.resolve(__dirname, '../plugin/official'))
-    .map(filename => 'official/' + filename.slice(0, -3))
-    .sort()
-
-function getPluginSidebar(pluginTitle, pluginIntro, officialPluginTitle) {
+function getPluginSidebar(groupA, groupB) {
     return [{
-        title: pluginTitle,
+        title: groupA,
         collapsable: false,
         children: [
-            ['', pluginIntro],
+            '',
             'using',
             'writing'
         ]
     }, {
-        title: officialPluginTitle,
+        title: groupB,
         collapsable: false,
-        children: officialPlugins
+        children: [
+            'database'
+        ]
     }]
 }
