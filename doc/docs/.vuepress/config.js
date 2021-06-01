@@ -93,7 +93,7 @@ function getGuideSidebar(groupA, groupB) {
         collapsable: false,
         children: [
             '',
-            'getting-started',
+            'start',
             'concept',
             'config',
             'migration',
