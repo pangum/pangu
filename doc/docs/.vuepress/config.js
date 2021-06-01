@@ -1,5 +1,5 @@
 module.exports = ctx => ({
-    dest: '../../vuepress',
+    dest: './dist',
     locales: {
         '/': {
             lang: 'zh-CN',
