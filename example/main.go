@@ -15,6 +15,6 @@ func main() {
 			Name:  "storezhang",
 			Email: "storezhang@gmail.com",
 		}),
-		pangu.Copyright("https://pangu.archtech.com"),
+		pangu.Copyright("https://pangu.archtech.studio"),
 	).Run(newBootstrap))
 }

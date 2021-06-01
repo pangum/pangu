@@ -14,6 +14,9 @@
 ## 文档
 
 `盘古`的所有文档都集中在[文档](https://pangu.archtech.studio)
+- [指南](https://pangu.archtech.studio/guide/)
+- [配置](https://pangu.archtech.studio/config/)
+- [插件](https://pangu.archtech.studio/plugin/)
 
 ## 使用者
 

@@ -8,7 +8,7 @@ Golang需要1.16及以上版本
 
 本文会帮助你从头搭建一个简单的Golang应用
 
-## 创建并进入一个新目录
+## 新建项目
 
 ``` shell
 mkdir pangu-app && cd pangu-app
