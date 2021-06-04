@@ -28,6 +28,7 @@ steps:
     commands:
       - cd doc
       - yarn docs:build
+      - yarn
 
 
 volumes:
