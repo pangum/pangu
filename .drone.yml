@@ -26,8 +26,8 @@ steps:
     image: node
     pull: if-not-exists
     commands:
-      - yarn install
-      - yarn
+      - cd doc
+      - yarn docs:build
 
 
 volumes:
