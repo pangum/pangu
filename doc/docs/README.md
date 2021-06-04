@@ -4,7 +4,7 @@
 home: true
 heroImage: /hero.png
 heroText: Pangu（盘古）
-tagline: Golang应用快速开发框架
+tagline: Golang应用程序快速开发框架
 actionText: 快速上手 →
 actionLink: /guide/
 features:
