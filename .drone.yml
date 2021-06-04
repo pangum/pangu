@@ -38,6 +38,7 @@ steps:
         from_secret: cos_secret_id
       secretKey:
         from_secret: cos_secret_key
+      baseUrl: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
       folder: doc/dist
 
 
