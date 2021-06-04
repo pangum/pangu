@@ -30,6 +30,15 @@ steps:
       - yarn install
       - yarn docs:build
 
+  - name: 部署到腾讯云
+    image: storezhang/cos
+    pull: if-not-exists
+    settings:
+      secretId: AKIDKRDlxzLDxUnMK4MMdqpw87Zn46tWx5xe
+      secretKey:
+        from_secret: cos_secret_key
+      folder: doc/dist
+
 
 volumes:
   - name: deps
