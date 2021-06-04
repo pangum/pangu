@@ -22,14 +22,22 @@ steps:
     image: plugins/git
     pull: if-not-exists
 
+  - name: 生成文档
+    image: node
+    pull: if-not-exists
+    commands:
+      - cd doc
+      - yarn install
+      - yarn docs:build
+
   - name: 部署到腾讯云
     image: storezhang/cos
     settings:
-      secretId:
+      secret_id:
         from_secret: cos_secret_id
-      secretKey:
+      secret_key:
         from_secret: cos_secret_key
-      baseUrl: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
+      base_url: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
       folder: doc/dist
 
 
