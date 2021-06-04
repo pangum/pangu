@@ -1,0 +1,34 @@
+kind: pipeline
+type: docker
+name: 盘古应用框架
+
+
+clone:
+  disable: true
+
+
+trigger:
+  event:
+    exclude:
+      - pull_request
+
+
+environment:
+  GOPROXY: https://goproxy.cn
+
+
+steps:
+  - name: 拉代码
+    image: plugins/git
+    pull: if-not-exists
+
+  - name: 生成文档
+    image: node
+    pull: if-not-exists
+    commands:
+      - yarn install
+
+
+volumes:
+  - name: deps
+    temp: { }
