@@ -27,6 +27,7 @@ steps:
     pull: if-not-exists
     commands:
       - cd doc
+      - yarn install
       - yarn docs:build
 
 
