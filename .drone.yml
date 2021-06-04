@@ -34,7 +34,8 @@ steps:
     image: storezhang/cos
     pull: if-not-exists
     settings:
-      secretId: AKIDKRDlxzLDxUnMK4MMdqpw87Zn46tWx5xe
+      secretId:
+        from_secret: cos_secret_id
       secretKey:
         from_secret: cos_secret_key
       folder: doc/dist
