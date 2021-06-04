@@ -27,6 +27,7 @@ steps:
     pull: if-not-exists
     commands:
       - yarn install
+      - yarn
 
 
 volumes:
