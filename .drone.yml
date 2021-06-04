@@ -22,14 +22,6 @@ steps:
     image: plugins/git
     pull: if-not-exists
 
-  - name: 生成文档
-    image: node
-    pull: if-not-exists
-    commands:
-      - cd doc
-      - yarn install
-      - yarn docs:build
-
   - name: 部署到腾讯云
     image: storezhang/cos
     settings:
