@@ -1,7 +1,6 @@
 package pangu
 
 import (
-	`encoding/json`
 	`errors`
 	`flag`
 	`fmt`
@@ -13,22 +12,19 @@ import (
 	`strings`
 	`sync`
 
-	`github.com/mcuadros/go-defaults`
-	`github.com/pelletier/go-toml`
 	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
-	`github.com/storezhang/validatorx`
 	`github.com/urfave/cli/v2`
 	`go.uber.org/dig`
-	`gopkg.in/yaml.v3`
 )
 
 // Application 应用程序，可以加入两种种类型的程序
 // Serve 用于描述应用程序内的服务
 // Command 用于描述应用程序内可以被执行的命令
 type Application struct {
+	config  *Config
 	options *options
 
 	container *dig.Container
@@ -202,8 +198,8 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	return
 }
 
-// GetConfig 取得解析后的配置
-func (a *Application) GetConfig(config interface{}) (err error) {
+// LoadConfig 取得解析后的配置
+func (a *Application) LoadConfig(config interface{}) (err error) {
 	var (
 		once sync.Once
 		path *string
@@ -285,35 +281,14 @@ func (a *Application) loadConfig(config interface{}, path string) (err error) {
 		return
 	}
 
-	var data []byte
-	if data, err = ioutil.ReadFile(path); nil != err {
+	a.config = &Config{
+		format:  strings.ToLower(filepath.Ext(path)),
+		options: a.options,
+	}
+	if a.config.data, err = ioutil.ReadFile(path); nil != err {
 		return
 	}
-
-	// 处理默认值
-	if a.options.isDefault {
-		defaults.SetDefaults(config)
-	}
-	switch strings.ToLower(filepath.Ext(path)) {
-	case "yml":
-		fallthrough
-	case "yaml":
-		err = yaml.Unmarshal(data, config)
-	case "json":
-		err = json.Unmarshal(data, config)
-	case "toml":
-		err = toml.Unmarshal(data, config)
-	default:
-		err = yaml.Unmarshal(data, config)
-	}
-	if nil != err {
-		return
-	}
-
-	// 验证数据
-	if a.options.isValidate {
-		err = validatorx.Struct(config)
-	}
+	err = a.config.Struct(config)
 
 	return
 }
@@ -374,7 +349,7 @@ func (a *Application) findConfigFilepathWithExt(filename string) (path string, n
 }
 
 func (a *Application) addProvides() (err error) {
-	if err = a.Provides(glog.NewLogger, gox.NewSnowflake, NewResty); nil != err {
+	if err = a.Provides(glog.NewLogger, gox.NewSnowflake); nil != err {
 		return
 	}
 	if err = a.Provides(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
@@ -387,12 +362,12 @@ func (a *Application) addProvides() (err error) {
 		return
 	}
 
-	// 注入快捷方式
-	// 解包Http对象
-	if err = a.Provides(getClientConfig, getServerConfig); nil != err {
+	// 注入配置
+	if err = a.Provide(func() *Config {
+		return a.config
+	}); nil != err {
 		return
 	}
-
 	// 注入自身
 	if err = a.Provide(func() *Application {
 		return a
