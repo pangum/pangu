@@ -13,7 +13,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20210408115534-a32ed26c37ea
 	github.com/storezhang/glog v1.0.5
-	github.com/storezhang/gox v1.4.10
+	github.com/storezhang/gox v1.5.0
 	github.com/storezhang/validatorx v1.0.5
 	github.com/urfave/cli/v2 v2.3.0
 	go.uber.org/dig v1.10.0
@@ -27,6 +27,4 @@ require (
 
 // replace github.com/storezhang/gox => ../gox
 // replace github.com/storezhang/glog => ../glog
-// replace github.com/class100/sdk-go => ../../class100/sdk-go
 // replace github.com/storezhang/validatorx => ../../storezhang/validatorx
-// replace github.com/class100/yunke-core => ../../../github/yunke-core

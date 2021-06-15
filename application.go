@@ -2,14 +2,8 @@ package pangu
 
 import (
 	`errors`
-	`flag`
-	`fmt`
 	`io/fs`
-	`io/ioutil`
 	`os`
-	`path/filepath`
-	`reflect`
-	`strings`
 	`sync`
 
 	`github.com/storezhang/glog`
@@ -26,23 +20,23 @@ import (
 type Application struct {
 	config  *Config
 	options *options
-
 	container *dig.Container
 }
 
-var (
-	once        sync.Once
-	application *Application
-)
+var application *Application
 
 // New 创建一个应用程序
 // 使用单例模式
 func New(opts ...option) *Application {
+	var once sync.Once
 	once.Do(func() {
 		application = &Application{
-			options: defaultOptions(),
-
+			options:   defaultOptions(),
 			container: dig.New(),
+		}
+		// 注入配置对象，后续使用
+		application.config = &Config{
+			application: application,
 		}
 	})
 
@@ -199,26 +193,8 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 }
 
 // LoadConfig 取得解析后的配置
-func (a *Application) LoadConfig(config interface{}) (err error) {
-	var (
-		once sync.Once
-		path *string
-	)
-
-	// 参数不允许重复定义，只能执行一次
-	once.Do(func() {
-		path = flag.String("conf", "./conf/application.yaml", "指定配置文件路径")
-		flag.StringVar(path, "c", *path, "指定配置文件路径")
-		flag.Parse()
-	})
-
-	if reflect.ValueOf(config).Kind() == reflect.Ptr {
-		err = a.loadConfig(config, *path)
-	} else {
-		err = a.loadConfig(&config, *path)
-	}
-
-	return
+func (a *Application) LoadConfig(config interface{}, opts ...option) (err error) {
+	return a.config.Struct(config, opts...)
 }
 
 func (a *Application) setup() error {
@@ -274,78 +250,6 @@ func (a *Application) addInternalFlags() error {
 			DefaultText: "./conf/application.yaml",
 		})
 	})
-}
-
-func (a *Application) loadConfig(config interface{}, path string) (err error) {
-	if path, err = a.findConfigFilepath(path); nil != err {
-		return
-	}
-
-	a.config = &Config{
-		format:  strings.ToLower(filepath.Ext(path)),
-		options: a.options,
-	}
-	if a.config.data, err = ioutil.ReadFile(path); nil != err {
-		return
-	}
-	err = a.config.Struct(config)
-
-	return
-}
-
-func (a *Application) findConfigFilepath(conf string) (path string, err error) {
-	path = conf
-	if "" != path && gox.IsFileExist(path) {
-		return
-	}
-
-	var notExists bool
-	if path, notExists = a.findConfigFilepathWithExt("./application"); !notExists {
-		return
-	}
-	if path, notExists = a.findConfigFilepathWithExt("./conf/application"); !notExists {
-		return
-	}
-	if path, notExists = a.findConfigFilepathWithExt("./app"); !notExists {
-		return
-	}
-	if path, notExists = a.findConfigFilepathWithExt("./conf/app"); !notExists {
-		return
-	}
-	err = errors.New("找不到配置文件")
-
-	return
-}
-
-// 之所以命名为notExists，是为了少对notExists赋值
-func (a *Application) findConfigFilepathWithExt(filename string) (path string, notExists bool) {
-	path = fmt.Sprintf("%s.%s", filename, "yaml")
-	if gox.IsFileExist(path) {
-		return
-	}
-
-	path = fmt.Sprintf("%s.%s", filename, "yml")
-	if gox.IsFileExist(path) {
-		return
-	}
-
-	path = fmt.Sprintf("%s.%s", filename, "toml")
-	if gox.IsFileExist(path) {
-		return
-	}
-
-	path = fmt.Sprintf("%s.%s", filename, "json")
-	if gox.IsFileExist(path) {
-		return
-	}
-
-	path = fmt.Sprintf("%s.%s", filename, "xml")
-	if gox.IsFileExist(path) {
-		return
-	}
-	notExists = true
-
-	return
 }
 
 func (a *Application) addProvides() (err error) {
