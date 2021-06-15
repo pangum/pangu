@@ -21,6 +21,7 @@ import (
 
 // Config 描述全局原始配置参数
 type Config struct {
+	path *string
 	// 原始数据
 	data []byte
 	// 格式
@@ -31,40 +32,40 @@ type Config struct {
 	once sync.Once
 }
 
-func (c *Config) Struct(config interface{}, opts ...option) (err error) {
+func (c *Config) Load(config interface{}, opts ...option) (err error) {
 	for _, opt := range opts {
 		opt.apply(c.application.options)
 	}
 
 	// 参数不允许重复定义，只能执行一次
-	var path *string
 	c.once.Do(func() {
-		path = flag.String("conf", "./conf/application.yaml", "指定配置文件路径")
-		flag.StringVar(path, "c", *path, "指定配置文件路径")
+		c.path = flag.String("conf", "./conf/application.yaml", "指定配置文件路径")
+		flag.StringVar(c.path, "c", *c.path, "指定配置文件路径")
 		flag.Parse()
 	})
 
 	// 区分指针类型和非指针类型
 	if reflect.ValueOf(config).Kind() == reflect.Ptr {
-		err = c.loadConfig(config, *path)
+		err = c.loadConfig(config)
 	} else {
-		err = c.loadConfig(&config, *path)
+		err = c.loadConfig(&config)
 	}
 
 	return
 }
 
-func (c *Config) loadConfig(config interface{}, path string) (err error) {
-	if path, err = c.findConfigFilepath(path); nil != err {
+func (c *Config) loadConfig(config interface{}) (err error) {
+	var finalPath string
+	if finalPath, err = c.findConfigFilepath(*c.path); nil != err {
 		return
 	}
 
 	// 可以处理后续动态加载
-	if "" != c.format {
-		c.format = strings.ToLower(filepath.Ext(path))
+	if "" == c.format {
+		c.format = strings.ToLower(filepath.Ext(finalPath))
 	}
-	if 0 != len(c.data) {
-		if c.data, err = ioutil.ReadFile(path); nil != err {
+	if 0 == len(c.data) {
+		if c.data, err = ioutil.ReadFile(finalPath); nil != err {
 			return
 		}
 	}
@@ -75,15 +76,15 @@ func (c *Config) loadConfig(config interface{}, path string) (err error) {
 	}
 
 	switch c.format {
-	case "yml":
+	case ".yml":
 		fallthrough
-	case "yaml":
+	case ".yaml":
 		err = yaml.Unmarshal(c.data, config)
-	case "json":
+	case ".json":
 		err = json.Unmarshal(c.data, config)
-	case "toml":
+	case ".toml":
 		err = toml.Unmarshal(c.data, config)
-	case "xml":
+	case ".xml":
 		err = xml.Unmarshal(c.data, config)
 	default:
 		err = yaml.Unmarshal(c.data, config)

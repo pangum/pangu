@@ -18,7 +18,7 @@ const (
 	// BannerTypeTxt 文本文件
 	BannerTypeTxt BannerType = "txt"
 	// BannerTypeFilepath 图片文件
-	BannerTypeFilepath BannerType = "filepath"
+	BannerTypeFilepath BannerType = "path"
 	// BannerTypeString 直接显示
 	BannerTypeString BannerType = "string"
 	// BannerTypeAscii 内部转换

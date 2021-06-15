@@ -18,17 +18,19 @@ import (
 // Serve 用于描述应用程序内的服务
 // Command 用于描述应用程序内可以被执行的命令
 type Application struct {
-	config  *Config
-	options *options
+	config    *Config
+	options   *options
 	container *dig.Container
 }
 
-var application *Application
+var (
+	application *Application
+	once        sync.Once
+)
 
 // New 创建一个应用程序
 // 使用单例模式
 func New(opts ...option) *Application {
-	var once sync.Once
 	once.Do(func() {
 		application = &Application{
 			options:   defaultOptions(),
@@ -194,7 +196,7 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 
 // LoadConfig 取得解析后的配置
 func (a *Application) LoadConfig(config interface{}, opts ...option) (err error) {
-	return a.config.Struct(config, opts...)
+	return a.config.Load(config, opts...)
 }
 
 func (a *Application) setup() error {
