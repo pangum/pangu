@@ -6,9 +6,9 @@ import (
 
 	`github.com/go-sql-driver/mysql`
 	`github.com/rubenv/sql-migrate`
-	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/gox/field`
+	`github.com/storezhang/pangu/app`
 	`xorm.io/builder`
 	`xorm.io/xorm`
 )
@@ -21,12 +21,12 @@ type migration struct {
 	// AppliedAt 升级时间
 	AppliedAt gox.Timestamp `xorm:"created default('2020-02-04 09:55:52')"`
 
-	migrations  []fs.FS         `xorm:"-"`
-	application *Application    `xorm:"-"`
-	logger      *glog.ZapLogger `xorm:"-"`
+	migrations  []fs.FS      `xorm:"-"`
+	application *Application `xorm:"-"`
+	logger      app.Logger   `xorm:"-"`
 }
 
-func newMigration(application *Application, logger *glog.ZapLogger) *migration {
+func newMigration(application *Application, logger app.Logger) *migration {
 	return &migration{
 		migrations:  make([]fs.FS, 0, 0),
 		application: application,

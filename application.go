@@ -6,7 +6,6 @@ import (
 	`os`
 	`sync`
 
-	`github.com/storezhang/glog`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
@@ -255,7 +254,7 @@ func (a *Application) addInternalFlags() error {
 }
 
 func (a *Application) addProvides() (err error) {
-	if err = a.Provides(glog.NewLogger, gox.NewSnowflake); nil != err {
+	if err = a.Provides(gox.NewSnowflake); nil != err {
 		return
 	}
 	if err = a.Provides(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
@@ -264,13 +263,19 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(appName, appVersion, buildVersion, buildTime, scmRevision, scmBranch, goVersion); nil != err {
 		return
 	}
-	if err = a.Provides(newApp, newMigration, newZapLogger, app.NewDefaultService); nil != err {
+	if err = a.Provides(newApp, newMigration, app.NewDefaultService); nil != err {
 		return
 	}
 
 	// 注入配置
 	if err = a.Provide(func() *Config {
 		return a.config
+	}); nil != err {
+		return
+	}
+	// 注入日志
+	if err = a.Provide(func() app.Logger {
+		return a.options.logger
 	}); nil != err {
 		return
 	}

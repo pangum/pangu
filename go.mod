@@ -12,13 +12,12 @@ require (
 	github.com/pelletier/go-toml v1.2.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20210408115534-a32ed26c37ea
-	github.com/storezhang/glog v1.0.5
+	github.com/storezhang/glog v1.0.8
 	github.com/storezhang/gox v1.5.0
 	github.com/storezhang/validatorx v1.0.5
 	github.com/urfave/cli/v2 v2.3.0
 	go.uber.org/dig v1.10.0
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.16.0
 	golang.org/x/net v0.0.0-20210521195947-fe42d452be8f // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	xorm.io/builder v0.3.9

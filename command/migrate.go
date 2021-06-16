@@ -1,7 +1,6 @@
 package command
 
 import (
-	`github.com/storezhang/glog`
 	`github.com/storezhang/pangu/app`
 )
 
@@ -12,11 +11,11 @@ type Migrate struct {
 	Base
 
 	migration migration
-	logger    glog.Logger
+	logger    app.Logger
 }
 
 // NewMigrate 创建服务命令
-func NewMigrate(logger *glog.ZapLogger) *Migrate {
+func NewMigrate(logger app.Logger) *Migrate {
 	return &Migrate{
 		Base: Base{
 			name:    "migrate",

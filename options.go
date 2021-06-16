@@ -2,6 +2,9 @@ package pangu
 
 import (
 	_ `embed`
+
+	`github.com/storezhang/glog`
+	`github.com/storezhang/pangu/app`
 )
 
 type options struct {
@@ -27,6 +30,8 @@ type options struct {
 	isDefault bool
 	// 是否验证数据
 	isValidate bool
+	// 日志
+	logger app.Logger
 }
 
 //go:embed asset/template/help_app.tmpl
@@ -63,5 +68,6 @@ func defaultOptions() *options {
 
 		isDefault:  true,
 		isValidate: true,
+		logger:     glog.Must(glog.Zap()),
 	}
 }

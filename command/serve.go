@@ -3,7 +3,6 @@ package command
 import (
 	`sync`
 
-	`github.com/storezhang/glog`
 	`github.com/storezhang/gox/field`
 	`github.com/storezhang/pangu/app`
 )
@@ -16,11 +15,11 @@ type Serve struct {
 
 	migration migration
 	serves    []app.Serve
-	logger    glog.Logger
+	logger    app.Logger
 }
 
 // NewServe 创建服务命令
-func NewServe(logger *glog.ZapLogger) *Serve {
+func NewServe(logger app.Logger) *Serve {
 	return &Serve{
 		Base: Base{
 			name:    "serve",
