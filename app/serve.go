@@ -5,6 +5,7 @@ package app
 type Serve interface {
 	// Run 运行服务器
 	Run() (err error)
+
 	// Name 服务器名称
 	Name() string
 }

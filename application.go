@@ -2,7 +2,6 @@ package pangu
 
 import (
 	`errors`
-	`io/fs`
 	`os`
 	`sync`
 
@@ -20,6 +19,9 @@ type Application struct {
 	config    *Config
 	options   *options
 	container *dig.Container
+
+	beforeExecutors []app.Executor
+	afterExecutors  []app.Executor
 }
 
 var (
@@ -34,6 +36,9 @@ func New(opts ...option) *Application {
 		application = &Application{
 			options:   defaultOptions(),
 			container: dig.New(),
+
+			beforeExecutors: make([]app.Executor, 0, 0),
+			afterExecutors:  make([]app.Executor, 0, 0),
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
@@ -75,7 +80,7 @@ func (a *Application) AddServes(serves ...app.Serve) error {
 	return a.container.Invoke(func(cmd *command.Serve) {
 		for _, serve := range serves {
 			// 为了防止包循环引用不得已的办法
-			cmd.Adds(serve)
+			cmd.AddServes(serve)
 		}
 	})
 }
@@ -107,11 +112,23 @@ func (a *Application) AddArgs(args ...app.Arg) error {
 	})
 }
 
-// AddMigration 添加一个升级脚本到系统中
-func (a *Application) AddMigration(source fs.FS) error {
-	return a.container.Invoke(func(migration *migration) {
-		migration.addSource(source)
-	})
+func (a *Application) AddExecutor(executors ...app.Executor) (err error) {
+	for _, executor := range executors {
+		switch executor.Type() {
+		case app.ExecutorTypeBeforeAll:
+			a.beforeExecutors = append(a.beforeExecutors, executor)
+		case app.ExecutorTypeAfterAll:
+			a.afterExecutors = append(a.afterExecutors, executor)
+		case app.ExecutorTypeBeforeServe:
+			fallthrough
+		case app.ExecutorTypeAfterServe:
+			err = a.Invoke(func(serve command.Serve) {
+				serve.AddExecutors(executor)
+			})
+		}
+	}
+
+	return
 }
 
 func (a *Application) Provide(constructor interface{}, opts ...provideOption) (err error) {
@@ -178,6 +195,12 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 		return
 	}
 
+	if 0 != len(a.beforeExecutors) {
+		if err = app.RunExecutors(a.beforeExecutors...); nil != err {
+			return
+		}
+	}
+
 	// 启动应用
 	if err = a.Invoke(func(startup *cli.App) error {
 		return startup.Run(os.Args)
@@ -185,6 +208,11 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 		return
 	}
 
+	if 0 != len(a.afterExecutors) {
+		if err = app.RunExecutors(a.afterExecutors...); nil != err {
+			return
+		}
+	}
 	// 退出程序，解决最外层panic报错的问题
 	// 原理：如果到这个地方还没有发生错误，程序正常退出，外层panic得不到执行
 	// 如果发生错误，则所有代码都会返回error直到panic检测到，然后程序整体panic
@@ -227,17 +255,12 @@ func (a *Application) addInternalCommands() error {
 	type commandsIn struct {
 		In
 
-		Serve     *command.Serve
-		Version   *command.Version
-		Migrate   *command.Migrate
-		Migration *migration
+		Serve   *command.Serve
+		Version *command.Version
 	}
 
 	return a.Invoke(func(in commandsIn) error {
-		in.Serve.SetMigration(in.Migration)
-		in.Migrate.SetMigration(in.Migration)
-
-		return a.AddCommands(in.Serve, in.Migrate, in.Version)
+		return a.AddCommands(in.Serve, in.Version)
 	})
 }
 
@@ -257,13 +280,13 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(gox.NewSnowflake); nil != err {
 		return
 	}
-	if err = a.Provides(command.NewServe, command.NewVersion, command.NewMigrate); nil != err {
+	if err = a.Provides(command.NewServe, command.NewVersion); nil != err {
 		return
 	}
 	if err = a.Provides(appName, appVersion, buildVersion, buildTime, scmRevision, scmBranch, goVersion); nil != err {
 		return
 	}
-	if err = a.Provides(newApp, newMigration, app.NewDefaultService); nil != err {
+	if err = a.Provides(newApp, app.NewDefaultService); nil != err {
 		return
 	}
 

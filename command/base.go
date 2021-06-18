@@ -23,18 +23,18 @@ func NewBase(name string, usage string, aliases ...string) Base {
 	}
 }
 
-func (c *Base) Name() string {
-	return c.name
+func (b *Base) Name() string {
+	return b.name
 }
 
-func (c *Base) Aliases() []string {
-	return c.aliases
+func (b *Base) Aliases() []string {
+	return b.aliases
 }
 
-func (c *Base) Usage() string {
-	return c.usage
+func (b *Base) Usage() string {
+	return b.usage
 }
 
-func (c *Base) SubCommands() (commands []app.Command) {
+func (b *Base) SubCommands() (commands []app.Command) {
 	return
 }
