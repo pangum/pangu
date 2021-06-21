@@ -71,6 +71,7 @@ func (s *Serve) AddExecutors(executors ...app.Executor) {
 }
 
 func (s *Serve) Run(ctx *app.Context) (err error) {
+	// 执行生命周期方法
 	if 0 != len(s.beforeExecutors) {
 		if err = app.RunExecutors(s.beforeExecutors...); nil != err {
 			return
@@ -86,6 +87,7 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 		s.logger.Info("启动服务成功", field.Int("count", serveCount))
 	}
 
+	// 执行生命周期方法
 	if 0 != len(s.afterExecutors) {
 		if err = app.RunExecutors(s.afterExecutors...); nil != err {
 			return

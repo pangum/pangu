@@ -11,22 +11,22 @@ type Executor interface {
 	// Type 类型
 	Type() ExecutorType
 
-	// ExecType 执行类型
-	ExecType() ExecType
+	// ExecuteType 执行类型
+	ExecuteType() ExecuteType
 }
 
 // RunExecutors 运行所有执行器
 func RunExecutors(executors ...Executor) (err error) {
 	for _, executor := range executors {
 		if err = executor.Run(); nil != err {
-			switch executor.ExecType() {
-			case ExecTypeBreak:
+			switch executor.ExecuteType() {
+			case ExecuteTypeBreak:
 				err = nil
 				break
-			case ExecTypeContinue:
+			case ExecuteTypeContinue:
 				err = nil
 				continue
-			case ExecTypeReturn:
+			case ExecuteTypeReturn:
 				return
 			}
 		}
