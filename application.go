@@ -57,6 +57,8 @@ func New(opts ...option) *Application {
 func (a *Application) Adds(components ...interface{}) (err error) {
 	for _, component := range components {
 		switch component.(type) {
+		case app.Executor:
+			err = a.AddExecutor(component.(app.Executor))
 		case app.Serve:
 			err = a.AddServes(component.(app.Serve))
 		case app.Command:
@@ -77,7 +79,7 @@ func (a *Application) Adds(components ...interface{}) (err error) {
 
 // AddServes 添加一个服务器到应用程序中
 func (a *Application) AddServes(serves ...app.Serve) error {
-	return a.container.Invoke(func(cmd *command.Serve) {
+	return a.Invoke(func(cmd *command.Serve) {
 		for _, serve := range serves {
 			// 为了防止包循环引用不得已的办法
 			cmd.AddServes(serve)
@@ -87,7 +89,7 @@ func (a *Application) AddServes(serves ...app.Serve) error {
 
 // AddCommands 添加一个可以被执行的命令到应用程序中
 func (a *Application) AddCommands(commands ...app.Command) error {
-	return a.container.Invoke(func(startup *cli.App) {
+	return a.Invoke(func(startup *cli.App) {
 		for _, cmd := range commands {
 			cmd := cmd
 			startup.Commands = append(startup.Commands, &cli.Command{
@@ -104,7 +106,7 @@ func (a *Application) AddCommands(commands ...app.Command) error {
 
 // AddArgs 添加参数
 func (a *Application) AddArgs(args ...app.Arg) error {
-	return a.container.Invoke(func(startup *cli.App) {
+	return a.Invoke(func(startup *cli.App) {
 		for _, argument := range args {
 			parameter := argument
 			startup.Flags = append(startup.Flags, parameter.ParseFlag())
@@ -122,7 +124,7 @@ func (a *Application) AddExecutor(executors ...app.Executor) (err error) {
 		case app.ExecutorTypeBeforeServe:
 			fallthrough
 		case app.ExecutorTypeAfterServe:
-			err = a.Invoke(func(serve command.Serve) {
+			err = a.Invoke(func(serve *command.Serve) {
 				serve.AddExecutors(executor)
 			})
 		}
