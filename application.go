@@ -171,7 +171,7 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	if err = a.addProvides(); nil != err {
 		return
 	}
-	if err = a.setup(); nil != err {
+	if err = a.setupStartup(); nil != err {
 		return
 	}
 
@@ -226,7 +226,7 @@ func (a *Application) LoadConfig(config interface{}, opts ...option) (err error)
 	return a.config.Load(config, opts...)
 }
 
-func (a *Application) setup() error {
+func (a *Application) setupStartup() error {
 	cli.AppHelpTemplate = a.options.helpAppTemplate
 	cli.CommandHelpTemplate = a.options.helpCommandTemplate
 	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
