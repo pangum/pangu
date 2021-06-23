@@ -3,19 +3,15 @@ package rest
 import (
 	`fmt`
 	`net/http`
-
-	`github.com/storezhang/gox`
 )
 
 // Server RESTFul服务器
 // 这里只做演示用，实际开发中请使用https://github.com/storezhang/echox开发
 // 也可以使用纯属echo或者gin以及其它框架来做开发
-type Server struct {
-	config gox.HttpServerConfig
-}
+type Server struct{}
 
-func newServer(config gox.HttpServerConfig) *Server {
-	return &Server{config: config}
+func newServer() *Server {
+	return &Server{}
 }
 
 func (s *Server) Run() error {
