@@ -3,7 +3,7 @@ module.exports = ctx => ({
     locales: {
         '/': {
             lang: 'zh-CN',
-            title: '我的在线作图 网',
+            title: '我的在线作图网',
             description: 'Golang应用快速开发框架'
         }
     },
