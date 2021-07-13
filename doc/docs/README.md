@@ -24,7 +24,7 @@ features:
     details: 支持Yaml、Toml、Json以及XML配置文件，且配置文件类型还在扩展中
   - title: 内置支持数据验证
     details: 配置文件内置支持数据验证，防止错误的配置被系统使用使系统问题越来越重
-footer: MIT Licensed | Copyright © 2021-present Storezhang
+footer: MIT Licensed | Copyright © 2021-present Storezhang [蜀ICP备2021013439号-1](https://beian.miit.gov.cn/)
 # @formatter:on
 ---
 
@@ -37,5 +37,3 @@ footer: MIT Licensed | Copyright © 2021-present Storezhang
 Golang需要1.16及以上版本
 <!--@formatter:on-->
 :::
-
-[蜀ICP备2021013439号-1](https://beian.miit.gov.cn/)
