@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: 盘古应用框架
+name: 盘古文档
 
 
 clone:
