@@ -19,7 +19,7 @@ var (
 	ScmRevision = `没有设置，请使用-ldflags "-s -X 'github.com/storezhang/pangu.ScmRevision=$SCM_REVISION"来注入值`
 	// ScmBranch 分支名称
 	ScmBranch = `没有设置，请使用-ldflags "-s -X 'github.com/storezhang/pangu.ScmBranch=$SCM_BRANCH"来注入值`
-	// GoVersion Golang信息
+	// GoVersion Go版本信息
 	GoVersion = runtime.Version()
 )
 
