@@ -23,10 +23,17 @@ module.exports = ctx => ({
     markdown: {
         lineNumbers: true
     },
+    theme: 'reco',
     themeConfig: {
         repo: 'storezhang/pangu',
         editLinks: true,
         docsDir: 'doc/docs',
+        record: '蜀ICP备2021013439号-1',
+        recordLink: 'https://beian.miit.gov.cn/',
+        // cyberSecurityRecord: '公安部备案文案',
+        // cyberSecurityLink: '公安部备案指向链接',
+        // 项目开始时间，只填写年份
+        startYear: '2021',
         algolia: ctx.isProd ? ({
             apiKey: 'f7edee00640ed06f44542bb62b4d9e5b',
             indexName: 'doc',
