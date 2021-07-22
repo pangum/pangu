@@ -22,6 +22,10 @@ type Application struct {
 
 	beforeExecutors []app.Executor
 	afterExecutors  []app.Executor
+
+	// dig内部使用一个非线程安全的map来存储各种依赖关系，容易导致线程安全问题，增加读写锁来确保不会出问题
+	// fatal error: concurrent map writes
+	mutex sync.RWMutex
 }
 
 var (
@@ -39,6 +43,8 @@ func New(opts ...option) *Application {
 
 			beforeExecutors: make([]app.Executor, 0, 0),
 			afterExecutors:  make([]app.Executor, 0, 0),
+
+			mutex: sync.RWMutex{},
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
@@ -157,6 +163,9 @@ func (a *Application) AddExecutor(executors ...app.Executor) (err error) {
 
 // Provide 提供依赖关系
 func (a *Application) Provide(constructor interface{}, opts ...provideOption) (err error) {
+	a.mutex.Lock()
+	defer a.mutex.Unlock()
+
 	options := defaultProvideOptions()
 	for _, opt := range opts {
 		opt.applyProvide(options)
@@ -178,6 +187,9 @@ func (a *Application) Provides(constructors ...interface{}) (err error) {
 
 // Invoke 获得依赖对象
 func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
+	a.mutex.RLock()
+	defer a.mutex.RUnlock()
+
 	options := defaultInvokeOptions()
 	for _, opt := range opts {
 		opt.applyInvoke(options)
