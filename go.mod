@@ -8,7 +8,7 @@ require (
 	github.com/pelletier/go-toml v1.2.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/storezhang/glog v1.0.8
-	github.com/storezhang/gox v1.5.3
+	github.com/storezhang/gox v1.6.3
 	github.com/storezhang/validatorx v1.0.5
 	github.com/urfave/cli/v2 v2.3.0
 	go.uber.org/dig v1.10.0
