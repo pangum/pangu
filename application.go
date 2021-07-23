@@ -6,6 +6,7 @@ import (
 	`sync`
 
 	`github.com/storezhang/gox`
+	`github.com/storezhang/guc`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
 	`github.com/urfave/cli/v2`
@@ -25,7 +26,7 @@ type Application struct {
 
 	// dig内部使用一个非线程安全的map来存储各种依赖关系，容易导致线程安全问题，增加读写锁来确保不会出问题
 	// fatal error: concurrent map writes
-	reentrantLocker sync.Locker
+	reentrantLocker guc.RWLocker
 }
 
 var (
@@ -44,7 +45,7 @@ func New(opts ...option) *Application {
 			beforeExecutors: make([]app.Executor, 0, 0),
 			afterExecutors:  make([]app.Executor, 0, 0),
 
-			reentrantLocker: gox.NewReentrantMutex(),
+			reentrantLocker: guc.NewReentrantRWMutex(),
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
@@ -177,7 +178,7 @@ func (a *Application) Provide(constructor interface{}, opts ...provideOption) (e
 // Provides 提供依赖关系
 func (a *Application) Provides(constructors ...interface{}) (err error) {
 	for _, constructor := range constructors {
-		if err = a.container.Provide(constructor); nil != err {
+		if err = a.Provide(constructor); nil != err {
 			return
 		}
 	}
@@ -187,8 +188,8 @@ func (a *Application) Provides(constructors ...interface{}) (err error) {
 
 // Invoke 获得依赖对象
 func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
-	a.reentrantLocker.Lock()
-	defer a.reentrantLocker.Unlock()
+	a.reentrantLocker.RLock()
+	defer a.reentrantLocker.RUnlock()
 
 	options := defaultInvokeOptions()
 	for _, opt := range opts {
