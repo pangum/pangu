@@ -188,9 +188,6 @@ func (a *Application) Provides(constructors ...interface{}) (err error) {
 
 // Invoke 获得依赖对象
 func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
-	a.reentrantLocker.Lock()
-	defer a.reentrantLocker.Unlock()
-
 	options := defaultInvokeOptions()
 	for _, opt := range opts {
 		opt.applyInvoke(options)
