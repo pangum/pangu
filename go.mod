@@ -7,12 +7,12 @@ require (
 	github.com/mcuadros/go-defaults v1.2.0
 	github.com/pelletier/go-toml v1.2.0
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/storezhang/dig v0.0.1
 	github.com/storezhang/glog v1.0.8
 	github.com/storezhang/gox v1.6.4
 	github.com/storezhang/guc v0.0.2
 	github.com/storezhang/validatorx v1.0.5
 	github.com/urfave/cli/v2 v2.3.0
-	go.uber.org/dig v1.10.0
 	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect
 	golang.org/x/text v0.3.6 // indirect

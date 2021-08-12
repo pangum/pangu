@@ -14,7 +14,7 @@ func newServer() *Server {
 	return &Server{}
 }
 
-func (s *Server) Run() error {
+func (s *Server) Start() error {
 	http.HandleFunc("/", s.indexHandler)
 
 	return http.ListenAndServe(":8000", nil)

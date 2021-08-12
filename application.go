@@ -5,12 +5,12 @@ import (
 	`os`
 	`sync`
 
+	`github.com/storezhang/dig`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/guc`
 	`github.com/storezhang/pangu/app`
 	`github.com/storezhang/pangu/command`
 	`github.com/urfave/cli/v2`
-	`go.uber.org/dig`
 )
 
 // Application 应用程序，可以加入两种种类型的程序

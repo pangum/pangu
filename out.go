@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	`go.uber.org/dig`
+	`github.com/storezhang/dig`
 )
 
 // Out 返回值集合

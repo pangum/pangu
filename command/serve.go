@@ -81,7 +81,7 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 	serveCount := len(s.serves)
 	if 0 != serveCount {
 		s.logger.Info("启动服务开始", field.Int("count", serveCount))
-		if err = s.runServes(ctx); nil != err {
+		if err = s.startServes(ctx); nil != err {
 			return
 		}
 		s.logger.Info("启动服务成功", field.Int("count", serveCount))
@@ -97,7 +97,7 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 	return
 }
 
-func (s *Serve) runServes(_ *app.Context) (err error) {
+func (s *Serve) startServes(_ *app.Context) (err error) {
 	wg := sync.WaitGroup{}
 	worker := len(s.serves)
 	wg.Add(worker)
@@ -110,7 +110,7 @@ func (s *Serve) runServes(_ *app.Context) (err error) {
 			s.logger.Info("启动服务器成功", field.String("name", serve.Name()))
 			// 服务器不允许中途有服务器启动错误，如果有，应该立即关掉容器
 			// 如果调用者想并行执行，可以使用recover机制来阻止程序退出
-			if err = serve.Run(); nil != err {
+			if err = serve.Start(); nil != err {
 				panic(err)
 			}
 		}()

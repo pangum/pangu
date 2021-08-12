@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	`go.uber.org/dig`
+	`github.com/storezhang/dig`
 )
 
 // In 输入值集合
