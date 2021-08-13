@@ -6,7 +6,7 @@ type Serve interface {
 	// Start 运行服务
 	Start() (err error)
 
-	// Name 服务器名称
+	// Name 服务名称
 	Name() string
 
 	// Stop 停止服务

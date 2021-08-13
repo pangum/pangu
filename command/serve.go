@@ -2,7 +2,10 @@ package command
 
 import (
 	`errors`
+	`os`
+	`os/signal`
 	`sync`
+	`syscall`
 
 	`github.com/storezhang/gox/field`
 	`github.com/storezhang/pangu/app`
@@ -17,7 +20,9 @@ type Serve struct {
 	beforeExecutors []app.Executor
 	afterExecutors  []app.Executor
 	serves          []app.Serve
-	logger          app.Logger
+
+	stop   chan os.Signal
+	logger app.Logger
 }
 
 // NewServe 创建服务命令
@@ -32,7 +37,9 @@ func NewServe(logger app.Logger) *Serve {
 		beforeExecutors: make([]app.Executor, 0, 0),
 		afterExecutors:  make([]app.Executor, 0, 0),
 		serves:          make([]app.Serve, 0, 1),
-		logger:          logger,
+
+		stop:   make(chan os.Signal),
+		logger: logger,
 	}
 }
 
@@ -97,7 +104,7 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 	return
 }
 
-func (s *Serve) startServes(_ *app.Context) (err error) {
+func (s *Serve) startServes(ctx *app.Context) (err error) {
 	wg := sync.WaitGroup{}
 	worker := len(s.serves)
 	wg.Add(worker)
@@ -107,7 +114,7 @@ func (s *Serve) startServes(_ *app.Context) (err error) {
 		go func() {
 			defer wg.Done()
 
-			s.logger.Info("启动服务器成功", field.String("name", serve.Name()))
+			s.logger.Info("启动服务成功", field.String("name", serve.Name()))
 			// 服务器不允许中途有服务器启动错误，如果有，应该立即关掉容器
 			// 如果调用者想并行执行，可以使用recover机制来阻止程序退出
 			if err = serve.Start(); nil != err {
@@ -116,6 +123,37 @@ func (s *Serve) startServes(_ *app.Context) (err error) {
 		}()
 	}
 
+	// 注册退出信号处理
+	signal.Notify(s.stop, syscall.SIGTERM, syscall.SIGINT)
+	<-s.stop
+	if err = s.stopServes(ctx); nil != err {
+		panic(err)
+	}
+
+	// 等待所有服务启动
+	wg.Wait()
+
+	return
+}
+
+func (s *Serve) stopServes(_ *app.Context) (err error) {
+	wg := sync.WaitGroup{}
+	worker := len(s.serves)
+	wg.Add(worker)
+
+	for _, serve := range s.serves {
+		serve := serve
+		go func() {
+			defer wg.Done()
+
+			s.logger.Info("停止服务成功", field.String("name", serve.Name()))
+			if err = serve.Stop(); nil != err {
+				s.logger.Info("停止服务出错", field.String("name", serve.Name()))
+			}
+		}()
+	}
+
+	// 等待所有程序退出
 	wg.Wait()
 
 	return
