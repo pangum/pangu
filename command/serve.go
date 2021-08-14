@@ -6,6 +6,7 @@ import (
 	`os/signal`
 	`sync`
 	`syscall`
+	`time`
 
 	`github.com/storezhang/gox/field`
 	`github.com/storezhang/pangu/app`
@@ -115,10 +116,15 @@ func (s *Serve) startServes(ctx *app.Context) (err error) {
 			defer wg.Done()
 
 			s.logger.Info("启动服务成功", field.String("name", serve.Name()))
-			// 服务器不允许中途有服务器启动错误，如果有，应该立即关掉容器
-			// 如果调用者想并行执行，可以使用recover机制来阻止程序退出
-			if err = serve.Start(); nil != err {
-				panic(err)
+			// 记录时间，如果发生错误的时间小于500毫秒，就是执行错误，应该立即退出；如果大于，则只记录日志
+			now := time.Now()
+			if startErr := serve.Start(); nil != startErr {
+				errTime := time.Now()
+				if errTime.Sub(now) > 500*time.Millisecond {
+					s.logger.Info("服务执行错误", field.String("name", serve.Name()), field.Error(startErr))
+				} else {
+					panic(startErr)
+				}
 			}
 		}()
 	}
@@ -147,8 +153,8 @@ func (s *Serve) stopServes(_ *app.Context) (err error) {
 			defer wg.Done()
 
 			s.logger.Info("停止服务成功", field.String("name", serve.Name()))
-			if err = serve.Stop(); nil != err {
-				s.logger.Info("停止服务出错", field.String("name", serve.Name()))
+			if stopErr := serve.Stop(); nil != stopErr {
+				s.logger.Info("停止服务出错", field.String("name", serve.Name()), field.Error(stopErr))
 			}
 		}()
 	}
