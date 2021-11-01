@@ -30,9 +30,9 @@ type Serve struct {
 func NewServe(logger app.Logger) *Serve {
 	return &Serve{
 		Base: Base{
-			name:    "serve",
-			aliases: []string{"s"},
-			usage:   "启动服务",
+			name:    `serve`,
+			aliases: []string{`s`},
+			usage:   `启动服务`,
 		},
 
 		beforeExecutors: make([]app.Executor, 0, 0),
@@ -52,7 +52,7 @@ func (s *Serve) Adds(components ...interface{}) (err error) {
 		case app.Executor:
 			s.AddExecutors(component.(app.Executor))
 		default:
-			err = errors.New("不支持的类型")
+			err = errors.New(`不支持的类型`)
 		}
 
 		if nil != err {
@@ -88,11 +88,11 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 
 	serveCount := len(s.serves)
 	if 0 != serveCount {
-		s.logger.Info("启动服务开始", field.Int("count", serveCount))
+		s.logger.Info(`启动服务开始`, field.Int(`count`, serveCount))
 		if err = s.startServes(ctx); nil != err {
 			return
 		}
-		s.logger.Info("启动服务成功", field.Int("count", serveCount))
+		s.logger.Info(`启动服务成功`, field.Int(`count`, serveCount))
 	}
 
 	// 执行生命周期方法
@@ -111,17 +111,17 @@ func (s *Serve) startServes(ctx *app.Context) (err error) {
 	wg.Add(worker)
 
 	for _, serve := range s.serves {
-		serve := serve
+		_serve := serve
 		go func() {
 			defer wg.Done()
 
-			s.logger.Info("启动服务成功", field.String("name", serve.Name()))
+			s.logger.Info(`启动服务成功`, field.String(`name`, _serve.Name()))
 			// 记录时间，如果发生错误的时间小于500毫秒，就是执行错误，应该立即退出；如果大于，则只记录日志
 			now := time.Now()
-			if startErr := serve.Start(); nil != startErr {
+			if startErr := _serve.Start(); nil != startErr {
 				errTime := time.Now()
 				if errTime.Sub(now) > 500*time.Millisecond {
-					s.logger.Info("服务执行错误", field.String("name", serve.Name()), field.Error(startErr))
+					s.logger.Info(`服务执行错误`, field.String(`name`, _serve.Name()), field.Error(startErr))
 				} else {
 					panic(startErr)
 				}
@@ -148,13 +148,13 @@ func (s *Serve) stopServes(_ *app.Context) (err error) {
 	wg.Add(worker)
 
 	for _, serve := range s.serves {
-		serve := serve
+		_serve := serve
 		go func() {
 			defer wg.Done()
 
-			s.logger.Info("停止服务成功", field.String("name", serve.Name()))
-			if stopErr := serve.Stop(); nil != stopErr {
-				s.logger.Info("停止服务出错", field.String("name", serve.Name()), field.Error(stopErr))
+			s.logger.Info(`停止服务成功`, field.String(`name`, _serve.Name()))
+			if stopErr := _serve.Stop(); nil != stopErr {
+				s.logger.Info(`停止服务出错`, field.String(`name`, _serve.Name()), field.Error(stopErr))
 			}
 		}()
 	}
