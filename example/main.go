@@ -1,8 +1,8 @@
 package main_test
 
 import (
-	`github.com/storezhang/pangu`
-	_ `github.com/storezhang/pangu/example/plugin`
+	`github.com/pangum/pangu`
+	_ `github.com/pangum/pangu/example/plugin`
 )
 
 func main() {

@@ -1,17 +1,17 @@
 package pangu
 
 import (
-	`github.com/storezhang/glog`
+	`github.com/storezhang/simaqian`
 )
 
 var _ option = (*optionLogger)(nil)
 
 type optionLogger struct {
-	logger glog.Logger
+	logger simaqian.Logger
 }
 
 // GLogger 配置日志
-func GLogger(logger glog.Logger) *optionLogger {
+func GLogger(logger simaqian.Logger) *optionLogger {
 	return &optionLogger{
 		logger: logger,
 	}

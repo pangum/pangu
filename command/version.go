@@ -4,8 +4,8 @@ import (
 	`fmt`
 	`strings`
 
-	`github.com/storezhang/pangu/app`
-	`github.com/storezhang/pangu/info`
+	`github.com/pangum/pangu/app`
+	`github.com/pangum/pangu/info`
 )
 
 var _ app.Command = (*Version)(nil)

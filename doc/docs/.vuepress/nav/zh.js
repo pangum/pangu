@@ -20,7 +20,7 @@ module.exports = [{
         text: '官方插件',
         items: [{
             text: '数据库',
-            link: 'https://github.com/storezhang/pangu-database'
+            link: 'https://github.com/pangum/pangu-database'
         }, {
             text: '统一对象存储',
             link: 'https://github.com/storezhang/uoa'

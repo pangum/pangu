@@ -19,12 +19,12 @@ volumes:
 commands:
   - export ldflags="-s"
   - # 注入版本信息
-  - ldflags="$ldflags -X 'github.com/storezhang/pangu.AppName=Archtech服务器'"
-  - ldflags="$ldflags -X 'github.com/storezhang/pangu.AppVersion=${DRONE_TAG=$DRONE_COMMIT_BRANCH:latest}'"
-  - ldflags="$ldflags -X 'github.com/storezhang/pangu.BuildVersion=$$DRONE_BUILD_NUMBER'"
-  - ldflags="$ldflags -X 'github.com/storezhang/pangu.BuildTime=$(TZ="Asia/Shanghai" date --date "@$$DRONE_BUILD_STARTED" +"%F %T")'"
-  - ldflags="$ldflags -X 'github.com/storezhang/pangu.ScmRevision=$$DRONE_COMMIT_SHA'"
-  - ldflags="$ldflags -X 'github.com/storezhang/pangu.ScmBranch=$$DRONE_COMMIT_BRANCH'"
+  - ldflags="$ldflags -X 'github.com/pangum/pangu.AppName=Archtech服务器'"
+  - ldflags="$ldflags -X 'github.com/pangum/pangu.AppVersion=${DRONE_TAG=$DRONE_COMMIT_BRANCH:latest}'"
+  - ldflags="$ldflags -X 'github.com/pangum/pangu.BuildVersion=$$DRONE_BUILD_NUMBER'"
+  - ldflags="$ldflags -X 'github.com/pangum/pangu.BuildTime=$(TZ="Asia/Shanghai" date --date "@$$DRONE_BUILD_STARTED" +"%F %T")'"
+  - ldflags="$ldflags -X 'github.com/pangum/pangu.ScmRevision=$$DRONE_COMMIT_SHA'"
+  - ldflags="$ldflags -X 'github.com/pangum/pangu.ScmBranch=$$DRONE_COMMIT_BRANCH'"
   - # 编译
   - CGO_ENABLED=0 GOOS=linux go build -ldflags "$ldflags" -o archtech
 ```
@@ -58,5 +58,5 @@ TODO
 不建议在非CI/CD系统中注入版本信息，因为那太耗时了（费力不讨好）
 
 ``` shell
-go build -ldflags "-X 'github.com/storezhang/pangu.AppName=Archtech服务器" -o archtech
+go build -ldflags "-X 'github.com/pangum/pangu.AppName=Archtech服务器" -o archtech
 ```

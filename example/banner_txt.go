@@ -3,7 +3,7 @@ package main_test
 import (
 	_ `embed`
 
-	`github.com/storezhang/pangu`
+	`github.com/pangum/pangu`
 )
 
 //go:embed banner/txt.txt

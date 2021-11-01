@@ -1,7 +1,7 @@
 package command
 
 import (
-	`github.com/storezhang/pangu/app`
+	`github.com/pangum/pangu/app`
 )
 
 // Base 命令基类

@@ -5,11 +5,11 @@ import (
 	`os`
 	`sync`
 
+	`github.com/pangum/pangu/app`
+	`github.com/pangum/pangu/command`
 	`github.com/storezhang/dig`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/guc`
-	`github.com/storezhang/pangu/app`
-	`github.com/storezhang/pangu/command`
 	`github.com/urfave/cli/v2`
 )
 

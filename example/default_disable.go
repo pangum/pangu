@@ -1,7 +1,7 @@
 package main_test
 
 import (
-	`github.com/storezhang/pangu`
+	`github.com/pangum/pangu`
 )
 
 func defaultDisable() {

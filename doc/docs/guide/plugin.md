@@ -20,7 +20,7 @@ Http客户端是所有开发者经常使用的功能，所以选择内置在于`
 
 ## 日志
 
-日志是绝大部分应用都需要支持的功能，所以`盘古`选择接入一个通用的日志库来解决此问题，[Glog](https://github.com/storezhang/glog)，该日志库支持以下几种日志库
+日志是绝大部分应用都需要支持的功能，所以`盘古`选择接入一个通用的日志库来解决此问题，[Glog](https://github.com/storezhang/simaqian)，该日志库支持以下几种日志库
 
 - Zap Log
 - Logrus

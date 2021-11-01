@@ -3,9 +3,9 @@ package command
 import (
 	`fmt`
 
-	`github.com/storezhang/pangu/app`
-	`github.com/storezhang/pangu/command`
-	`github.com/storezhang/pangu/example/plugin`
+	`github.com/pangum/pangu/app`
+	`github.com/pangum/pangu/command`
+	`github.com/pangum/pangu/example/plugin`
 )
 
 var _ app.Command = (*Test)(nil)

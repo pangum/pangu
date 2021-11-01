@@ -3,8 +3,8 @@ package pangu
 import (
 	_ `embed`
 
-	`github.com/storezhang/glog`
-	`github.com/storezhang/pangu/app`
+	`github.com/pangum/pangu/app`
+	`github.com/storezhang/simaqian`
 )
 
 type options struct {
@@ -68,6 +68,6 @@ func defaultOptions() *options {
 
 		isDefault:  true,
 		isValidate: true,
-		logger:     glog.Must(glog.Zap()),
+		logger:     simaqian.Must(simaqian.Zap()),
 	}
 }

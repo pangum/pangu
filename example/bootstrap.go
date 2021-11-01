@@ -4,10 +4,10 @@ import (
 	`embed`
 	`io/fs`
 
-	`github.com/storezhang/pangu`
-	`github.com/storezhang/pangu/example/command`
-	`github.com/storezhang/pangu/example/conf`
-	`github.com/storezhang/pangu/example/rest`
+	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/command`
+	`github.com/pangum/pangu/example/conf`
+	`github.com/pangum/pangu/example/rest`
 )
 
 //go:embed db/migration

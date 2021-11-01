@@ -1,7 +1,7 @@
 package app
 
 import (
-	`github.com/storezhang/glog`
+	`github.com/storezhang/simaqian`
 )
 
-type Logger glog.Logger
+type Logger simaqian.Logger

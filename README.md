@@ -22,8 +22,8 @@
 
 目前使用者比较少，只集中在官方插件中，包括
 
-- [数据库](https://github.com/storezhang/pangu)
-- [Http客户端](https://github.com/storezhang/pangu-http)
+- [数据库](https://github.com/pangum/pangu)
+- [Http客户端](https://github.com/pangum/pangu-http)
 - [统一对象存储接入](https://github.com/storezhang/uoa)
 - [统一通知接入](https://github.com/storezhang/una)
 - [统一直播接入](https://github.com/storezhang/ula)

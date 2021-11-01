@@ -1,7 +1,7 @@
 package arg
 
 import (
-	`github.com/storezhang/pangu/app`
+	`github.com/pangum/pangu/app`
 	`github.com/urfave/cli/v2`
 )
 
