@@ -22,11 +22,14 @@
 
 目前使用者比较少，只集中在官方插件中，包括
 
-- [数据库](https://github.com/pangum/pangu)
-- [Http客户端](https://github.com/pangum/pangu-http)
-- [统一对象存储接入](https://github.com/storezhang/uoa)
-- [统一通知接入](https://github.com/storezhang/una)
-- [统一直播接入](https://github.com/storezhang/ula)
+- [Web开发](https://github.com/pangum/web)
+- [数据库](https://github.com/pangum/database)
+- [日志库](https://github.com/pangum/logging)
+- [Http客户端](https://github.com/pangum/http)
+- [MQTT客户端](https://github.com/pangum/mqtt)
+- [gRPC](https://github.com/pangum/grpc)
+- [Redis客户端](https://github.com/pangum/redis)
+- [计划任务](https://github.com/pangum/schedule)
 
 ## 其它项目推荐
 
