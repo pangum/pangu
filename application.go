@@ -167,12 +167,19 @@ func (a *Application) Provide(constructor interface{}, opts ...provideOption) (e
 	a.reentrantLocker.Lock()
 	defer a.reentrantLocker.Unlock()
 
-	options := defaultProvideOptions()
+	_options := defaultProvideOptions()
 	for _, opt := range opts {
-		opt.applyProvide(options)
+		opt.applyProvide(_options)
 	}
 
 	return a.container.Provide(constructor)
+}
+
+// Must 提供依赖关系，如果依赖关系有错，退出
+func (a *Application) Must(constructor interface{}, opts ...provideOption) {
+	if err := a.Provide(constructor, opts...); nil != err {
+		panic(err)
+	}
 }
 
 // Provides 提供依赖关系
@@ -186,11 +193,20 @@ func (a *Application) Provides(constructors ...interface{}) (err error) {
 	return
 }
 
+// Musts 提供依赖关系，如果依赖关系有错，退出
+func (a *Application) Musts(constructors ...interface{}) {
+	for _, constructor := range constructors {
+		if err := a.Provide(constructor); nil != err {
+			panic(err)
+		}
+	}
+}
+
 // Invoke 获得依赖对象
 func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
-	options := defaultInvokeOptions()
+	_options := defaultInvokeOptions()
 	for _, opt := range opts {
-		opt.applyInvoke(options)
+		opt.applyInvoke(_options)
 	}
 
 	return a.container.Invoke(function)
