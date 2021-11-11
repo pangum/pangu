@@ -8,11 +8,10 @@ import (
 	`fmt`
 	`io/ioutil`
 	`path/filepath`
-	`reflect`
 	`strings`
 	`sync`
 
-	`github.com/mcuadros/go-defaults`
+	`github.com/creasty/defaults`
 	`github.com/pelletier/go-toml`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/validatorx`
@@ -39,17 +38,11 @@ func (c *Config) Load(config interface{}, opts ...option) (err error) {
 
 	// 参数不允许重复定义，只能执行一次
 	c.once.Do(func() {
-		c.path = flag.String("conf", "./conf/application.yaml", "指定配置文件路径")
-		flag.StringVar(c.path, "c", *c.path, "指定配置文件路径")
+		c.path = flag.String(`conf`, `./conf/application.yaml`, `指定配置文件路径`)
+		flag.StringVar(c.path, `c`, *c.path, `指定配置文件路径`)
 		flag.Parse()
 	})
-
-	// 区分指针类型和非指针类型
-	if reflect.ValueOf(config).Kind() == reflect.Ptr {
-		err = c.loadConfig(config)
-	} else {
-		err = c.loadConfig(&config)
-	}
+	err = c.loadConfig(config)
 
 	return
 }
@@ -61,7 +54,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	}
 
 	// 可以处理后续动态加载
-	if "" == c.format {
+	if `` == c.format {
 		c.format = strings.ToLower(filepath.Ext(finalPath))
 	}
 	if 0 == len(c.data) {
@@ -70,27 +63,30 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		}
 	}
 
-	// 处理默认值
-	if c.application.options.isDefault {
-		defaults.SetDefaults(config)
-	}
-
 	switch c.format {
-	case ".yml":
+	case `.yml`:
 		fallthrough
-	case ".yaml":
+	case `.yaml`:
 		err = yaml.Unmarshal(c.data, config)
-	case ".json":
+	case `.json`:
 		err = json.Unmarshal(c.data, config)
-	case ".toml":
+	case `.toml`:
 		err = toml.Unmarshal(c.data, config)
-	case ".xml":
+	case `.xml`:
 		err = xml.Unmarshal(c.data, config)
 	default:
 		err = yaml.Unmarshal(c.data, config)
 	}
 	if nil != err {
 		return
+	}
+
+	// 处理默认值，此处逻辑不能往前，原因
+	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
+	if c.application.options.isDefault {
+		if err = defaults.Set(config); nil != err {
+			return
+		}
 	}
 
 	// 验证数据
@@ -103,51 +99,51 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 func (c *Config) findConfigFilepath(conf string) (path string, err error) {
 	path = conf
-	if "" != path && gox.IsFileExist(path) {
+	if `` != path && gox.IsFileExist(path) {
 		return
 	}
 
 	var notExists bool
-	if path, notExists = c.findConfigFilepathWithExt("./application"); !notExists {
+	if path, notExists = c.findConfigFilepathWithExt(`./application`); !notExists {
 		return
 	}
-	if path, notExists = c.findConfigFilepathWithExt("./conf/application"); !notExists {
+	if path, notExists = c.findConfigFilepathWithExt(`./conf/application`); !notExists {
 		return
 	}
-	if path, notExists = c.findConfigFilepathWithExt("./app"); !notExists {
+	if path, notExists = c.findConfigFilepathWithExt(`./app`); !notExists {
 		return
 	}
-	if path, notExists = c.findConfigFilepathWithExt("./conf/app"); !notExists {
+	if path, notExists = c.findConfigFilepathWithExt(`./conf/app`); !notExists {
 		return
 	}
-	err = errors.New("找不到配置文件")
+	err = errors.New(`找不到配置文件`)
 
 	return
 }
 
 // 之所以命名为notExists，是为了少对notExists赋值
 func (c *Config) findConfigFilepathWithExt(filename string) (path string, notExists bool) {
-	path = fmt.Sprintf("%s.%s", filename, "yaml")
+	path = fmt.Sprintf(`%s.%s`, filename, `yaml`)
 	if gox.IsFileExist(path) {
 		return
 	}
 
-	path = fmt.Sprintf("%s.%s", filename, "yml")
+	path = fmt.Sprintf(`%s.%s`, filename, `yml`)
 	if gox.IsFileExist(path) {
 		return
 	}
 
-	path = fmt.Sprintf("%s.%s", filename, "toml")
+	path = fmt.Sprintf(`%s.%s`, filename, `toml`)
 	if gox.IsFileExist(path) {
 		return
 	}
 
-	path = fmt.Sprintf("%s.%s", filename, "json")
+	path = fmt.Sprintf(`%s.%s`, filename, `json`)
 	if gox.IsFileExist(path) {
 		return
 	}
 
-	path = fmt.Sprintf("%s.%s", filename, "xml")
+	path = fmt.Sprintf(`%s.%s`, filename, `xml`)
 	if gox.IsFileExist(path) {
 		return
 	}
