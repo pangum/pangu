@@ -14,24 +14,30 @@ type options struct {
 	description string
 	// 使用方式
 	usage string
+
 	// 帮助信息模板
 	helpAppTemplate string
 	// 命令帮助信息模板
 	helpCommandTemplate string
 	// 子命令帮助信息模板
 	helpSubcommandTemplate string
+
 	// 标志
 	banner banner
 	// 版权
 	copyright string
 	// 作者
 	authors []Author
+
 	// 是否处理默认值
-	isDefault bool
+	_default bool
 	// 是否验证数据
-	isValidate bool
+	validate bool
+
 	// 日志
 	logger app.Logger
+	// 标签
+	tag tag
 }
 
 //go:embed asset/template/help_app.tmpl
@@ -66,8 +72,12 @@ func defaultOptions() *options {
 			bannerType: BannerTypeAscii,
 		},
 
-		isDefault:  true,
-		isValidate: true,
-		logger:     simaqian.Must(simaqian.Zap()),
+		_default: true,
+		validate: true,
+
+		logger: simaqian.Must(simaqian.Zap()),
+		tag: tag{
+			_default: `default`,
+		},
 	}
 }

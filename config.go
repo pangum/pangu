@@ -83,14 +83,14 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 	// 处理默认值，此处逻辑不能往前，原因
 	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
-	if c.application.options.isDefault {
-		if err = god.Set(config); nil != err {
+	if c.application.options._default {
+		if err = god.Set(config, god.Tag(c.application.options.tag._default)); nil != err {
 			return
 		}
 	}
 
 	// 验证数据
-	if c.application.options.isValidate {
+	if c.application.options.validate {
 		err = validatorx.Struct(config)
 	}
 

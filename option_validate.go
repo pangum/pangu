@@ -14,5 +14,5 @@ func DisableValidate() *optionValidate {
 }
 
 func (b *optionValidate) apply(options *options) {
-	options.isValidate = b.isValidate
+	options.validate = b.isValidate
 }
