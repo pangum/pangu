@@ -11,8 +11,8 @@ import (
 	`strings`
 	`sync`
 
-	`github.com/creasty/defaults`
 	`github.com/pelletier/go-toml`
+	`github.com/storezhang/god`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/validatorx`
 	`gopkg.in/yaml.v3`
@@ -84,7 +84,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	// 处理默认值，此处逻辑不能往前，原因
 	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
 	if c.application.options.isDefault {
-		if err = defaults.Set(config); nil != err {
+		if err = god.Set(config); nil != err {
 			return
 		}
 	}
