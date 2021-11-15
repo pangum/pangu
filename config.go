@@ -110,10 +110,10 @@ func (c *Config) findConfigFilepath(conf string) (path string, err error) {
 	if path, notExists = c.findConfigFilepathWithExt(`./conf/application`); !notExists {
 		return
 	}
-	if path, notExists = c.findConfigFilepathWithExt(`./app`); !notExists {
+	if path, notExists = c.findConfigFilepathWithExt(`./name`); !notExists {
 		return
 	}
-	if path, notExists = c.findConfigFilepathWithExt(`./conf/app`); !notExists {
+	if path, notExists = c.findConfigFilepathWithExt(`./conf/name`); !notExists {
 		return
 	}
 	err = errors.New(`找不到配置文件`)

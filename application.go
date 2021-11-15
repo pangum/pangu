@@ -271,13 +271,13 @@ func (a *Application) setupStartup() error {
 	cli.CommandHelpTemplate = a.options.helpCommandTemplate
 	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
 	cli.VersionPrinter = func(ctx *cli.Context) {
-		_ = a.Invoke(func(version *command.Version) error {
-			return version.Run(app.NewContext(ctx))
+		_ = a.Invoke(func(info *command.Info) error {
+			return info.Run(app.NewContext(ctx))
 		})
 	}
 
 	return a.Invoke(func(startup *cli.App) {
-		startup.Name = a.options.name
+		startup.Name = Name
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
 		startup.Copyright = a.options.copyright
@@ -295,12 +295,12 @@ func (a *Application) addInternalCommands() error {
 	type commandsIn struct {
 		In
 
-		Serve   *command.Serve
-		Version *command.Version
+		Serve *command.Serve
+		Info  *command.Info
 	}
 
 	return a.Invoke(func(in commandsIn) error {
-		return a.AddCommands(in.Serve, in.Version)
+		return a.AddCommands(in.Serve, in.Info)
 	})
 }
 
@@ -320,10 +320,10 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(gox.NewSnowflake); nil != err {
 		return
 	}
-	if err = a.Provides(command.NewServe, command.NewVersion); nil != err {
+	if err = a.Provides(command.NewServe, command.NewInfo); nil != err {
 		return
 	}
-	if err = a.Provides(appName, appVersion, buildVersion, buildTime, scmRevision, scmBranch, goVersion); nil != err {
+	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
 		return
 	}
 	if err = a.Provides(newApp, app.NewDefaultService); nil != err {

@@ -9,7 +9,7 @@ func newApp() (startup *cli.App) {
 	startup.EnableBashCompletion = true
 	startup.UseShortOptionHandling = true
 	// 定制版本显示，版本号不可改变
-	startup.Version = AppVersion
+	startup.Version = Version
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
 		Aliases: []string{"v"},

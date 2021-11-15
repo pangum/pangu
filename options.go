@@ -8,8 +8,6 @@ import (
 )
 
 type options struct {
-	// 应用名称
-	name string
 	// 应用描述
 	description string
 	// 使用方式
