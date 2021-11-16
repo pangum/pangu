@@ -7,6 +7,7 @@ require (
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pelletier/go-toml v1.2.0
+	github.com/poloxue/modv v0.1.0 // indirect
 	github.com/storezhang/dig v0.0.1
 	github.com/storezhang/gox v1.8.1
 	github.com/storezhang/guc v0.0.2
