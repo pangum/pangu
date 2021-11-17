@@ -11,6 +11,7 @@ import (
 	`strings`
 	`sync`
 
+	`github.com/drone/envsubst`
 	`github.com/pelletier/go-toml`
 	`github.com/storezhang/god`
 	`github.com/storezhang/gox`
@@ -62,7 +63,9 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 			return
 		}
 	}
-
+	if err = c.eval(); nil != err {
+		return
+	}
 	switch c.format {
 	case `.yml`:
 		fallthrough
@@ -93,6 +96,17 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	if c.application.options.validate {
 		err = validatorx.Struct(config)
 	}
+
+	return
+}
+
+// 增加环境变量配置处理
+func (c *Config) eval() (err error) {
+	rawConf, err := envsubst.EvalEnv(string(c.data))
+	if nil != err {
+		return
+	}
+	c.data = []byte(rawConf)
 
 	return
 }

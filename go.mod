@@ -3,6 +3,7 @@ module github.com/pangum/pangu
 go 1.16
 
 require (
+ 	github.com/drone/envsubst v1.0.3
 	github.com/common-nighthawk/go-figure v0.0.0-20200609044655-c4b36f998cf2
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pelletier/go-toml v1.2.0

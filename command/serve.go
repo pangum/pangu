@@ -8,8 +8,9 @@ import (
 	`syscall`
 	`time`
 
-	`github.com/pangum/pangu/app`
 	`github.com/storezhang/gox/field`
+
+	`github.com/pangum/pangu/app`
 )
 
 var _ app.Command = (*Serve)(nil)
