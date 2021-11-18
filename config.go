@@ -63,9 +63,11 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 			return
 		}
 	}
+
 	if err = c.eval(); nil != err {
 		return
 	}
+
 	switch c.format {
 	case `.yml`:
 		fallthrough
@@ -102,11 +104,11 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 // 增加环境变量配置处理
 func (c *Config) eval() (err error) {
-	rawConf, err := envsubst.EvalEnv(string(c.data))
-	if nil != err {
+	var raw string
+	if raw, err = envsubst.EvalEnv(string(c.data)); nil != err {
 		return
 	}
-	c.data = []byte(rawConf)
+	c.data = []byte(raw)
 
 	return
 }
