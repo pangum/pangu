@@ -64,8 +64,9 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		}
 	}
 
-	// 处理环境变量
-	if err = c.eval(); nil != err {
+	// 处理环境变量，不能修改原始数据，复制一份原始数据做修改
+	var _data string
+	if _data, err = envsubst.EvalEnv(string(c.data)); nil != err {
 		return
 	}
 
@@ -73,15 +74,15 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	case `.yml`:
 		fallthrough
 	case `.yaml`:
-		err = yaml.Unmarshal(c.data, config)
+		err = yaml.Unmarshal([]byte(_data), config)
 	case `.json`:
-		err = json.Unmarshal(c.data, config)
+		err = json.Unmarshal([]byte(_data), config)
 	case `.toml`:
-		err = toml.Unmarshal(c.data, config)
+		err = toml.Unmarshal([]byte(_data), config)
 	case `.xml`:
-		err = xml.Unmarshal(c.data, config)
+		err = xml.Unmarshal([]byte(_data), config)
 	default:
-		err = yaml.Unmarshal(c.data, config)
+		err = yaml.Unmarshal([]byte(_data), config)
 	}
 	if nil != err {
 		return
@@ -99,18 +100,6 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	if c.application.options.validate {
 		err = validatorx.Struct(config)
 	}
-
-	return
-}
-
-// 环境变量配置处理
-// 后续增加表达式处理
-func (c *Config) eval() (err error) {
-	var raw string
-	if raw, err = envsubst.EvalEnv(string(c.data)); nil != err {
-		return
-	}
-	c.data = []byte(raw)
 
 	return
 }
