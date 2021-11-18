@@ -11,6 +11,7 @@ import (
 	`strings`
 	`sync`
 
+	`github.com/drone/envsubst`
 	`github.com/pelletier/go-toml`
 	`github.com/storezhang/gox`
 	`github.com/storezhang/mengpo`
@@ -63,6 +64,11 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		}
 	}
 
+	// 处理环境变量
+	if err = c.eval(); nil != err {
+		return
+	}
+
 	switch c.format {
 	case `.yml`:
 		fallthrough
@@ -93,6 +99,18 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	if c.application.options.validate {
 		err = validatorx.Struct(config)
 	}
+
+	return
+}
+
+// 环境变量配置处理
+// 后续增加表达式处理
+func (c *Config) eval() (err error) {
+	var raw string
+	if raw, err = envsubst.EvalEnv(string(c.data)); nil != err {
+		return
+	}
+	c.data = []byte(raw)
 
 	return
 }
