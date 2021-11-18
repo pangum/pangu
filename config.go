@@ -64,6 +64,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		}
 	}
 
+	// 处理环境变量
 	if err = c.eval(); nil != err {
 		return
 	}
@@ -102,7 +103,8 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	return
 }
 
-// 增加环境变量配置处理
+// 环境变量配置处理
+// 后续增加表达式处理
 func (c *Config) eval() (err error) {
 	var raw string
 	if raw, err = envsubst.EvalEnv(string(c.data)); nil != err {
