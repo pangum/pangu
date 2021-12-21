@@ -13,6 +13,6 @@ func Authors(authors ...Author) *optionAuthors {
 	}
 }
 
-func (b *optionAuthors) apply(options *options) {
-	options.authors = b.authors
+func (a *optionAuthors) apply(options *options) {
+	options.authors = a.authors
 }

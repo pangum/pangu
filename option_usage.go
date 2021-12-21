@@ -13,6 +13,6 @@ func Usage(usage string) *optionUsage {
 	}
 }
 
-func (b *optionUsage) apply(options *options) {
-	options.usage = b.usage
+func (u *optionUsage) apply(options *options) {
+	options.usage = u.usage
 }

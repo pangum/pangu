@@ -13,6 +13,6 @@ func SubcommandHelpTemplate(template string) *optionSubcommandHelpTemplate {
 	}
 }
 
-func (b *optionSubcommandHelpTemplate) apply(options *options) {
-	options.helpSubcommandTemplate = b.template
+func (sht *optionSubcommandHelpTemplate) apply(options *options) {
+	options.helpSubcommandTemplate = sht.template
 }

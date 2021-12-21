@@ -13,6 +13,6 @@ func Copyright(copyright string) *optionCopyright {
 	}
 }
 
-func (b *optionCopyright) apply(options *options) {
-	options.copyright = b.copyright
+func (c *optionCopyright) apply(options *options) {
+	options.copyright = c.copyright
 }

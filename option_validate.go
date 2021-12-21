@@ -13,6 +13,6 @@ func DisableValidate() *optionValidate {
 	}
 }
 
-func (b *optionValidate) apply(options *options) {
-	options.validate = b.validate
+func (v *optionValidate) apply(options *options) {
+	options.validate = v.validate
 }

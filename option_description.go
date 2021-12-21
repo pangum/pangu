@@ -13,6 +13,6 @@ func Description(description string) *optionDescription {
 	}
 }
 
-func (b *optionDescription) apply(options *options) {
-	options.description = b.description
+func (d *optionDescription) apply(options *options) {
+	options.description = d.description
 }

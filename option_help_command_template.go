@@ -13,6 +13,6 @@ func CommandHelpTemplate(template string) *optionCommandHelpTemplate {
 	}
 }
 
-func (b *optionCommandHelpTemplate) apply(options *options) {
-	options.helpCommandTemplate = b.template
+func (cht *optionCommandHelpTemplate) apply(options *options) {
+	options.helpCommandTemplate = cht.template
 }

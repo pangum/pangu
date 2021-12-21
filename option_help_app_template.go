@@ -13,6 +13,6 @@ func AppHelpTemplate(template string) *optionAppHelpTemplate {
 	}
 }
 
-func (b *optionAppHelpTemplate) apply(options *options) {
-	options.helpAppTemplate = b.template
+func (aht *optionAppHelpTemplate) apply(options *options) {
+	options.helpAppTemplate = aht.template
 }
