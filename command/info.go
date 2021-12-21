@@ -14,18 +14,18 @@ var _ app.Command = (*Info)(nil)
 type Info struct {
 	Base
 
-	appName    info.App
-	appVersion info.Version
-	build      info.Build
-	timestamp  info.Timestamp
-	revision   info.Revision
-	branch     info.Branch
-	golang     info.Golang
+	app       info.App
+	version   info.Version
+	build     info.Build
+	timestamp info.Timestamp
+	revision  info.Revision
+	branch    info.Branch
+	golang    info.Golang
 }
 
 // NewInfo 创建版本信息命令
 func NewInfo(
-	appName info.App, appVersion info.Version,
+	app info.App, version info.Version,
 	build info.Build, timestamp info.Timestamp,
 	revision info.Revision, branch info.Branch,
 	golang info.Golang,
@@ -37,21 +37,21 @@ func NewInfo(
 			usage:   "打印应用程序信息",
 		},
 
-		appName:    appName,
-		appVersion: appVersion,
-		build:      build,
-		timestamp:  timestamp,
-		revision:   revision,
-		branch:     branch,
-		golang:     golang,
+		app:       app,
+		version:   version,
+		build:     build,
+		timestamp: timestamp,
+		revision:  revision,
+		branch:    branch,
+		golang:    golang,
 	}
 }
 
 func (v *Info) Run(_ *app.Context) (err error) {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat("-", 120)))
-	sb.WriteString(fmt.Sprintf("App    name: %s\n", v.appName))
-	sb.WriteString(fmt.Sprintf("App    Info: %s\n", v.appVersion))
+	sb.WriteString(fmt.Sprintf("App: %s\n", v.app))
+	sb.WriteString(fmt.Sprintf("Version: %s\n", v.version))
 	sb.WriteString(fmt.Sprintf("Build: %s\n", v.build))
 	sb.WriteString(fmt.Sprintf("Timestamp: %s\n", v.timestamp))
 	sb.WriteString(fmt.Sprintf("Revision: %s\n", v.revision))

@@ -119,13 +119,13 @@ func (a *Application) AddServes(serves ...app.Serve) error {
 func (a *Application) AddCommands(commands ...app.Command) error {
 	return a.Invoke(func(startup *cli.App) {
 		for _, cmd := range commands {
-			cmd := cmd
+			_cmd := cmd
 			startup.Commands = append(startup.Commands, &cli.Command{
-				Name:    cmd.Name(),
-				Aliases: cmd.Aliases(),
-				Usage:   cmd.Usage(),
+				Name:    _cmd.Name(),
+				Aliases: _cmd.Aliases(),
+				Usage:   _cmd.Usage(),
 				Action: func(ctx *cli.Context) error {
-					return cmd.Run(app.NewContext(ctx))
+					return _cmd.Run(app.NewContext(ctx))
 				},
 			})
 		}
