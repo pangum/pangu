@@ -36,6 +36,8 @@ type options struct {
 	logger app.Logger
 	// 标签
 	tag tag
+	// 环境变量
+	envs []*env
 }
 
 //go:embed asset/template/help_app.tmpl

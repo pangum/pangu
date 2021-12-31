@@ -60,6 +60,9 @@ func New(opts ...option) *Application {
 		// AddExecutors
 		// AddArgs
 		// AddFlags
+		if err := application.addEnvs(); nil != err {
+			panic(err)
+		}
 		if err := application.addProvides(); nil != err {
 			panic(err)
 		}
@@ -289,6 +292,20 @@ func (a *Application) setupStartup() error {
 			startup.Authors = authors
 		}
 	})
+}
+
+func (a *Application) addEnvs() (err error) {
+	if 0 >= len(a.options.envs) {
+		return
+	}
+
+	for _, _env := range a.options.envs {
+		if err = os.Setenv(_env.key, _env.value); nil != err {
+			return
+		}
+	}
+
+	return
 }
 
 func (a *Application) addInternalCommands() error {
