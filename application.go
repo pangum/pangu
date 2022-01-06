@@ -9,7 +9,6 @@ import (
 	`github.com/pangum/pangu/command`
 	`github.com/storezhang/dig`
 	`github.com/storezhang/gox`
-	`github.com/storezhang/guc`
 	`github.com/urfave/cli/v2`
 )
 
@@ -23,10 +22,6 @@ type Application struct {
 
 	beforeExecutors []app.Executor
 	afterExecutors  []app.Executor
-
-	// dig内部使用一个非线程安全的map来存储各种依赖关系，容易导致线程安全问题，增加读写锁来确保不会出问题
-	// fatal error: concurrent map writes
-	reentrantLocker sync.Locker
 }
 
 var (
@@ -44,8 +39,6 @@ func New(opts ...option) *Application {
 
 			beforeExecutors: make([]app.Executor, 0, 0),
 			afterExecutors:  make([]app.Executor, 0, 0),
-
-			reentrantLocker: guc.NewReentrantMutex(),
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
@@ -167,9 +160,6 @@ func (a *Application) AddExecutor(executors ...app.Executor) (err error) {
 
 // Provide 提供依赖关系
 func (a *Application) Provide(constructor interface{}, opts ...provideOption) (err error) {
-	a.reentrantLocker.Lock()
-	defer a.reentrantLocker.Unlock()
-
 	_options := defaultProvideOptions()
 	for _, opt := range opts {
 		opt.applyProvide(_options)

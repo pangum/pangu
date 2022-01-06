@@ -11,7 +11,7 @@ require (
 	github.com/storezhang/dig v0.0.1
 	github.com/storezhang/gox v1.8.1
 	github.com/storezhang/guc v0.0.2
-	github.com/storezhang/mengpo v0.0.6
+	github.com/storezhang/mengpo v0.1.0
 	github.com/storezhang/simaqian v0.0.6
 	github.com/storezhang/validatorx v1.0.9
 	github.com/urfave/cli/v2 v2.3.0
