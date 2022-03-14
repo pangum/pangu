@@ -20,11 +20,9 @@ import (
 
 // Config 描述全局原始配置参数
 type Config struct {
-	path *string
+	path string
 	// 原始数据
 	data []byte
-	// 格式
-	ext string
 	// 选项
 	options *options
 	// 单例模式
@@ -38,8 +36,8 @@ func (c *Config) Load(config interface{}, opts ...option) (err error) {
 
 	// 参数不允许重复定义，只能执行一次
 	c.once.Do(func() {
-		c.path = flag.String(configLongName, configDefault, configUsage)
-		flag.StringVar(c.path, configShortName, *c.path, configUsage)
+		c.path = *flag.String(configLongName, configDefault, configUsage)
+		flag.StringVar(&c.path, configShortName, c.path, configUsage)
 		flag.Parse()
 	})
 	err = c.loadConfig(config)
@@ -48,18 +46,17 @@ func (c *Config) Load(config interface{}, opts ...option) (err error) {
 }
 
 func (c *Config) loadConfig(config interface{}) (err error) {
-	if path, existErr := c.configFilepath(*c.path); nil != err {
+	if path, existErr := c.configFilepath(c.path); nil != err {
 		err = existErr
 	} else if c.loadable() {
-		// 去掉最开关的点号
-		c.ext = strings.ToLower(filepath.Ext(path))
+		c.path = path
 		c.data, err = ioutil.ReadFile(path)
 	}
 	if nil != err {
 		return
 	}
 
-	switch c.ext {
+	switch strings.ToLower(filepath.Ext(c.path)) {
 	case ymlExt:
 		fallthrough
 	case yamlExt:
@@ -108,5 +105,5 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 }
 
 func (c *Config) loadable() bool {
-	return `` == c.ext || nil == c.data
+	return `` == c.path || nil == c.data
 }
