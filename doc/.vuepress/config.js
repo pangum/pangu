@@ -1,9 +1,9 @@
 module.exports = ctx => ({
-    dest: './dist',
+    dest: 'dist',
     locales: {
         '/': {
             lang: 'zh-CN',
-            title: '我的在线作图网',
+            title: '盘古',
             description: 'Golang应用快速开发框架'
         }
     },
@@ -25,9 +25,10 @@ module.exports = ctx => ({
     },
     theme: 'reco',
     themeConfig: {
-        repo: 'storezhang/pangu',
+        logo: '/logo.png',
+        repo: 'pangum/pangu',
+        docsDir: 'doc',
         editLinks: true,
-        docsDir: 'doc/docs',
         record: '蜀ICP备2021013439号-1',
         recordLink: 'https://beian.miit.gov.cn/',
         // cyberSecurityRecord: '公安部备案文案',
@@ -60,6 +61,19 @@ module.exports = ctx => ({
         }
     },
     plugins: [
+        ['sitemap', {
+            hostname: 'https://pangu.pangum.tech',
+            exclude: ['/404.html']
+        }],
+        ['@vuepress/last-updated', {
+            transformer: (timestamp, lang) => {
+                const moment = require('moment')
+                moment.locale(lang)
+                const datetime = moment(timestamp)
+
+                return datetime.format('yyyy-MM-DD hh:mm:ss')
+            }
+        }],
         ['@vuepress/back-to-top', true],
         ['@vuepress/pwa', {
             serviceWorker: true,

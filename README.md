@@ -46,4 +46,4 @@
 作者主观认为的比较好的项目
 
 - [Http服务器](https://github.com/storezhang/echox)
-- [数据验证](https://github.com/storezhang/validatorx)
+- [数据验证](https://github.com/goexl/xiren)

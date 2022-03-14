@@ -1,46 +1,45 @@
 kind: pipeline
 type: docker
-name: 盘古文档
+name: 盘古
 
 
 clone:
   disable: true
 
 
-trigger:
-  event:
-    exclude:
-      - pull_request
-
-
-environment:
-  GOPROXY: https://goproxy.cn
-
-
 steps:
-  - name: 拉代码
-    image: plugins/git
-    pull: if-not-exists
+  - name: 代码
+    image: dronestock/git
 
-  - name: 生成文档
-    image: node
-    pull: if-not-exists
-    commands:
-      - cd doc
-      - yarn install
-      - yarn docs:build
-
-  - name: 部署到腾讯云
-    image: storezhang/cos
+  - name: 编译
+    image: pangum/drone
+    pull: always
+    volumes:
+      - name: go
+        path: /go
     settings:
-      secret_id:
-        from_secret: cos_secret_id
-      secret_key:
-        from_secret: cos_secret_key
-      base_url: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
+      test: false
+      compress: false
+
+  - name: 文档
+    image: dronestock/node
+    pull: always
+    settings:
+      folder: doc
+
+  - name: 部署
+    image: dronestock/cos
+    pull: always
+    settings:
       folder: doc/dist
+      secret_id:
+        from_secret: secret_id_cos
+      secret_key:
+        from_secret: secret_key_cos
+      base_url: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
 
 
 volumes:
-  - name: deps
-    temp: { }
+  - name: go
+    host:
+      path: /var/lib/cache/go

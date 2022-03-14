@@ -1,10 +1,13 @@
 package pangu
 
 import (
-	`github.com/storezhang/simaqian`
+	`github.com/goexl/simaqian`
 )
 
-var _ option = (*optionLogger)(nil)
+var (
+	_        = GLogger
+	_ option = (*optionLogger)(nil)
+)
 
 type optionLogger struct {
 	logger simaqian.Logger

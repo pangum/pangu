@@ -11,11 +11,11 @@ import (
 	`strings`
 	`sync`
 
-	`github.com/drone/envsubst`
+	`github.com/goexl/gfx`
+	`github.com/goexl/mengpo`
+	`github.com/goexl/xiren`
+
 	`github.com/pelletier/go-toml`
-	`github.com/storezhang/gox`
-	`github.com/storezhang/mengpo`
-	`github.com/storezhang/validatorx`
 	`gopkg.in/yaml.v3`
 )
 
@@ -39,8 +39,8 @@ func (c *Config) Load(config interface{}, opts ...option) (err error) {
 
 	// 参数不允许重复定义，只能执行一次
 	c.once.Do(func() {
-		c.path = flag.String(`conf`, `./conf/application.yaml`, `指定配置文件路径`)
-		flag.StringVar(c.path, `c`, *c.path, `指定配置文件路径`)
+		c.path = flag.String(configLongName, configDefault, configUsage)
+		flag.StringVar(c.path, configShortName, *c.path, configUsage)
 		flag.Parse()
 	})
 	err = c.loadConfig(config)
@@ -64,25 +64,19 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		}
 	}
 
-	// 处理环境变量，不能修改原始数据，复制一份原始数据做修改
-	var _data string
-	if _data, err = envsubst.EvalEnv(string(c.data)); nil != err {
-		return
-	}
-
 	switch c.format {
 	case `.yml`:
 		fallthrough
 	case `.yaml`:
-		err = yaml.Unmarshal([]byte(_data), config)
+		err = yaml.Unmarshal(c.data, config)
 	case `.json`:
-		err = json.Unmarshal([]byte(_data), config)
+		err = json.Unmarshal(c.data, config)
 	case `.toml`:
-		err = toml.Unmarshal([]byte(_data), config)
+		err = toml.Unmarshal(c.data, config)
 	case `.xml`:
-		err = xml.Unmarshal([]byte(_data), config)
+		err = xml.Unmarshal(c.data, config)
 	default:
-		err = yaml.Unmarshal([]byte(_data), config)
+		err = yaml.Unmarshal(c.data, config)
 	}
 	if nil != err {
 		return
@@ -98,7 +92,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 	// 验证数据
 	if c.application.options.validate {
-		err = validatorx.Struct(config)
+		err = xiren.Struct(config)
 	}
 
 	return
@@ -106,7 +100,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 func (c *Config) findConfigFilepath(conf string) (path string, err error) {
 	path = conf
-	if `` != path && gox.IsFileExist(path) {
+	if `` != path && gfx.Exists(path) {
 		return
 	}
 
@@ -131,27 +125,27 @@ func (c *Config) findConfigFilepath(conf string) (path string, err error) {
 // 之所以命名为notExists，是为了少对notExists赋值
 func (c *Config) findConfigFilepathWithExt(filename string) (path string, notExists bool) {
 	path = fmt.Sprintf(`%s.%s`, filename, `yaml`)
-	if gox.IsFileExist(path) {
+	if gfx.Exists(path) {
 		return
 	}
 
 	path = fmt.Sprintf(`%s.%s`, filename, `yml`)
-	if gox.IsFileExist(path) {
+	if gfx.Exists(path) {
 		return
 	}
 
 	path = fmt.Sprintf(`%s.%s`, filename, `toml`)
-	if gox.IsFileExist(path) {
+	if gfx.Exists(path) {
 		return
 	}
 
 	path = fmt.Sprintf(`%s.%s`, filename, `json`)
-	if gox.IsFileExist(path) {
+	if gfx.Exists(path) {
 		return
 	}
 
 	path = fmt.Sprintf(`%s.%s`, filename, `xml`)
-	if gox.IsFileExist(path) {
+	if gfx.Exists(path) {
 		return
 	}
 	notExists = true

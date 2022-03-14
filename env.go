@@ -1,14 +1,24 @@
 package pangu
 
+import (
+	`strings`
+)
+
 type env struct {
 	key   string
 	value string
 }
 
-// NewEnv 创建环境变量
-func NewEnv(key string, value string) *env {
-	return &env{
-		key:   key,
-		value: value,
+func parseEnv(from string) (_env *env) {
+	data := strings.Split(from, envSeparator)
+	if envCount != len(data) {
+		return
 	}
+
+	_env = &env{
+		key:   data[0],
+		value: data[1],
+	}
+
+	return
 }

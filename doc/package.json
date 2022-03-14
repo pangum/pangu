@@ -1,14 +1,15 @@
 {
-  "name": "pangu-doc",
+  "name": "gex",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "vuepress-theme-reco": "^1.6.6",
-    "vuepress": "^1.8.2"
-  },
+  "license": "Apache-2.0",
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "dev": "vuepress dev",
+    "build": "vuepress build"
+  },
+  "devDependencies": {
+    "moment": "^2.29.1",
+    "vuepress": "^1.9.7",
+    "vuepress-theme-reco": "^1.6.6"
   }
 }

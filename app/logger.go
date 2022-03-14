@@ -1,7 +1,7 @@
 package app
 
 import (
-	`github.com/storezhang/simaqian`
+	`github.com/goexl/simaqian`
 )
 
 type Logger simaqian.Logger

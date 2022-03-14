@@ -37,7 +37,7 @@
 - 文件名
 - 其它
 
-这些扩展被集合在了一个叫[Validatorx](https://github.com/storezhang/validatorx)的代码仓库里，可以很方便的扩展验证器
+这些扩展被集合在了一个叫[Validatorx](https://github.com/goexl/xiren)的代码仓库里，可以很方便的扩展验证器
 要使用数据验证也很简单，编写对应的`tag`即可，就像这样
 
 <<< @/../example/conf/config.go{16,18}
