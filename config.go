@@ -50,7 +50,7 @@ func (c *Config) Load(config interface{}, opts ...option) (err error) {
 func (c *Config) loadConfig(config interface{}) (err error) {
 	if path, existErr := c.configFilepath(*c.path); nil != err {
 		err = existErr
-	} else {
+	} else if c.loadable() {
 		// 去掉最开关的点号
 		c.ext = strings.ToLower(filepath.Ext(path))
 		c.data, err = ioutil.ReadFile(path)
@@ -105,4 +105,8 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 	}
 
 	return
+}
+
+func (c *Config) loadable() bool {
+	return `` == c.ext || nil == c.data
 }
