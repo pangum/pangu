@@ -22,6 +22,10 @@ type (
 	}
 
 	options struct {
+		// 配置文件
+		paths      []string
+		extensions []string
+
 		// 应用描述
 		description string
 		// 使用方式
@@ -57,6 +61,15 @@ type (
 
 func defaultOptions() *options {
 	return &options{
+		paths: []string{},
+		extensions: []string{
+			ymlExt,
+			yamlExt,
+			tomlExt,
+			jsonExt,
+			xmlExt,
+		},
+
 		usage: `一个功能强大的命令行应用程序框架`,
 
 		// 帮助信息

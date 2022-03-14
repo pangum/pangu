@@ -37,12 +37,12 @@ func New(opts ...option) *Application {
 			options:   defaultOptions(),
 			container: dig.New(),
 
-			beforeExecutors: make([]app.Executor, 0, 0),
-			afterExecutors:  make([]app.Executor, 0, 0),
+			beforeExecutors: make([]app.Executor, 0),
+			afterExecutors:  make([]app.Executor, 0),
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
-			application: application,
+			options: application.options,
 		}
 
 		// 初始化内置变量及内置命令

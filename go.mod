@@ -36,6 +36,4 @@ require (
 )
 
 // replace github.com/storezhang/gox => ../gox
-// replace github.com/storezhang/god => ../../storezhang/god
-// replace github.com/goexl/simaqian => ../glog
-// replace github.com/goexl/xiren => ../../storezhang/validatorx
+replace github.com/goexl/gfx => ../../goexl/gfx

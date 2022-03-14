@@ -8,4 +8,10 @@ const (
 
 	envSeparator = `=`
 	envCount     = 2
+
+	yamlExt = `.yaml`
+	ymlExt  = `.yml`
+	jsonExt = `.json`
+	xmlExt  = `.xml`
+	tomlExt = `.toml`
 )
