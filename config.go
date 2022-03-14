@@ -24,7 +24,7 @@ type Config struct {
 	// 原始数据
 	data []byte
 	// 格式
-	format string
+	ext string
 	// 选项
 	options *options
 	// 单例模式
@@ -52,14 +52,14 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		err = existErr
 	} else {
 		// 去掉最开关的点号
-		c.format = strings.ToLower(filepath.Ext(path))
+		c.ext = strings.ToLower(filepath.Ext(path))
 		c.data, err = ioutil.ReadFile(path)
 	}
 	if nil != err {
 		return
 	}
 
-	switch c.format {
+	switch c.ext {
 	case ymlExt:
 		fallthrough
 	case yamlExt:
