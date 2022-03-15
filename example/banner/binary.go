@@ -1,17 +1,18 @@
-package main_test
+package banner
 
 import (
 	_ `embed`
 
 	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/bootstrap`
 )
 
-//go:embed banner/github.png
+//go:embed github.png
 var binaryBanner []byte
+var _ = binary
 
-func bannerWithBinary() {
+func binary() {
 	panic(pangu.New(
-		pangu.App("example"),
 		pangu.Banner(binaryBanner, pangu.BannerTypeBinary),
-	).Run(newBootstrap))
+	).Run(bootstrap.NewBootstrap))
 }

@@ -5,5 +5,5 @@ import (
 )
 
 func Provides(application *pangu.Application) error {
-	return application.Provides(config, example, http)
+	return application.Provides(config, example)
 }

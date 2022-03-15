@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	// App 应用名称
-	App = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.App=$App"来注入值`
+	// Name 应用名称
+	Name = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Name=$NAME"来注入值`
 	// Version 应用版本
 	Version = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Version=$VERSION"来注入值`
 	// Build 编译版本
@@ -19,34 +19,34 @@ var (
 	Revision = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Revision=$REVISION"来注入值`
 	// Branch 分支名称
 	Branch = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Branch=$BRANCH"来注入值`
-	// Runtime 运行时版本信息
-	Runtime = runtime.Version()
+	// Golang 运行时版本信息
+	Golang = runtime.Version()
 )
 
-func newApp() info.App {
-	return info.App(App)
+func name() info.Name {
+	return info.Name(Name)
 }
 
-func newVersion() info.Version {
+func version() info.Version {
 	return info.Version(Version)
 }
 
-func newBuild() info.Build {
+func build() info.Build {
 	return info.Build(Build)
 }
 
-func newTimestamp() info.Timestamp {
+func timestamp() info.Timestamp {
 	return info.Timestamp(Timestamp)
 }
 
-func newRevision() info.Revision {
+func revision() info.Revision {
 	return info.Revision(Revision)
 }
 
-func newBranch() info.Branch {
+func branch() info.Branch {
 	return info.Branch(Branch)
 }
 
-func newRuntime() info.Runtime {
-	return info.Runtime(Runtime)
+func golang() info.Golang {
+	return info.Golang(Golang)
 }

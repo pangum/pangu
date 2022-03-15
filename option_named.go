@@ -20,7 +20,7 @@ func Named(name string) *optionNamed {
 }
 
 func (n *optionNamed) apply(_ *options) {
-	App = n.name
+	Name = n.name
 }
 
 func (n *optionNamed) applyProvide(options *provideOptions) {

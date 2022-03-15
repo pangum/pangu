@@ -11,7 +11,7 @@ func newStartup() (startup *cli.App) {
 	// 定制版本显示，版本号不可改变
 	startup.Version = Version
 	cli.VersionFlag = &cli.BoolFlag{
-		Name:    "newVersion",
+		Name:    "version",
 		Aliases: []string{"v"},
 		Usage:   "显示应用程序版本信息",
 	}

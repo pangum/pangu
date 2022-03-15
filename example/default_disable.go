@@ -1,12 +1,13 @@
-package main_test
+package example
 
 import (
 	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/bootstrap`
 )
 
 func defaultDisable() {
 	panic(pangu.New(
-		pangu.App("example"),
+		pangu.Name("example"),
 		pangu.DisableDefault(),
-	).Run(newBootstrap))
+	).Run(bootstrap.newBootstrap))
 }

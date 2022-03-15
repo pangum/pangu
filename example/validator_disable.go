@@ -1,12 +1,13 @@
-package main_test
+package example
 
 import (
 	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/bootstrap`
 )
 
 func validatorDisable() {
 	panic(pangu.New(
-		pangu.App("example"),
+		pangu.Name("example"),
 		pangu.DisableValidate(),
-	).Run(newBootstrap))
+	).Run(bootstrap.newBootstrap))
 }

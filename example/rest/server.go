@@ -11,19 +11,19 @@ import (
 type Server struct{}
 
 func newServer() *Server {
-	return &Server{}
+	return new(Server)
 }
 
 func (s *Server) Start() error {
-	http.HandleFunc("/", s.indexHandler)
+	http.HandleFunc(`/`, s.indexHandler)
 
-	return http.ListenAndServe(":8000", nil)
+	return http.ListenAndServe(`:8000`, nil)
 }
 
 func (s *Server) indexHandler(w http.ResponseWriter, _ *http.Request) {
-	_, _ = fmt.Fprintf(w, "hello world")
+	_, _ = fmt.Fprintf(w, `hello world`)
 }
 
 func (s *Server) Name() string {
-	return "RESTFul服务器"
+	return `RESTFul服务器`
 }

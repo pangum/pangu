@@ -1,14 +1,16 @@
-package main_test
+package banner
 
 import (
 	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/bootstrap`
 )
 
 const filepathBanner = `./baner/github.png`
 
-func bannerWithFilepath() {
+var _ = filepath
+
+func filepath() {
 	panic(pangu.New(
-		pangu.App("example"),
 		pangu.Banner(filepathBanner, pangu.BannerTypeFilepath),
-	).Run(newBootstrap))
+	).Run(bootstrap.NewBootstrap))
 }

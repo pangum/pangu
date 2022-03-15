@@ -1,14 +1,16 @@
-package main_test
+package banner
 
 import (
 	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/bootstrap`
 )
 
 const stringBanner = `example`
 
-func bannerWithString() {
+var _ = str
+
+func str() {
 	panic(pangu.New(
-		pangu.App("example"),
 		pangu.Banner(stringBanner, pangu.BannerTypeString),
-	).Run(newBootstrap))
+	).Run(bootstrap.NewBootstrap))
 }

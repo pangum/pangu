@@ -16,25 +16,25 @@ type (
 	Info struct {
 		Base
 
-		app       info.App
+		app       info.Name
 		version   info.Version
 		build     info.Build
 		timestamp info.Timestamp
 		revision  info.Revision
 		branch    info.Branch
-		golang    info.Runtime
+		golang    info.Golang
 	}
 
 	infoIn struct {
 		dig.In
 
-		App       info.App
+		App       info.Name
 		Version   info.Version
 		Build     info.Build
 		Timestamp info.Timestamp
 		Revision  info.Revision
 		Branch    info.Branch
-		Golang    info.Runtime
+		Golang    info.Golang
 	}
 )
 
@@ -60,13 +60,13 @@ func NewInfo(in infoIn) *Info {
 func (v *Info) Run(_ *app.Context) (err error) {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf(`%s\n`, strings.Repeat(`-`, 120)))
-	sb.WriteString(fmt.Sprintf(`App: %s\n`, v.app))
+	sb.WriteString(fmt.Sprintf(`Name: %s\n`, v.app))
 	sb.WriteString(fmt.Sprintf(`Version: %s\n`, v.version))
 	sb.WriteString(fmt.Sprintf(`Build: %s\n`, v.build))
 	sb.WriteString(fmt.Sprintf(`Timestamp: %s\n`, v.timestamp))
 	sb.WriteString(fmt.Sprintf(`Revision: %s\n`, v.revision))
 	sb.WriteString(fmt.Sprintf(`Branch: %s\n`, v.branch))
-	sb.WriteString(fmt.Sprintf(`Runtime: %s\n`, v.golang))
+	sb.WriteString(fmt.Sprintf(`Golang: %s\n`, v.golang))
 	sb.WriteString(fmt.Sprintf(`%s\n`, strings.Repeat(`-`, 120)))
 
 	fmt.Print(sb.String())

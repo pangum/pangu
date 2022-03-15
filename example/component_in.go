@@ -1,4 +1,4 @@
-package main_test
+package example
 
 import (
 	`github.com/pangum/pangu`

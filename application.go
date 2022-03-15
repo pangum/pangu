@@ -270,7 +270,7 @@ func (a *Application) setupStartup() error {
 	}
 
 	return a.Invoke(func(startup *cli.App) {
-		startup.Name = App
+		startup.Name = Name
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
 		startup.Copyright = a.options.copyright
@@ -330,7 +330,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(command.NewServe, command.NewInfo); nil != err {
 		return
 	}
-	if err = a.Provides(newApp, newVersion, newBuild, newTimestamp, newRevision, newBranch, newRuntime); nil != err {
+	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
 		return
 	}
 	if err = a.Provides(newStartup, app.NewDefaultService); nil != err {

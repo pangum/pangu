@@ -1,18 +1,19 @@
-package main_test
+package banner
 
 import (
 	`embed`
 	_ `embed`
 
 	`github.com/pangum/pangu`
+	`github.com/pangum/pangu/example/bootstrap`
 )
 
-//go:embed banner/txt.txt
+//go:embed txt.txt
 var fileBanner embed.FS
+var _ = file
 
-func bannerWithFile() {
+func file() {
 	panic(pangu.New(
-		pangu.App("example"),
 		pangu.Banner(fileBanner, pangu.BannerTypeFile),
-	).Run(newBootstrap))
+	).Run(bootstrap.NewBootstrap))
 }
