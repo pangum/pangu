@@ -18,8 +18,10 @@ steps:
       - name: go
         path: /go
     settings:
-      test: false
-      compress: false
+      test:
+        enabled: false
+      compress:
+        enabled: false
 
   - name: 文档
     image: dronestock/node
