@@ -7,7 +7,7 @@ import (
 
 func main() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.Banner("example", pangu.BannerTypeAscii),
 		pangu.Usage("盘古框架例子使用方法"),
 		pangu.Description("盘古框架例子描述"),

@@ -6,7 +6,7 @@ import (
 
 func defaultDisable() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.DisableDefault(),
 	).Run(newBootstrap))
 }

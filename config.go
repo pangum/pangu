@@ -24,14 +24,14 @@ type Config struct {
 	// 原始数据
 	data []byte
 	// 选项
-	options *options
+	options *configOptions
 	// 单例模式
 	once sync.Once
 }
 
-func (c *Config) Load(config interface{}, opts ...option) (err error) {
+func (c *Config) Load(config interface{}, opts ...configOption) (err error) {
 	for _, opt := range opts {
-		opt.apply(c.options)
+		opt.applyConfig(c.options)
 	}
 
 	// 参数不允许重复定义，只能执行一次
@@ -76,8 +76,8 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 	// 处理默认值，此处逻辑不能往前，原因
 	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
-	if c.options._default {
-		if err = mengpo.Set(config, mengpo.Tag(c.options.tag._default)); nil != err {
+	if c.options.defaults {
+		if err = mengpo.Set(config, mengpo.Tag(c.options.tag.defaults)); nil != err {
 			return
 		}
 	}

@@ -16,17 +16,17 @@ import (
 
 const (
 	// BannerTypeTxt 文本文件
-	BannerTypeTxt BannerType = "txt"
+	BannerTypeTxt bannerType = "txt"
 	// BannerTypeFilepath 图片文件
-	BannerTypeFilepath BannerType = "path"
+	BannerTypeFilepath bannerType = "path"
 	// BannerTypeString 直接显示
-	BannerTypeString BannerType = "string"
+	BannerTypeString bannerType = "string"
 	// BannerTypeAscii 内部转换
-	BannerTypeAscii BannerType = "ascii"
+	BannerTypeAscii bannerType = "ascii"
 	// BannerTypeBinary 二进制文件数据
-	BannerTypeBinary BannerType = "binary"
+	BannerTypeBinary bannerType = "binary"
 	// BannerTypeFile 文件数据
-	BannerTypeFile BannerType = "file"
+	BannerTypeFile bannerType = "file"
 
 	ascii = "MND8OZ$7I?+=~:,.."
 )
@@ -35,19 +35,18 @@ const (
 var dividingLine string
 
 type (
-	// BannerType 标志类型
-	BannerType string
+	bannerType string
 
 	banner struct {
-		data       interface{}
-		bannerType BannerType
+		data interface{}
+		typ  bannerType
 	}
 )
 
 func (b *banner) print() (err error) {
 	var content string
 
-	switch b.bannerType {
+	switch b.typ {
 	case BannerTypeTxt:
 		var data []byte
 		data, err = ioutil.ReadFile(b.data.(string))

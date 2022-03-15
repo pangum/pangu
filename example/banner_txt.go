@@ -11,7 +11,7 @@ var txtBanner string
 
 func bannerWithTxt() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.Banner(txtBanner, pangu.BannerTypeTxt),
 	).Run(newBootstrap))
 }

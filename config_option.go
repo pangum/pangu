@@ -6,12 +6,33 @@ type (
 	}
 
 	configOptions struct {
-		typ configType
+		paths      []string
+		extensions []string
+
+		defaults bool
+		validate bool
+
+		tag  tag
+		envs []*env
 	}
 )
 
 func defaultConfigOptions() *configOptions {
 	return &configOptions{
-		typ: ConfigTypeAppend,
+		paths: []string{},
+		extensions: []string{
+			ymlExt,
+			yamlExt,
+			tomlExt,
+			jsonExt,
+			xmlExt,
+		},
+
+		defaults: true,
+		validate: true,
+
+		tag: tag{
+			defaults: `default`,
+		},
 	}
 }

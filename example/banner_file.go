@@ -12,7 +12,7 @@ var fileBanner embed.FS
 
 func bannerWithFile() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.Banner(fileBanner, pangu.BannerTypeFile),
 	).Run(newBootstrap))
 }

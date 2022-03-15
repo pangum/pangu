@@ -11,7 +11,7 @@ var binaryBanner []byte
 
 func bannerWithBinary() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.Banner(binaryBanner, pangu.BannerTypeBinary),
 	).Run(newBootstrap))
 }

@@ -1,6 +1,4 @@
-# Created by .ignore support plugin.md (hsz.mobi)
-### Go template
-# Binaries for programs and plugins
+# 编译文件
 *.exe
 *.exe~
 *.dll
@@ -8,22 +6,21 @@
 *.dylib
 dist/
 
-# Test binary, built with `go test -c`
+# 测试文件
 *.test
 *.db
 
-# Config files
+# 配置文件
 .idea/
 .vscode/
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# 各种工具中间文件
 *.out
+*.lock
+*.sum
 
-# Dependency directories (remove the comment below to include it)
+# 依赖文件
 vendor/
 scripts/
 node_modules/
 
-# 自动生成的中间文件
-go.sum
-wire_gen.go

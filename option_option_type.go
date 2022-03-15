@@ -3,11 +3,11 @@ package pangu
 var (
 	_              = Append
 	_              = Override
-	_ configOption = (*optionConfigType)(nil)
+	_ optionOption = (*optionConfigType)(nil)
 )
 
 type optionConfigType struct {
-	typ configType
+	typ optionType
 }
 
 // Append 追加
@@ -24,6 +24,6 @@ func Override() *optionConfigType {
 	}
 }
 
-func (ct *optionConfigType) applyConfig(options *configOptions) {
+func (ct *optionConfigType) applyOption(options *optionOptions) {
 	options.typ = ct.typ
 }

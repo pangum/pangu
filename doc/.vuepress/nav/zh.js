@@ -2,8 +2,11 @@ module.exports = [{
     text: '指南',
     link: '/guide/'
 }, {
-    text: '配置',
-    link: '/config/'
+    text: '选项',
+    link: '/option/'
+}, {
+    text: '配置文件',
+    link: '/config/',
 }, {
     text: '插件',
     link: '/plugin/'
@@ -15,24 +18,36 @@ module.exports = [{
         items: [{
             text: 'Archtech',
             link: 'https://archtech.studio'
+        }, {
+            text: 'IT课',
+            link: 'https://itcoursee.com'
         }]
     }, {
         text: '官方插件',
         items: [{
             text: '数据库',
-            link: 'https://github.com/pangum/database'
+            link: 'https://database.pangum.tech'
         }, {
-            text: '统一对象存储',
-            link: 'https://github.com/storezhang/uoa'
+            text: 'Redis',
+            link: 'https://redis.pangum.tech'
         }, {
-            text: '统一直播',
-            link: 'https://github.com/storezhang/ula'
+            text: 'Mqtt',
+            link: 'https://mqtt.pangum.tech'
         }, {
-            text: '统一通知',
-            link: 'https://github.com/storezhang/una'
+            text: 'Pulsar',
+            link: 'https://pulsar.pangum.tech'
         }, {
-            text: 'Echox',
-            link: 'https://github.com/storezhang/echox'
+            text: 'Http客户端',
+            link: 'https://http.pangum.tech'
+        }, {
+            text: '日志',
+            link: 'https://logging.pangum.tech'
+        }, {
+            text: 'gRPC',
+            link: 'https://grpc.pangum.tech'
+        }, {
+            text: '任务计划',
+            link: 'https://schedule.pangum.tech'
         }]
     }]
 }]

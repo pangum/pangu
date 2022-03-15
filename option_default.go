@@ -1,18 +1,25 @@
 package pangu
 
-var _ option = (*optionDefault)(nil)
+var (
+	_        = DisableDefault
+	_ option = (*optionDefault)(nil)
+)
 
 type optionDefault struct {
-	_default bool
+	defaults bool
 }
 
 // DisableDefault 配置是否处理默认值
 func DisableDefault() *optionDefault {
 	return &optionDefault{
-		_default: false,
+		defaults: false,
 	}
 }
 
 func (d *optionDefault) apply(options *options) {
-	options._default = d._default
+	options.defaults = d.defaults
+}
+
+func (d *optionDefault) applyConfig(options *configOptions) {
+	options.defaults = d.defaults
 }

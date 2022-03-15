@@ -8,7 +8,7 @@ const stringBanner = `example`
 
 func bannerWithString() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.Banner(stringBanner, pangu.BannerTypeString),
 	).Run(newBootstrap))
 }

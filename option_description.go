@@ -1,6 +1,9 @@
 package pangu
 
-var _ option = (*optionDescription)(nil)
+var (
+	_        = Description
+	_ option = (*optionDescription)(nil)
+)
 
 type optionDescription struct {
 	description string

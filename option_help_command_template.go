@@ -1,6 +1,9 @@
 package pangu
 
-var _ option = (*optionCommandHelpTemplate)(nil)
+var (
+	_        = CommandHelpTemplate
+	_ option = (*optionCommandHelpTemplate)(nil)
+)
 
 type optionCommandHelpTemplate struct {
 	template string

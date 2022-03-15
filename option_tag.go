@@ -1,27 +1,32 @@
 package pangu
 
-var _ option = (*optionTag)(nil)
+var (
+	_ = Tag
+	_ = DefaultTag
+
+	_ option = (*optionTag)(nil)
+)
 
 type optionTag struct {
-	_default string
+	defaults string
 }
 
 // Tag 配置标签
-func Tag(_default string) *optionTag {
+func Tag(defaults string) *optionTag {
 	return &optionTag{
-		_default: _default,
+		defaults: defaults,
 	}
 }
 
 // DefaultTag 配置默认值标签
 func DefaultTag(tag string) *optionTag {
 	return &optionTag{
-		_default: tag,
+		defaults: tag,
 	}
 }
 
 func (t *optionTag) apply(options *options) {
-	if `` != t._default {
-		options.tag._default = t._default
+	if `` != t.defaults {
+		options.tag.defaults = t.defaults
 	}
 }

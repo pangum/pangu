@@ -21,29 +21,59 @@
     - 方便使用
     - 多态行为，同一个调用在不同的场景下有不同的意义
 
+## 快速开始
+
+`Pangu`使用非常简单，只需要定义两部分代码`启动方法`和`启动器`
+
+启动方法代码如下
+
+```go
+package main
+
+import (
+    `github.com/pangum/pangu`
+    `github.com/pangum/pangum`
+)
+
+func main() {
+    panic(pangu.New(
+        pangu.Name(`ziyunix`),
+        pangu.Banner(`Ziyunix Server`, pangu.BannerTypeAscii),
+    ).Run(newBootstrap))
+}
+```
+
+启动器的代码如下
+
+```go
+package main
+
+type bootstrap struct {
+    application *pangu.Application
+}
+
+func newBootstrap(application *pangu.Application) pangu.Bootstrap {
+    return &bootstrap{
+        application: application,
+    }
+}
+```
+
+> `Pangu`有非常多的配置项，请参看[**使用文档**](https://pangu.pangum.tech)
+
 ## 文档
 
-`盘古`的所有文档都集中在[文档](https://pangu.archtech.studio)
-- [指南](https://pangu.archtech.studio/guide/)
-- [配置](https://pangu.archtech.studio/config/)
-- [插件](https://pangu.archtech.studio/plugin/)
+[点击这里查看最新文档](https://pangu.pangum.tech)
 
-## 使用者
+## 使用示例
 
-目前使用者比较少，只集中在官方插件中，包括
+[点击这里查看最新的代码示例](example)
 
-- [Web开发](https://github.com/pangum/web)
-- [数据库](https://github.com/pangum/database)
-- [日志库](https://github.com/pangum/logging)
-- [Http客户端](https://github.com/pangum/http)
-- [MQTT客户端](https://github.com/pangum/mqtt)
-- [gRPC](https://github.com/pangum/grpc)
-- [Redis客户端](https://github.com/pangum/redis)
-- [计划任务](https://github.com/pangum/schedule)
+## 交流
 
-## 其它项目推荐
+![微信群](doc/.vuepress/public/communication/wxwork.jpg)
 
-作者主观认为的比较好的项目
+## 捐助
 
-- [Http服务器](https://github.com/storezhang/echox)
-- [数据验证](https://github.com/goexl/xiren)
+![支持宝](https://github.com/storezhang/donate/raw/master/alipay-small.jpg)
+![微信](https://github.com/storezhang/donate/raw/master/weipay-small.jpg)

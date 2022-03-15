@@ -1,6 +1,9 @@
 package pangu
 
-var _ option = (*optionCopyright)(nil)
+var (
+	_        = Copyright
+	_ option = (*optionCopyright)(nil)
+)
 
 type optionCopyright struct {
 	copyright string

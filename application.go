@@ -42,7 +42,7 @@ func New(opts ...option) *Application {
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
-			options: application.options,
+			options: application.options.configOptions,
 		}
 
 		// 初始化内置变量及内置命令
@@ -254,8 +254,8 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	return
 }
 
-// LoadConfig 取得解析后的配置
-func (a *Application) LoadConfig(config interface{}, opts ...option) (err error) {
+// Load 取得解析后的配置
+func (a *Application) Load(config interface{}, opts ...configOption) (err error) {
 	return a.config.Load(config, opts...)
 }
 
@@ -270,14 +270,14 @@ func (a *Application) setupStartup() error {
 	}
 
 	return a.Invoke(func(startup *cli.App) {
-		startup.Name = Name
+		startup.Name = App
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
 		startup.Copyright = a.options.copyright
 		if 0 != len(a.options.authors) {
 			authors := make([]*cli.Author, 0, len(a.options.authors))
-			for _, author := range a.options.authors {
-				authors = append(authors, &cli.Author{Name: author.Name, Email: author.Email})
+			for _, _author := range a.options.authors {
+				authors = append(authors, &cli.Author{Name: _author.name, Email: _author.email})
 			}
 			startup.Authors = authors
 		}
@@ -330,7 +330,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(command.NewServe, command.NewInfo); nil != err {
 		return
 	}
-	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
+	if err = a.Provides(app, version, build, timestamp, revision, branch, golang); nil != err {
 		return
 	}
 	if err = a.Provides(newApp, app.NewDefaultService); nil != err {

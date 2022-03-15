@@ -17,7 +17,7 @@ type Config struct {
 
 // 暴露配置，可以是私有也可以仅有方法，建议私有，尽量隐藏现实
 func config(application *pangu.Application) (config Config, err error) {
-	err = application.LoadConfig(&config)
+	err = application.Load(&config)
 
 	return
 }

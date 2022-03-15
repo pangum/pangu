@@ -1,6 +1,9 @@
 package pangu
 
-var _ option = (*optionValidate)(nil)
+var (
+	_        = DisableValidate
+	_ option = (*optionValidate)(nil)
+)
 
 type optionValidate struct {
 	validate bool

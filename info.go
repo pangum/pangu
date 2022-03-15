@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	// Name 应用名称
-	Name = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Name=$Name"来注入值`
+	// App 应用名称
+	App = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.App=$App"来注入值`
 	// Version 应用版本
 	Version = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Version=$VERSION"来注入值`
 	// Build 编译版本
@@ -23,8 +23,8 @@ var (
 	Golang = runtime.Version()
 )
 
-func name() info.App {
-	return info.App(Name)
+func app() info.App {
+	return info.App(App)
 }
 
 func version() info.Version {

@@ -4,7 +4,6 @@ import (
 	_ `embed`
 
 	`github.com/goexl/simaqian`
-	`github.com/pangum/pangu/app`
 )
 
 //go:embed asset/template/help_app.tmpl
@@ -22,9 +21,7 @@ type (
 	}
 
 	options struct {
-		// 配置文件
-		paths      []string
-		extensions []string
+		*configOptions
 
 		// 应用描述
 		description string
@@ -43,34 +40,19 @@ type (
 		// 版权
 		copyright string
 		// 作者
-		authors []Author
-
-		// 是否处理默认值
-		_default bool
-		// 是否验证数据
-		validate bool
+		authors []*author
 
 		// 日志
 		logger app.Logger
-		// 标签
-		tag tag
-		// 环境变量
-		envs []*env
 	}
 )
 
 func defaultOptions() *options {
 	return &options{
-		paths: []string{},
-		extensions: []string{
-			ymlExt,
-			yamlExt,
-			tomlExt,
-			jsonExt,
-			xmlExt,
-		},
+		configOptions: defaultConfigOptions(),
 
-		usage: `一个功能强大的命令行应用程序框架`,
+		description: `一个基于Pangum/Pangu快速开始框架的应用程序`,
+		usage:       `一个功能强大的命令行应用程序框架`,
 
 		// 帮助信息
 		helpAppTemplate:        helpAppTemplate,
@@ -79,21 +61,15 @@ func defaultOptions() *options {
 
 		// 版权
 		copyright: `https://pangu.pangum.tech`,
-		authors: []Author{{
-			Name:  `storezhang`,
-			Email: `storezhang@gmail.com`,
+		authors: []*author{{
+			name:  `storezhang`,
+			email: `storezhang@gmail.com`,
 		}},
 		banner: banner{
-			data:       `pangu`,
-			bannerType: BannerTypeAscii,
+			data: `pangu`,
+			typ:  BannerTypeAscii,
 		},
-
-		_default: true,
-		validate: true,
 
 		logger: simaqian.Must(simaqian.Zap()),
-		tag: tag{
-			_default: `default`,
-		},
 	}
 }

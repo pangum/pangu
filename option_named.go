@@ -1,6 +1,8 @@
 package pangu
 
 var (
+	_ = Named
+
 	_ option        = (*optionNamed)(nil)
 	_ provideOption = (*optionNamed)(nil)
 	_ invokeOption  = (*optionNamed)(nil)
@@ -18,7 +20,7 @@ func Named(name string) *optionNamed {
 }
 
 func (n *optionNamed) apply(_ *options) {
-	Name = n.name
+	App = n.name
 }
 
 func (n *optionNamed) applyProvide(options *provideOptions) {

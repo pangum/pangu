@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	_        = GLogger
+	_        = SimaqianLogger
 	_ option = (*optionLogger)(nil)
 )
 
@@ -13,8 +13,8 @@ type optionLogger struct {
 	logger simaqian.Logger
 }
 
-// GLogger 配置日志
-func GLogger(logger simaqian.Logger) *optionLogger {
+// SimaqianLogger 日志
+func SimaqianLogger(logger simaqian.Logger) *optionLogger {
 	return &optionLogger{
 		logger: logger,
 	}

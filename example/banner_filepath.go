@@ -8,7 +8,7 @@ const filepathBanner = `./baner/github.png`
 
 func bannerWithFilepath() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.Banner(filepathBanner, pangu.BannerTypeFilepath),
 	).Run(newBootstrap))
 }

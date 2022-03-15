@@ -6,7 +6,7 @@ import (
 
 func validatorDisable() {
 	panic(pangu.New(
-		pangu.Name("example"),
+		pangu.App("example"),
 		pangu.DisableValidate(),
 	).Run(newBootstrap))
 }
