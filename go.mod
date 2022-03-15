@@ -12,7 +12,7 @@ require (
 	github.com/pelletier/go-toml v1.9.4
 	github.com/storezhang/dig v0.0.1
 	github.com/storezhang/gox v1.8.4
-	github.com/urfave/cli/v2 v2.3.0
+	github.com/urfave/cli/v2 v2.4.0
 	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58 // indirect
 	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
 	golang.org/x/text v0.3.7 // indirect
