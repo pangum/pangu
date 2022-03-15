@@ -54,7 +54,7 @@ module.exports = ctx => ({
                 sidebar: {
                     '/api/': getApiSidebar(),
                     '/guide/': getGuideSidebar('指南', '深入'),
-                    '/config/': getConfigSidebar('系统', '命令行'),
+                    '/config/': getOptionSidebar('系统', '命令行'),
                     '/plugin/': getPluginSidebar('插件', '官方插件'),
                 }
             }
@@ -133,14 +133,14 @@ function getGuideSidebar(groupA, groupB) {
     }]
 }
 
-function getConfigSidebar(groupA, groupB) {
+function getOptionSidebar(groupA, groupB) {
     return [{
         title: groupA,
         collapsable: false,
         children: [
             '',
             'banner',
-            'default',
+            'defaults',
             'validator'
         ]
     }, {
@@ -150,7 +150,7 @@ function getConfigSidebar(groupA, groupB) {
             'name',
             'usage',
             'description',
-            'authors',
+            'author',
             'copyright'
         ]
     }]

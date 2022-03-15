@@ -2,4 +2,4 @@
 
 可以配置应用程序显示帮助信息的版权信息
 
-<<< @/../example/main.go{17}
+<<< @/../example/option/copyright.go

@@ -9,8 +9,8 @@ type (
 		paths      []string
 		extensions []string
 
-		defaults bool
-		validate bool
+		defaults  bool
+		validates bool
 
 		tag  tag
 		envs []*env
@@ -28,8 +28,8 @@ func defaultConfigOptions() *configOptions {
 			xmlExt,
 		},
 
-		defaults: true,
-		validate: true,
+		defaults:  true,
+		validates: true,
 
 		tag: tag{
 			defaults: `default`,

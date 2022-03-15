@@ -83,7 +83,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 	}
 
 	// 验证数据
-	if c.options.validate {
+	if c.options.validates {
 		err = xiren.Struct(config)
 	}
 

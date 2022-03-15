@@ -12,7 +12,7 @@ func main() {
 		pangu.Banner("example", pangu.BannerTypeAscii),
 		pangu.Usage("盘古框架例子使用方法"),
 		pangu.Description("盘古框架例子描述"),
-		pangu.Authors(pangu.Author{
+		pangu.Author(pangu.Author{
 			Name:  "storezhang",
 			Email: "storezhang@gmail.com",
 		}),

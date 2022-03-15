@@ -2,6 +2,7 @@ package pangu
 
 var (
 	_        = DisableDefault
+	_        = DisableDefaults
 	_ option = (*optionDefault)(nil)
 )
 
@@ -11,6 +12,11 @@ type optionDefault struct {
 
 // DisableDefault 配置是否处理默认值
 func DisableDefault() *optionDefault {
+	return DisableDefaults()
+}
+
+// DisableDefaults 配置是否处理默认值
+func DisableDefaults() *optionDefault {
 	return &optionDefault{
 		defaults: false,
 	}

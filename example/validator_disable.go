@@ -8,6 +8,6 @@ import (
 func validatorDisable() {
 	panic(pangu.New(
 		pangu.Name("example"),
-		pangu.DisableValidate(),
+		pangu.DisableValidates(),
 	).Run(bootstrap.newBootstrap))
 }

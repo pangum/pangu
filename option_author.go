@@ -1,7 +1,7 @@
 package pangu
 
 var (
-	_        = Authors
+	_        = Author
 	_ option = (*optionAuthor)(nil)
 )
 
@@ -10,8 +10,8 @@ type optionAuthor struct {
 	email string
 }
 
-// Authors 配置作者
-func Authors(name string, email string) *optionAuthor {
+// Author 配置作者
+func Author(name string, email string) *optionAuthor {
 	return &optionAuthor{
 		name:  name,
 		email: email,

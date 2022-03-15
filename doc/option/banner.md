@@ -11,24 +11,20 @@
 
 ## 文本文件
 
-<<< @/../example/banner_txt.go
+<<< @/../example/banner/txt.go
 
 ## 图片文件
 
-<<< @/../example/banner_filepath.go
+<<< @/../example/banner/filepath.go
 
 ## 字符串
 
-<<< @/../example/banner_string.go
-
-## 自动生成
-
-<<< @/../example/main.go
+<<< @/../example/banner/string.go
 
 ## 二进制数据
 
-<<< @/../example/banner_binary.go
+<<< @/../example/banner/binary.go
 
 ## 文件数据
 
-<<< @/../example/banner_file.go
+<<< @/../example/banner/file.go
