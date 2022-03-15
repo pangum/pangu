@@ -72,6 +72,10 @@ func newBootstrap(application *pangu.Application) pangu.Bootstrap {
 
 [点击这里查看最新的代码示例](example)
 
+## 项目实践
+
+[项目实战代码](https://github.com/pangum/example)
+
 ## 交流
 
 ![微信群](doc/.vuepress/public/communication/wxwork.jpg)
