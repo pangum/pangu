@@ -22,7 +22,7 @@ type (
 		timestamp info.Timestamp
 		revision  info.Revision
 		branch    info.Branch
-		golang    info.Golang
+		golang    info.Runtime
 	}
 
 	infoIn struct {
@@ -34,7 +34,7 @@ type (
 		Timestamp info.Timestamp
 		Revision  info.Revision
 		Branch    info.Branch
-		Golang    info.Golang
+		Golang    info.Runtime
 	}
 )
 
@@ -66,7 +66,7 @@ func (v *Info) Run(_ *app.Context) (err error) {
 	sb.WriteString(fmt.Sprintf(`Timestamp: %s\n`, v.timestamp))
 	sb.WriteString(fmt.Sprintf(`Revision: %s\n`, v.revision))
 	sb.WriteString(fmt.Sprintf(`Branch: %s\n`, v.branch))
-	sb.WriteString(fmt.Sprintf(`Golang: %s\n`, v.golang))
+	sb.WriteString(fmt.Sprintf(`Runtime: %s\n`, v.golang))
 	sb.WriteString(fmt.Sprintf(`%s\n`, strings.Repeat(`-`, 120)))
 
 	fmt.Print(sb.String())

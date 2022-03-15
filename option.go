@@ -4,6 +4,7 @@ import (
 	_ `embed`
 
 	`github.com/goexl/simaqian`
+	`github.com/pangum/pangu/app`
 )
 
 //go:embed asset/template/help_app.tmpl

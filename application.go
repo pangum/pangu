@@ -330,10 +330,10 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(command.NewServe, command.NewInfo); nil != err {
 		return
 	}
-	if err = a.Provides(app, version, build, timestamp, revision, branch, golang); nil != err {
+	if err = a.Provides(newApp, newVersion, newBuild, newTimestamp, newRevision, newBranch, newRuntime); nil != err {
 		return
 	}
-	if err = a.Provides(newApp, app.NewDefaultService); nil != err {
+	if err = a.Provides(newStartup, app.NewDefaultService); nil != err {
 		return
 	}
 

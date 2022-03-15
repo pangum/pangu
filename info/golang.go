@@ -1,4 +1,4 @@
 package info
 
-// Golang 描述Golang版本
-type Golang string
+// Runtime 描述Golang版本
+type Runtime string

@@ -19,34 +19,34 @@ var (
 	Revision = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Revision=$REVISION"来注入值`
 	// Branch 分支名称
 	Branch = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Branch=$BRANCH"来注入值`
-	// Golang Go版本信息
-	Golang = runtime.Version()
+	// Runtime 运行时版本信息
+	Runtime = runtime.Version()
 )
 
-func app() info.App {
+func newApp() info.App {
 	return info.App(App)
 }
 
-func version() info.Version {
+func newVersion() info.Version {
 	return info.Version(Version)
 }
 
-func build() info.Build {
+func newBuild() info.Build {
 	return info.Build(Build)
 }
 
-func timestamp() info.Timestamp {
+func newTimestamp() info.Timestamp {
 	return info.Timestamp(Timestamp)
 }
 
-func revision() info.Revision {
+func newRevision() info.Revision {
 	return info.Revision(Revision)
 }
 
-func branch() info.Branch {
+func newBranch() info.Branch {
 	return info.Branch(Branch)
 }
 
-func golang() info.Golang {
-	return info.Golang(Golang)
+func newRuntime() info.Runtime {
+	return info.Runtime(Runtime)
 }

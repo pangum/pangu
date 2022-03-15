@@ -12,7 +12,7 @@ type optionNamed struct {
 	name string
 }
 
-// Named 配置应用名称
+// Named 应用名称
 func Named(name string) *optionNamed {
 	return &optionNamed{
 		name: name,
