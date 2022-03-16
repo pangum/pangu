@@ -13,10 +13,9 @@ steps:
 
   - name: 编译
     image: pangum/drone
-    pull: always
     volumes:
       - name: go
-        path: /go
+        path: /var/lib/go
     settings:
       test:
         enabled: false
@@ -25,13 +24,11 @@ steps:
 
   - name: 文档
     image: dronestock/node
-    pull: always
     settings:
       folder: doc
 
   - name: 部署
     image: dronestock/cos
-    pull: always
     settings:
       folder: doc/dist
       secret_id:
