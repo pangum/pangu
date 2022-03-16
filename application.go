@@ -1,14 +1,14 @@
 package pangu
 
 import (
-	`errors`
 	`os`
 	`sync`
 
+	`github.com/goexl/gox`
+	`github.com/goexl/gox/field`
 	`github.com/pangum/pangu/app`
 	`github.com/pangum/pangu/command`
 	`github.com/storezhang/dig`
-	`github.com/storezhang/gox`
 	`github.com/urfave/cli/v2`
 )
 
@@ -91,7 +91,7 @@ func (a *Application) Adds(components ...interface{}) (err error) {
 		case app.Arg:
 			err = a.AddArgs(typ)
 		default:
-			err = errors.New("不支持的类型")
+			err = gox.NewFieldException(`不支持的类型`, field.Any(`type`, typ))
 		}
 
 		if nil != err {

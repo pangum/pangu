@@ -4,17 +4,17 @@ go 1.17
 
 require (
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/goexl/gfx v0.0.4
+	github.com/goexl/gfx v0.0.5
+	github.com/goexl/gox v0.0.2
 	github.com/goexl/mengpo v0.1.4
-	github.com/goexl/simaqian v0.1.2
-	github.com/goexl/xiren v0.0.1
+	github.com/goexl/simaqian v0.1.3
+	github.com/goexl/xiren v0.0.2
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/pelletier/go-toml v1.9.4
 	github.com/storezhang/dig v0.0.1
-	github.com/storezhang/gox v1.8.4
 	github.com/urfave/cli/v2 v2.4.0
-	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58 // indirect
-	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
+	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
+	golang.org/x/sys v0.0.0-20220315194320-039c03cc5b86 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

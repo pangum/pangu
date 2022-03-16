@@ -1,14 +1,14 @@
 package command
 
 import (
-	`errors`
 	`os`
 	`os/signal`
 	`sync`
 	`syscall`
 	`time`
 
-	`github.com/storezhang/gox/field`
+	`github.com/goexl/gox`
+	`github.com/goexl/gox/field`
 
 	`github.com/pangum/pangu/app`
 )
@@ -53,7 +53,7 @@ func (s *Serve) Adds(components ...interface{}) (err error) {
 		case app.Executor:
 			s.AddExecutors(typ)
 		default:
-			err = errors.New(`不支持的类型`)
+			err = gox.NewFieldException(`不支持的类型`, field.Any(`type`, typ))
 		}
 
 		if nil != err {

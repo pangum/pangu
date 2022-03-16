@@ -3,7 +3,6 @@ package pangu
 import (
 	`encoding/json`
 	`encoding/xml`
-	`errors`
 	`flag`
 	`io/ioutil`
 	`path/filepath`
@@ -11,6 +10,8 @@ import (
 	`sync`
 
 	`github.com/goexl/gfx`
+	`github.com/goexl/gox`
+	`github.com/goexl/gox/field`
 	`github.com/goexl/mengpo`
 	`github.com/goexl/xiren`
 
@@ -92,13 +93,13 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 func (c *Config) configFilepath(conf string) (path string, err error) {
 	gfxOptions := gfx.NewExistsOptions(
-		gfx.Path(c.options.paths[0], c.options.paths[1:]...),
-		gfx.Ext(c.options.extensions[0], c.options.extensions[1:]...),
+		gfx.Paths(c.options.paths...),
+		gfx.Extensions(c.options.extensions...),
 	)
 	if final, exists := gfx.Exists(conf, gfxOptions...); exists {
 		path = final
 	} else {
-		err = errors.New(`找不到配置文件`)
+		err = gox.NewFieldException(`找不到配置文件`, field.String(`path`, final))
 	}
 
 	return

@@ -1,8 +1,8 @@
 package app
 
 import (
+	`github.com/goexl/gox`
 	`github.com/goexl/simaqian`
-	`github.com/storezhang/gox`
 )
 
 // defaultService 默认应用服务
