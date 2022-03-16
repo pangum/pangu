@@ -34,5 +34,6 @@ func defaultConfigOptions() *configOptions {
 		tag: tag{
 			defaults: `default`,
 		},
+		envs: make([]*env, 0),
 	}
 }

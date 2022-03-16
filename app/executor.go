@@ -21,10 +21,8 @@ func RunExecutors(executors ...Executor) (err error) {
 		if err = executor.Run(); nil != err {
 			switch executor.ExecuteType() {
 			case ExecuteTypeBreak:
-				err = nil
 				break
 			case ExecuteTypeContinue:
-				err = nil
 				continue
 			case ExecuteTypeReturn:
 				return

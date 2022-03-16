@@ -1,5 +1,11 @@
 package arg
 
+var (
+	_ = DefaultArg
+	_ = NewRequiredArg
+	_ = NewHiddenArg
+)
+
 type base struct {
 	// 名称
 	name string
@@ -19,21 +25,26 @@ type base struct {
 
 // DefaultArg 创建默认参数
 func DefaultArg(name string, usage string, aliases ...string) *base {
-	return NewArg(name, usage, false, false, "", []string{}, aliases...)
+	return NewArg(name, usage, false, false, ``, []string{}, aliases...)
 }
 
 // NewRequiredArg 创建必填参数
 func NewRequiredArg(name string, usage string, aliases ...string) *base {
-	return NewArg(name, usage, true, false, "", []string{}, aliases...)
+	return NewArg(name, usage, true, false, ``, []string{}, aliases...)
 }
 
 // NewHiddenArg 创建隐藏参数
 func NewHiddenArg(name string, usage string, aliases ...string) *base {
-	return NewArg(name, usage, false, true, "", []string{}, aliases...)
+	return NewArg(name, usage, false, true, ``, []string{}, aliases...)
 }
 
 // NewArg 创建参数
-func NewArg(name string, usage string, required bool, hidden bool, defaultText string, envs []string, aliases ...string) *base {
+func NewArg(
+	name string, usage string,
+	required bool, hidden bool,
+	text string,
+	envs []string, aliases ...string,
+) *base {
 	return &base{
 		name:        name,
 		aliases:     aliases,
@@ -41,7 +52,7 @@ func NewArg(name string, usage string, required bool, hidden bool, defaultText s
 		envVars:     envs,
 		required:    required,
 		hidden:      hidden,
-		defaultText: defaultText,
+		defaultText: text,
 	}
 }
 

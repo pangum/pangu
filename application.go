@@ -81,15 +81,15 @@ func New(opts ...option) *Application {
 // Adds 添加各种组件到系统中
 func (a *Application) Adds(components ...interface{}) (err error) {
 	for _, component := range components {
-		switch component.(type) {
+		switch typ := component.(type) {
 		case app.Executor:
-			err = a.AddExecutor(component.(app.Executor))
+			err = a.AddExecutor(typ)
 		case app.Serve:
-			err = a.AddServes(component.(app.Serve))
+			err = a.AddServes(typ)
 		case app.Command:
-			err = a.AddCommands(component.(app.Command))
+			err = a.AddCommands(typ)
 		case app.Arg:
-			err = a.AddArgs(component.(app.Arg))
+			err = a.AddArgs(typ)
 		default:
 			err = errors.New("不支持的类型")
 		}
@@ -277,7 +277,10 @@ func (a *Application) setupStartup() error {
 		if 0 != len(a.options.authors) {
 			authors := make([]*cli.Author, 0, len(a.options.authors))
 			for _, _author := range a.options.authors {
-				authors = append(authors, &cli.Author{Name: _author.name, Email: _author.email})
+				authors = append(authors, &cli.Author{
+					Name:  _author.name,
+					Email: _author.email,
+				})
 			}
 			startup.Authors = authors
 		}
@@ -285,12 +288,12 @@ func (a *Application) setupStartup() error {
 }
 
 func (a *Application) addEnvs() (err error) {
-	if 0 >= len(a.options.envs) {
+	if 0 == len(a.options.envs) {
 		return
 	}
 
-	for _, _env := range a.options.envs {
-		if err = os.Setenv(_env.key, _env.value); nil != err {
+	for _, e := range a.options.envs {
+		if err = os.Setenv(e.key, e.value); nil != err {
 			return
 		}
 	}

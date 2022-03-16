@@ -47,11 +47,11 @@ func NewServe(logger app.Logger) *Serve {
 
 func (s *Serve) Adds(components ...interface{}) (err error) {
 	for _, component := range components {
-		switch component.(type) {
+		switch typ := component.(type) {
 		case app.Serve:
-			s.AddServes(component.(app.Serve))
+			s.AddServes(typ)
 		case app.Executor:
-			s.AddExecutors(component.(app.Executor))
+			s.AddExecutors(typ)
 		default:
 			err = errors.New(`不支持的类型`)
 		}
