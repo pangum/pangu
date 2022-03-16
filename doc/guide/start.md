@@ -1,9 +1,8 @@
 # 快速下手
 
 ::: warning 前提条件
-<!--@formatter:off-->
+
 Golang需要1.16及以上版本
-<!--@formatter:on-->
 :::
 
 本文会帮助你从头搭建一个简单的Golang应用
@@ -28,7 +27,7 @@ go mod init
 
 启动器是`盘古`最重要的部件，一个好的启动器能让项目代码结构变得简单
 
-<<< @/../example/bootstrap.go
+<<< @/../example/bootstrap/bootstrap.go
 
 ## 创建启动文件
 

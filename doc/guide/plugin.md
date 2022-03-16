@@ -1,30 +1,31 @@
-# 内置插件
+# 插件
+
+插件是指一类可以被`盘古`认识并使用的独立的功能封装框架，使用类似于`Springboot`自动配置的形式提供插件。 这样可以很方便开发者使用插件，完全不需要自己开发只需要使用（当然会有一引起配置项）。
+`盘古`的插件具有以下特征
+
+- 自动配置
+- 内置丰富的插件
+- 方便开发自己的插件
+
+## 内置插件
 
 为了方便开发者，`盘古`内置了一些扩展插件，方便快速开发的需求
 
-## Http客户端
+- [Web开发](https://github.com/pangum/web)
+- [Http客户端](https://github.com/pangum/http)
+- [数据库](https://github.com/pangum/database)
+- [Pulsar](https://github.com/pangum/pulsar)
+- [Mqtt](https://github.com/pangum/mqtt)
+- [Redis](https://github.com/pangum/redis)
+- [gRPC](https://github.com/pangum/grpc)
+- [日志](https://github.com/pangum/logging)
 
-Http客户端是所有开发者经常使用的功能，所以选择内置在于`盘古`
-中。Http客户端最终选择了[Resty](https://github.com/go-resty/resty)，相关操作完全可以通过查看Resty的文档来获得，同时在Resty的基础了做了一些简单的封闭，比如
+## 插件开发
 
-- 良好的配置
-- 代理
-- 超时
-- SSL证书
-- 通用头
-- 通过查询参数
-- 通用Cookie
-- 授权
+`盘古`可以很方便的接入自己的插件，插件可以是
 
-具体配置可以参考[HttpClientConfig](https://github.com/storezhang/gox/blob/master/http_client.go)
+- 服务
+- 命令
+- 参数
 
-## 日志
-
-日志是绝大部分应用都需要支持的功能，所以`盘古`选择接入一个通用的日志库来解决此问题，[Glog](https://github.com/goexl/simaqian)，该日志库支持以下几种日志库
-
-- Zap Log
-- Logrus
-- Zero Log
-- 系统内置日志
-
-`盘古`只是接入了日志系统，但并没有对日志系统做任何修改，具体日志功能请参考官方文档
+具体如何开发插件[请移步](/plugin)

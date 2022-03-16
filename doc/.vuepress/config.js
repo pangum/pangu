@@ -117,7 +117,6 @@ function getGuideSidebar(groupA, groupB) {
             'start',
             'concept',
             'config',
-            'migration',
         ]
     }, {
         title: groupB,
@@ -141,13 +140,13 @@ function getOptionSidebar(groupA, groupB) {
             '',
             'banner',
             'defaults',
-            'validator'
+            'validates'
         ]
     }, {
         title: groupB,
         collapsable: false,
         children: [
-            'name',
+            'named',
             'usage',
             'description',
             'author',

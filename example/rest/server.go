@@ -1,4 +1,4 @@
-package rest
+package rest_test
 
 import (
 	`fmt`

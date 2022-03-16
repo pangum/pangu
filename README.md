@@ -26,9 +26,13 @@
 
 ## 快速开始
 
-`Pangu`使用非常简单，只需要定义两部分代码`启动方法`和`启动器`
+`Pangu`使用非常简单，只需要定义两部分代码`启动方法`和`启动器`以及`依赖关系`，对于`依赖关系`
 
-启动方法代码如下
+- 可以没有依赖，如果没有，就不需要处理依赖
+- 一般稍微大型一点的系统都会有复杂的依赖关系，而这正是`盘古`框架的强项
+- 对于没有依赖或者依赖非常少的项目，使用`盘古`反而会使代码变多，这个需要大家酌情考虑
+
+`启动方法`代码如下
 
 ```go
 package main
@@ -40,13 +44,13 @@ import (
 
 func main() {
     panic(pangu.New(
-        pangu.Name(`ziyunix`),
+        pangu.Named(`ziyunix`),
         pangu.Banner(`Ziyunix Server`, pangu.BannerTypeAscii),
     ).Run(newBootstrap))
 }
 ```
 
-启动器的代码如下
+`启动器`的代码如下
 
 ```go
 package main
@@ -62,6 +66,30 @@ func newBootstrap(application *pangu.Application) pangu.Bootstrap {
 }
 ```
 
+`依赖关系`建议像如下处理
+
+```go
+package rest
+
+import (
+	`github.com/pangum/pangu`
+)
+
+type Server struct {}
+
+func newServer(/* 如果有依赖，可以在这里增加依赖：api *Api */) *Server {
+	return new(Server)
+}
+
+func init() {
+	pangu.New().Musts(
+		newServer,
+		// 其它依赖
+		// ...
+	)
+}
+```
+
 > `Pangu`有非常多的配置项，请参看[**使用文档**](https://pangu.pangum.tech)
 
 ## 文档
@@ -74,7 +102,11 @@ func newBootstrap(application *pangu.Application) pangu.Bootstrap {
 
 ## 项目实践
 
-[项目实战代码](https://github.com/pangum/example)
+- [基础项目实战代码](https://github.com/pangum/example)
+    - 数据库操作
+    - 数据库迁移
+    - RESTFul接口
+    - 配置加载
 
 ## 交流
 

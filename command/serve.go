@@ -36,8 +36,8 @@ func NewServe(logger app.Logger) *Serve {
 			usage:   `启动服务`,
 		},
 
-		beforeExecutors: make([]app.Executor, 0, 0),
-		afterExecutors:  make([]app.Executor, 0, 0),
+		beforeExecutors: make([]app.Executor, 0),
+		afterExecutors:  make([]app.Executor, 0),
 		serves:          make([]app.Serve, 0, 1),
 
 		stop:   make(chan os.Signal),

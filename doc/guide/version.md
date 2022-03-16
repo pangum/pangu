@@ -1,9 +1,14 @@
 # 版本信息
 
 可以很方便的输出如下版本信息
-![version](/version.png)
+![版本信息](/version.png)
 
-## 在CI/CD中注入版本信息（推荐）
+::: warning 注意
+
+有三种方式可以很方便的注入版本信息，推荐在CI/CD系统中自动化注入版本信息
+:::
+
+## 在CI/CD系统中注入版本信息
 
 推荐在CI/CD系统中做版本信息的注入，做到自动化
 
@@ -11,22 +16,17 @@
 
 ``` shell
 - name: 编译
-image: golang
-pull: if-not-exists
+image: pangum/pangu
 volumes:
-  - name: deps
-    path: /go
-commands:
-  - export ldflags="-s"
-  - # 注入版本信息
-  - ldflags="$ldflags -X 'github.com/pangum/pangu.AppName=Archtech服务器'"
-  - ldflags="$ldflags -X 'github.com/pangum/pangu.AppVersion=${DRONE_TAG=$DRONE_COMMIT_BRANCH:latest}'"
-  - ldflags="$ldflags -X 'github.com/pangum/pangu.BuildVersion=$$DRONE_BUILD_NUMBER'"
-  - ldflags="$ldflags -X 'github.com/pangum/pangu.BuildTime=$(TZ="Asia/Shanghai" date --date "@$$DRONE_BUILD_STARTED" +"%F %T")'"
-  - ldflags="$ldflags -X 'github.com/pangum/pangu.ScmRevision=$$DRONE_COMMIT_SHA'"
-  - ldflags="$ldflags -X 'github.com/pangum/pangu.ScmBranch=$$DRONE_COMMIT_BRANCH'"
-  - # 编译
-  - CGO_ENABLED=0 GOOS=linux go build -ldflags "$ldflags" -o archtech
+  - name: go
+    path: /var/lib/go
+settings:
+  output: pangu
+
+volumes:
+  - name: go
+    host:
+      path: /var/lib/cache/go
 ```
 
 ### Jenkins
@@ -58,5 +58,5 @@ TODO
 不建议在非CI/CD系统中注入版本信息，因为那太耗时了（费力不讨好）
 
 ``` shell
-go build -ldflags "-X 'github.com/pangum/pangu.AppName=Archtech服务器" -o archtech
+go build -ldflags "-X 'github.com/pangum/pangu.Name=Pangu" -o pangu
 ```

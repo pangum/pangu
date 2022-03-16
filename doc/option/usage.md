@@ -2,4 +2,4 @@
 
 可以配置应用程序显示帮助信息的使用方法
 
-<<< @/../example/main.go{11}
+<<< @/../example/option/usage.go

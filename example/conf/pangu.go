@@ -4,6 +4,6 @@ import (
 	`github.com/pangum/pangu`
 )
 
-func Provides(application *pangu.Application) error {
-	return application.Provides(config, example)
+func init() {
+	pangu.New().Musts(config, example)
 }

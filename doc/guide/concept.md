@@ -6,7 +6,7 @@
 
 依赖注入是`盘古框架`的核心，依赖是指调用者依赖系统的组件（可以是结构体、方法或者变量），如果系统中有这个依赖，那么`盘古框架`就会提供正确的组件给调用方，使用方法
 
-<<< @/../example/bootstrap.go#snippet{22}
+<<< @/../example/bootstrap.go#snippet{16}
 
 ## 注入
 
@@ -18,11 +18,10 @@
 
 泛指一个可以长期执行的服务，可以是任何形式的服务，比如
 
-- Http/RESTFul服务器
-- gRPC服务器
-- RocketMQ消费者
-
-<<< @/../example/rest/server.go
+- `Http/RESTFul`服务器
+- `gRPC`服务器
+- `RocketMQ`生产者或者消费者
+- `Pulsar`生产者或者消费者
 
 ## 命令
 
@@ -32,8 +31,6 @@
 - 数据迁移
 - 帮助信息
 - 启动服务
-
-<<< @/../example/command/test.go
 
 ## 参数
 

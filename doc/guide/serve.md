@@ -24,5 +24,5 @@
 建议
 
 - 分包`controller`和`handler`，这在Java或者其它语言的Web开发中比较常见
-- 使用[Echox](https://github.com/storezhang/echox)来开发RESTFul服务器
-- 增加一个`pangu.go`来组织依赖
+- 使用[Web开发](https://github.com/pangum/web)来开发RESTFul服务器
+- 增加一个`pangu.go`文件来组织依赖
