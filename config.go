@@ -9,8 +9,8 @@ import (
 	`strings`
 	`sync`
 
+	`github.com/goexl/exc`
 	`github.com/goexl/gfx`
-	`github.com/goexl/gox`
 	`github.com/goexl/gox/field`
 	`github.com/goexl/mengpo`
 	`github.com/goexl/xiren`
@@ -99,7 +99,7 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 	if final, exists := gfx.Exists(conf, gfxOptions...); exists {
 		path = final
 	} else {
-		err = gox.NewFieldException(`找不到配置文件`, field.String(`path`, final))
+		err = exc.NewField(`找不到配置文件`, field.String(`path`, final))
 	}
 
 	return
