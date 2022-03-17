@@ -1,5 +1,9 @@
 package pangu
 
+import (
+	`path/filepath`
+)
+
 type (
 	configOption interface {
 		applyConfig(options *configOptions)
@@ -12,14 +16,18 @@ type (
 		defaults  bool
 		validates bool
 
-		tag  tag
-		envs []*env
+		tag          tag
+		environments []*environment
 	}
 )
 
 func defaultConfigOptions() *configOptions {
 	return &configOptions{
-		paths: []string{},
+		paths: []string{
+			applicationName,
+			filepath.Join(configDir, applicationName),
+			filepath.Join(confDir, applicationName),
+		},
 		extensions: []string{
 			ymlExt,
 			yamlExt,
@@ -32,8 +40,8 @@ func defaultConfigOptions() *configOptions {
 		validates: true,
 
 		tag: tag{
-			defaults: `default`,
+			defaults: defaultsTag,
 		},
-		envs: make([]*env, 0),
+		environments: make([]*environment, 0),
 	}
 }

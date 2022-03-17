@@ -8,7 +8,7 @@ import (
 
 var (
 	// Name 应用名称
-	Name = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Name=$NAME"来注入值`
+	Name = defaultName
 	// Version 应用版本
 	Version = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Version=$VERSION"来注入值`
 	// Build 编译版本

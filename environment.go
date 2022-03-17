@@ -4,18 +4,18 @@ import (
 	`strings`
 )
 
-type env struct {
+type environment struct {
 	key   string
 	value string
 }
 
-func parseEnv(from string) (_env *env) {
+func parseEnv(from string) (env *environment) {
 	data := strings.Split(from, envSeparator)
 	if envCount != len(data) {
 		return
 	}
 
-	_env = &env{
+	env = &environment{
 		key:   data[0],
 		value: data[1],
 	}

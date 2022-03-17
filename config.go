@@ -10,6 +10,7 @@ import (
 	`sync`
 
 	`github.com/drone/envsubst`
+	`github.com/goexl/env`
 	`github.com/goexl/exc`
 	`github.com/goexl/gfx`
 	`github.com/goexl/gox/field`
@@ -26,14 +27,14 @@ type Config struct {
 	// 原始数据
 	data []byte
 	// 选项
-	options *configOptions
+	options *options
 	// 单例模式
 	once sync.Once
 }
 
 func (c *Config) Load(config interface{}, opts ...configOption) (err error) {
 	for _, opt := range opts {
-		opt.applyConfig(c.options)
+		opt.applyConfig(c.options.configOptions)
 	}
 
 	// 参数不允许重复定义，只能执行一次
@@ -60,7 +61,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 	// 处理环境变量，不能修改原始数据，复制一份原始数据做修改
 	var _data string
-	if _data, err = envsubst.EvalEnv(string(c.data)); nil != err {
+	if _data, err = envsubst.Eval(string(c.data), env.Get); nil != err {
 		return
 	}
 
@@ -103,6 +104,11 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 		gfx.Paths(c.options.paths...),
 		gfx.Extensions(c.options.extensions...),
 	)
+	// 如果配置了应用名称，可以使用应用名称的配置文件
+	if defaultName != Name {
+		gfxOptions = append(gfxOptions, gfx.Paths(Name, filepath.Join(configDir, Name), filepath.Join(confDir, Name)))
+	}
+
 	if final, exists := gfx.Exists(conf, gfxOptions...); exists {
 		path = final
 	} else {

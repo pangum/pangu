@@ -43,7 +43,7 @@ func New(opts ...option) *Application {
 		}
 		// 注入配置对象，后续使用
 		application.config = &Config{
-			options: application.options.configOptions,
+			options: application.options,
 		}
 
 		// 初始化内置变量及内置命令
@@ -289,12 +289,12 @@ func (a *Application) setupStartup() error {
 }
 
 func (a *Application) addEnvs() (err error) {
-	if 0 == len(a.options.envs) {
+	if 0 == len(a.options.environments) {
 		return
 	}
 
-	for _, e := range a.options.envs {
-		if err = os.Setenv(e.key, e.value); nil != err {
+	for _, env := range a.options.environments {
+		if err = os.Setenv(env.key, env.value); nil != err {
 			return
 		}
 	}
@@ -318,11 +318,11 @@ func (a *Application) addInternalCommands() error {
 func (a *Application) addInternalFlags() error {
 	return a.Invoke(func(startup *cli.App) {
 		startup.Flags = append(startup.Flags, &cli.StringFlag{
-			Name:        "conf",
-			Aliases:     []string{"c"},
-			Usage:       "指定配置文件路径",
-			Value:       "./conf/application.yaml",
-			DefaultText: "./conf/application.yaml",
+			Name:        `conf`,
+			Aliases:     []string{`c`},
+			Usage:       `指定配置文件路径`,
+			Value:       `./conf/application.yaml`,
+			DefaultText: `./conf/application.yaml`,
 		})
 	})
 }

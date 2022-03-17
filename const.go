@@ -1,10 +1,16 @@
 package pangu
 
 const (
+	defaultName = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu.Name=$NAME"来注入值`
+	defaultsTag = `default`
+
 	configLongName  = `conf`
 	configShortName = `c`
 	configUsage     = `指定配置文件路径`
 	configDefault   = `./conf/application.yaml`
+	configDir       = `config`
+	confDir         = `conf`
+	applicationName = `application`
 
 	envSeparator = `=`
 	envCount     = 2
@@ -14,4 +20,6 @@ const (
 	jsonExt = `.json`
 	xmlExt  = `.xml`
 	tomlExt = `.toml`
+
+	envHostname = `HOSTNAME`
 )
