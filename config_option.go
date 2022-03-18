@@ -2,6 +2,8 @@ package pangu
 
 import (
 	`path/filepath`
+
+	`github.com/goexl/env`
 )
 
 type (
@@ -16,8 +18,9 @@ type (
 		defaults  bool
 		validates bool
 
-		tag          tag
-		environments []*environment
+		tag               tag
+		environmentGetter environmentGetter
+		environments      []*environment
 	}
 )
 
@@ -42,6 +45,8 @@ func defaultConfigOptions() *configOptions {
 		tag: tag{
 			defaults: defaultsTag,
 		},
-		environments: make([]*environment, 0),
+
+		environmentGetter: env.Get,
+		environments:      make([]*environment, 0),
 	}
 }

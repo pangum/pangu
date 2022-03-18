@@ -23,8 +23,6 @@ require (
 require (
 	github.com/drone/envsubst v1.0.3
 	github.com/goexl/env v0.0.1
-	github.com/google/uuid v1.3.0
-	github.com/rs/xid v1.3.0
 )
 
 require (
@@ -33,7 +31,9 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.1 // indirect
 	github.com/goexl/baozheng v0.0.1 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/rs/xid v1.3.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

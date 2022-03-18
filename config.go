@@ -10,7 +10,6 @@ import (
 	`sync`
 
 	`github.com/drone/envsubst`
-	`github.com/goexl/env`
 	`github.com/goexl/exc`
 	`github.com/goexl/gfx`
 	`github.com/goexl/gox/field`
@@ -61,7 +60,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 
 	// 处理环境变量，不能修改原始数据，复制一份原始数据做修改
 	var _data string
-	if _data, err = envsubst.Eval(string(c.data), env.Get); nil != err {
+	if _data, err = envsubst.Eval(string(c.data), c.options.environmentGetter); nil != err {
 		return
 	}
 
