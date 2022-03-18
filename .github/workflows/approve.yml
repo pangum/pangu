@@ -1,0 +1,14 @@
+name: 自动同意机器人的合并请求
+
+on: pull_request_target
+
+jobs:
+  autoapprove:
+    name: 自动同意机器人的合并请求
+    runs-on: ubuntu-latest
+    steps:
+      - name: 自动同意
+        uses: cognitedata/auto-approve-dependabot-action@v3.0.1
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

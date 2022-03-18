@@ -4,3 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    pull-request-branch-name:
+      separator: "-"
+
+  - package-ecosystem: "npm"
+    directory: "/doc"
+    schedule:
+      interval: "weekly"
