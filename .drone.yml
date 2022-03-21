@@ -17,8 +17,6 @@ steps:
       - name: go
         path: /var/lib/go
     settings:
-      test:
-        enabled: false
       compress:
         enabled: false
 
