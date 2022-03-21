@@ -7,7 +7,7 @@ require (
 	github.com/goexl/exc v0.0.2
 	github.com/goexl/gfx v0.0.5
 	github.com/goexl/gox v0.0.4
-	github.com/goexl/mengpo v0.1.5
+	github.com/goexl/mengpo v0.1.6
 	github.com/goexl/simaqian v0.1.3
 	github.com/goexl/xiren v0.0.2
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
@@ -15,7 +15,7 @@ require (
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.4.0
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
-	golang.org/x/sys v0.0.0-20220317022123-2c4bbad7e934 // indirect
+	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
