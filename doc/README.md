@@ -38,5 +38,5 @@ footer: Apache Licensed | Copyright © 2021-present Storezhang
 
 ::: warning 警告
 
-Golang需要1.16及以上版本
+Golang最好使用最新版本以期更好的开发体验
 :::

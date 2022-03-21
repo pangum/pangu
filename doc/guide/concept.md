@@ -6,7 +6,7 @@
 
 依赖注入是`盘古框架`的核心，依赖是指调用者依赖系统的组件（可以是结构体、方法或者变量），如果系统中有这个依赖，那么`盘古框架`就会提供正确的组件给调用方，使用方法
 
-<<< @/../example/bootstrap.go#snippet{16}
+<<< @/../example/bootstrap/bootstrap.go#snippet{16}
 
 ## 注入
 

@@ -53,9 +53,10 @@ module.exports = ctx => ({
                 nav: require('./nav/zh'),
                 sidebar: {
                     '/api/': getApiSidebar(),
-                    '/guide/': getGuideSidebar('指南', '深入'),
-                    '/config/': getOptionSidebar('系统', '命令行'),
-                    '/plugin/': getPluginSidebar('插件', '官方插件'),
+                    '/guide/': getGuideSidebar('指北', '深入'),
+                    '/option/': getOptionSidebar('系统', '命令行'),
+                    '/config/': getConfigSidebar('指北', '深入'),
+                    '/plugin/': getPluginSidebar('指北', '官方插件'),
                 }
             }
         }
@@ -151,6 +152,22 @@ function getOptionSidebar(groupA, groupB) {
             'description',
             'author',
             'copyright'
+        ]
+    }]
+}
+
+function getConfigSidebar(groupA, groupB) {
+    return [{
+        title: groupA,
+        collapsable: false,
+        children: [
+            ''
+        ]
+    }, {
+        title: groupB,
+        collapsable: false,
+        children: [
+            ''
         ]
     }]
 }
