@@ -20,6 +20,4 @@ const (
 	jsonExt = `.json`
 	xmlExt  = `.xml`
 	tomlExt = `.toml`
-
-	envHostname = `HOSTNAME`
 )
