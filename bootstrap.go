@@ -5,6 +5,6 @@ package pangu
 // 使用 pangu.Application.Provide 添加 pangu.Serve 实现类到 pangu.Application 中
 // 使用 pangu.Application.Provide 添加 pangu.Command 实现类到 pangu.Application 中
 type Bootstrap interface {
-	// Setup 配置系统
+	// Setup 配置
 	Setup() error
 }

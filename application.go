@@ -207,7 +207,7 @@ func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
 }
 
 // Run 启动应用程序
-func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
+func (a *Application) Run(constructor bootstrapConstructor) (err error) {
 	// 输出标志信息
 	if "" != a.options.banner.data {
 		if err = a.options.banner.print(); nil != err {
@@ -216,7 +216,7 @@ func (a *Application) Run(bootstrap func(*Application) Bootstrap) (err error) {
 	}
 
 	// 添加启动器到依赖关系中
-	if err = a.Provide(bootstrap); nil != err {
+	if err = a.Provide(constructor); nil != err {
 		return
 	}
 	// 加载用户启动器并做好配置
