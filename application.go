@@ -2,6 +2,8 @@ package pangu
 
 import (
 	`os`
+	`reflect`
+	`runtime`
 	`sync`
 
 	`github.com/goexl/exc`
@@ -166,7 +168,13 @@ func (a *Application) Provide(constructor interface{}, opts ...provideOption) (e
 		opt.applyProvide(_options)
 	}
 
-	return a.container.Provide(constructor)
+	// 验证构造方法是否合法
+	if err = a.validateConstructor(constructor); nil != err {
+		return
+	}
+	err = a.container.Provide(constructor)
+
+	return
 }
 
 // Must 提供依赖关系，如果依赖关系有错，退出
@@ -207,7 +215,12 @@ func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
 }
 
 // Run 启动应用程序
-func (a *Application) Run(constructor bootstrapConstructor) (err error) {
+func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
+	// 验证启动器构造方法是否合法
+	if err = a.validateBoostrap(bootstrapConstructor); nil != err {
+		return
+	}
+
 	// 输出标志信息
 	if "" != a.options.banner.data {
 		if err = a.options.banner.print(); nil != err {
@@ -216,7 +229,7 @@ func (a *Application) Run(constructor bootstrapConstructor) (err error) {
 	}
 
 	// 添加启动器到依赖关系中
-	if err = a.Provide(constructor); nil != err {
+	if err = a.Provide(bootstrapConstructor); nil != err {
 		return
 	}
 	// 加载用户启动器并做好配置
@@ -258,6 +271,37 @@ func (a *Application) Run(constructor bootstrapConstructor) (err error) {
 // Load 取得解析后的配置
 func (a *Application) Load(config interface{}, opts ...configOption) (err error) {
 	return a.config.Load(config, opts...)
+}
+
+func (a *Application) validateBoostrap(constructor interface{}) (err error) {
+	constructorType := reflect.TypeOf(constructor)
+	// 构造方法必须有依赖项
+	if 0 == constructorType.NumIn() {
+		funcName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
+		err = exc.NewField(exceptionBootstrapMustHasDependencies, field.String(`constructor`, funcName))
+	}
+	if nil != err {
+		return
+	}
+
+	// 只能返回一个类型为Bootstrap返回值
+	returnsCount := constructorType.NumOut()
+	if 1 != returnsCount || reflect.TypeOf((*Bootstrap)(nil)).Elem() != constructorType.Out(firstIndex) {
+		err = exc.NewMessage(exceptionBoostrapMustReturnBootstrap)
+	}
+
+	return
+}
+
+func (a *Application) validateConstructor(constructor interface{}) (err error) {
+	constructorType := reflect.TypeOf(constructor)
+	// 构造方法必须有返回值
+	if 0 == constructorType.NumOut() {
+		funcName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
+		err = exc.NewField(exceptionConstructorMustReturn, field.String(`constructor`, funcName))
+	}
+
+	return
 }
 
 func (a *Application) setupStartup() error {

@@ -1,12 +1,12 @@
 module github.com/pangum/pangu
 
-go 1.17
+go 1.18
 
 require (
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/goexl/exc v0.0.2
+	github.com/goexl/exc v0.0.3
 	github.com/goexl/gfx v0.0.5
-	github.com/goexl/gox v0.0.4
+	github.com/goexl/gox v0.0.5
 	github.com/goexl/mengpo v0.1.6
 	github.com/goexl/simaqian v0.1.3
 	github.com/goexl/xiren v0.0.2
@@ -43,3 +43,4 @@ require (
 
 // replace github.com/storezhang/gox => ../gox
 // replace github.com/goexl/gfx => ../../goexl/gfx
+// replace github.com/goexl/exc => ../../goexl/exc
