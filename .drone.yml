@@ -8,6 +8,20 @@ clone:
 
 
 steps:
+  - name: 通知
+    image: clem109/drone-wechat
+    corpid:
+      from_secret: corpid_wxwork
+    corp_secret:
+      from_secret: corp_secret_wxwork_drone
+    agent_id:
+      from_secret: agent_id_wxwork_drone
+    to_party: 10853102415923281
+    title: 盘古框架发布新版本
+    description: "Build Number: ${DRONE_BUILD_NUMBER} failed. ${DRONE_COMMIT_AUTHOR} please fix. Check the results here: ${DRONE_BUILD_LINK} "
+    msg_url: ${DRONE_BUILD_LINK}
+    btn_txt: btn
+
   - name: 代码
     image: dronestock/git
 

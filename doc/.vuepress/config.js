@@ -3,8 +3,8 @@ module.exports = ctx => ({
     locales: {
         '/': {
             lang: 'zh-CN',
-            title: '盘古',
-            description: 'Golang应用快速开发框架'
+            title: '盘古框架文档',
+            description: 'Golang应用快速开发框架使用文档'
         }
     },
     head: [
@@ -29,7 +29,7 @@ module.exports = ctx => ({
         repo: 'pangum/pangu',
         docsDir: 'doc',
         editLinks: true,
-        record: '蜀ICP备2021013439号-1',
+        record: '蜀ICP备2021013439号-4',
         recordLink: 'https://beian.miit.gov.cn/',
         // cyberSecurityRecord: '公安部备案文案',
         // cyberSecurityLink: '公安部备案指向链接',
