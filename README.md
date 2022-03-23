@@ -107,6 +107,7 @@ func init() {
     - 数据库迁移
     - RESTFul接口
     - 配置加载
+    - MQTT操作
 
 ## 交流
 
