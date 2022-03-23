@@ -5,5 +5,5 @@ import (
 )
 
 func init() {
-	pangu.New().Musts(newServer)
+	pangu.New().Dependencies(newServer)
 }

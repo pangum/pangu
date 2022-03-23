@@ -177,8 +177,9 @@ func (a *Application) Provide(constructor interface{}, opts ...provideOption) (e
 	return
 }
 
-// Must 提供依赖关系，如果依赖关系有错，退出
-func (a *Application) Must(constructor interface{}, opts ...provideOption) {
+// Dependence 提供依赖关系，如果依赖关系有错，退出
+// Provide 方法的特殊封装，如果有错误直接退出
+func (a *Application) Dependence(constructor interface{}, opts ...provideOption) {
 	if err := a.Provide(constructor, opts...); nil != err {
 		panic(err)
 	}
@@ -195,8 +196,9 @@ func (a *Application) Provides(constructors ...interface{}) (err error) {
 	return
 }
 
-// Musts 提供依赖关系，如果依赖关系有错，退出
-func (a *Application) Musts(constructors ...interface{}) {
+// Dependencies 提供依赖关系，如果依赖关系有错，退出
+// Provides 方法的特殊封装，如果有错误直接退出
+func (a *Application) Dependencies(constructors ...interface{}) {
 	for _, constructor := range constructors {
 		if err := a.Provide(constructor); nil != err {
 			panic(err)
@@ -275,10 +277,19 @@ func (a *Application) Load(config interface{}, opts ...configOption) (err error)
 
 func (a *Application) validateBoostrap(constructor interface{}) (err error) {
 	constructorType := reflect.TypeOf(constructor)
+
+	// 构造方法必须是方法不能是其它类型
+	if reflect.Func != constructorType.Kind() {
+		err = exc.NewField(exceptionConstructorMustFunc, field.String(`constructor`, constructorType.String()))
+	}
+	if nil != err {
+		return
+	}
+
 	// 构造方法必须有依赖项
 	if 0 == constructorType.NumIn() {
-		funcName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
-		err = exc.NewField(exceptionBootstrapMustHasDependencies, field.String(`constructor`, funcName))
+		constructorName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
+		err = exc.NewField(exceptionBootstrapMustHasDependencies, field.String(`constructor`, constructorName))
 	}
 	if nil != err {
 		return
@@ -295,10 +306,19 @@ func (a *Application) validateBoostrap(constructor interface{}) (err error) {
 
 func (a *Application) validateConstructor(constructor interface{}) (err error) {
 	constructorType := reflect.TypeOf(constructor)
+
+	// 构造方法必须是方法不能是其它类型
+	if reflect.Func != constructorType.Kind() {
+		err = exc.NewField(exceptionConstructorMustFunc, field.String(`constructor`, constructorType.String()))
+	}
+	if nil != err {
+		return
+	}
+
 	// 构造方法必须有返回值
 	if 0 == constructorType.NumOut() {
-		funcName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
-		err = exc.NewField(exceptionConstructorMustReturn, field.String(`constructor`, funcName))
+		constructorName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
+		err = exc.NewField(exceptionConstructorMustReturn, field.String(`constructor`, constructorName))
 	}
 
 	return

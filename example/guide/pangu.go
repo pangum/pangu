@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	pangu.New().Musts(
+	pangu.New().Dependencies(
 		newConstructor,
 		newAnswer,
 		newQa,

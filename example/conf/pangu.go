@@ -5,5 +5,5 @@ import (
 )
 
 func init() {
-	pangu.New().Musts(config, example)
+	pangu.New().Dependencies(config, example)
 }
