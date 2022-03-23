@@ -82,7 +82,7 @@ func newServer(/* 如果有依赖，可以在这里增加依赖：api *Api */) *
 }
 
 func init() {
-	pangu.New().Musts(
+	pangu.New().Dependencies(
 		newServer,
 		// 其它依赖
 		// ...
