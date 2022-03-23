@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/goexl/exc v0.0.4
-	github.com/goexl/gfx v0.0.5
+	github.com/goexl/gfx v0.0.8
 	github.com/goexl/gox v0.0.5
 	github.com/goexl/mengpo v0.1.6
 	github.com/goexl/simaqian v0.1.3
