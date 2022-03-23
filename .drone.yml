@@ -8,19 +8,6 @@ clone:
 
 
 steps:
-  - name: 通知
-    image: lizheming/drone-wechat
-    corpid:
-      from_secret: corpid_wxwork
-    corp_secret:
-      from_secret: corp_secret_wxwork_drone
-    agent_id: 1000002
-    to_party: 10853102415923281
-    title: Test
-    message: "Build Number"
-    msg_url: ${DRONE_BUILD_LINK}
-    btn_txt: btn
-
   - name: 代码
     image: dronestock/git
 
