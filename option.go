@@ -56,6 +56,7 @@ func defaultOptions() *options {
 	return &options{
 		configOptions: defaultConfigOptions(),
 
+		verify:      true,
 		description: `一个基于Pangum/Pangu快速开始框架的应用程序`,
 		usage:       `一个功能强大的命令行应用程序框架`,
 
