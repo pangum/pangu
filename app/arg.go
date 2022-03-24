@@ -9,6 +9,6 @@ type Arg interface {
 	// DefaultText 默认值
 	DefaultText() string
 
-	// ParseFlag 解析出真正使用的参数
-	ParseFlag() Flag
+	// Flag 解析出真正使用的参数
+	Flag() Flag
 }

@@ -5,33 +5,36 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*int64SliceArg)(nil)
+var (
+	_         = NewInt64s
+	_ app.Arg = (*int64sArg)(nil)
+)
 
-type int64SliceArg struct {
+type int64sArg struct {
 	*base
 
 	// 值
-	value []int64
+	values []int64
 }
 
-// NewInt64Slice 创建一个整形数组参数
-func NewInt64Slice(base *base, values ...int64) *int64SliceArg {
-	return &int64SliceArg{
-		base:  base,
-		value: values,
+// NewInt64s 创建一个整形数组参数
+func NewInt64s(base *base, values ...int64) *int64sArg {
+	return &int64sArg{
+		base:   base,
+		values: values,
 	}
 }
 
-func (s *int64SliceArg) Value() interface{} {
-	return s.value
+func (i *int64sArg) Value() interface{} {
+	return i.values
 }
 
-func (s *int64SliceArg) ParseFlag() app.Flag {
+func (i *int64sArg) Flag() app.Flag {
 	return &cli.Int64SliceFlag{
-		Name:        s.Name(),
-		Aliases:     s.Aliases(),
-		Usage:       s.Usage(),
-		Value:       cli.NewInt64Slice(s.Value().([]int64)...),
-		DefaultText: s.DefaultText(),
+		Name:        i.Name(),
+		Aliases:     i.Aliases(),
+		Usage:       i.Usage(),
+		Value:       cli.NewInt64Slice(i.Value().([]int64)...),
+		DefaultText: i.DefaultText(),
 	}
 }

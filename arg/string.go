@@ -5,7 +5,10 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*stringArg)(nil)
+var (
+	_         = NewString
+	_ app.Arg = (*stringArg)(nil)
+)
 
 type stringArg struct {
 	*base
@@ -26,7 +29,7 @@ func (s *stringArg) Value() interface{} {
 	return s.value
 }
 
-func (s *stringArg) ParseFlag() app.Flag {
+func (s *stringArg) Flag() app.Flag {
 	return &cli.StringFlag{
 		Name:        s.Name(),
 		Aliases:     s.Aliases(),

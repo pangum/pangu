@@ -11,8 +11,10 @@ type Flag interface {
 
 	// Apply 解析参数
 	Apply(set *flag.FlagSet) error
+
 	// Names 别名列表
 	Names() []string
-	// IsSet 是否被设置
+
+	// IsSet 是否可设置
 	IsSet() bool
 }

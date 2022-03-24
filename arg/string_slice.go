@@ -5,28 +5,31 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*stringsArg)(nil)
+var (
+	_         = NewStrings
+	_ app.Arg = (*stringsArg)(nil)
+)
 
 type stringsArg struct {
 	*base
 
 	// 值
-	value []string
+	values []string
 }
 
-// NewStringSlice 创建一个字符串数组参数
-func NewStringSlice(base *base, values ...string) *stringsArg {
+// NewStrings 创建一个字符串数组参数
+func NewStrings(base *base, values ...string) *stringsArg {
 	return &stringsArg{
-		base:  base,
-		value: values,
+		base:   base,
+		values: values,
 	}
 }
 
 func (s *stringsArg) Value() interface{} {
-	return s.value
+	return s.values
 }
 
-func (s *stringsArg) ParseFlag() app.Flag {
+func (s *stringsArg) Flag() app.Flag {
 	return &cli.StringSliceFlag{
 		Name:        s.Name(),
 		Aliases:     s.Aliases(),

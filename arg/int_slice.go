@@ -5,28 +5,31 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*intSliceArg)(nil)
+var (
+	_         = NewInts
+	_ app.Arg = (*intsArg)(nil)
+)
 
-type intSliceArg struct {
+type intsArg struct {
 	*base
 
 	// 值
-	value []int
+	values []int
 }
 
-// NewIntSlice 创建一个整形数组参数
-func NewIntSlice(base *base, values ...int) *intSliceArg {
-	return &intSliceArg{
-		base:  base,
-		value: values,
+// NewInts 创建一个整形数组参数
+func NewInts(base *base, values ...int) *intsArg {
+	return &intsArg{
+		base:   base,
+		values: values,
 	}
 }
 
-func (s *intSliceArg) Value() interface{} {
-	return s.value
+func (s *intsArg) Value() interface{} {
+	return s.values
 }
 
-func (s *intSliceArg) ParseFlag() app.Flag {
+func (s *intsArg) Flag() app.Flag {
 	return &cli.IntSliceFlag{
 		Name:        s.Name(),
 		Aliases:     s.Aliases(),

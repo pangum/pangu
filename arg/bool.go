@@ -5,7 +5,10 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*boolArg)(nil)
+var (
+	_         = NewBool
+	_ app.Arg = (*boolArg)(nil)
+)
 
 type boolArg struct {
 	*base
@@ -26,7 +29,7 @@ func (b *boolArg) Value() interface{} {
 	return b.Value
 }
 
-func (b *boolArg) ParseFlag() app.Flag {
+func (b *boolArg) Flag() app.Flag {
 	return &cli.BoolFlag{
 		Name:        b.Name(),
 		Aliases:     b.Aliases(),

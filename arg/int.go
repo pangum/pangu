@@ -6,7 +6,10 @@ import (
 	`github.com/pangum/pangu/app`
 )
 
-var _ app.Arg = (*intArg)(nil)
+var (
+	_         = NewInt
+	_ app.Arg = (*intArg)(nil)
+)
 
 type intArg struct {
 	*base
@@ -27,7 +30,7 @@ func (i *intArg) Value() interface{} {
 	return i.value
 }
 
-func (i *intArg) ParseFlag() app.Flag {
+func (i *intArg) Flag() app.Flag {
 	return &cli.IntFlag{
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),

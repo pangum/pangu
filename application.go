@@ -136,7 +136,7 @@ func (a *Application) AddArgs(args ...app.Arg) error {
 	return a.Invoke(func(startup *cli.App) {
 		for _, argument := range args {
 			parameter := argument
-			startup.Flags = append(startup.Flags, parameter.ParseFlag())
+			startup.Flags = append(startup.Flags, parameter.Flag())
 		}
 	})
 }

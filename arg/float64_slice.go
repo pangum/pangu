@@ -5,28 +5,31 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*float64SliceArg)(nil)
+var (
+	_         = NewFloat64s
+	_ app.Arg = (*float64sArg)(nil)
+)
 
-type float64SliceArg struct {
+type float64sArg struct {
 	*base
 
 	// 值
-	value []float64
+	values []float64
 }
 
-// NewFloat64Slice 创建一个浮点数组参数
-func NewFloat64Slice(base *base, values ...float64) *float64SliceArg {
-	return &float64SliceArg{
-		base:  base,
-		value: values,
+// NewFloat64s 创建一个浮点数组参数
+func NewFloat64s(base *base, values ...float64) *float64sArg {
+	return &float64sArg{
+		base:   base,
+		values: values,
 	}
 }
 
-func (s *float64SliceArg) Value() interface{} {
-	return s.value
+func (s *float64sArg) Value() interface{} {
+	return s.values
 }
 
-func (s *float64SliceArg) ParseFlag() app.Flag {
+func (s *float64sArg) Flag() app.Flag {
 	return &cli.Float64SliceFlag{
 		Name:        s.Name(),
 		Aliases:     s.Aliases(),

@@ -5,7 +5,10 @@ import (
 	`github.com/urfave/cli/v2`
 )
 
-var _ app.Arg = (*float64Arg)(nil)
+var (
+	_         = NewFloat64
+	_ app.Arg = (*float64Arg)(nil)
+)
 
 type float64Arg struct {
 	*base
@@ -26,7 +29,7 @@ func (i *float64Arg) Value() interface{} {
 	return i.Value
 }
 
-func (i *float64Arg) ParseFlag() app.Flag {
+func (i *float64Arg) Flag() app.Flag {
 	return &cli.Float64Flag{
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
