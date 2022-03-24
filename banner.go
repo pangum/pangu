@@ -54,7 +54,7 @@ func (b *banner) print() (err error) {
 	case BannerTypeString:
 		content = b.data.(string)
 	case BannerTypeAscii:
-		content = figure.NewFigure(b.data.(string), "", true).String()
+		content = figure.NewFigure(b.data.(string), ``, true).String()
 	case BannerTypeFilepath:
 		content, err = b.asciiFromFilepath(b.data.(string))
 	case BannerTypeBinary:
@@ -110,7 +110,7 @@ func (b *banner) asciiFromReader(reader io.Reader) (data string, err error) {
 	for i := 0; i < conf.Height; i++ {
 		for j := 0; j < conf.Width; j++ {
 			g := color.GrayModel.Convert(img.At(j, i))
-			y := reflect.ValueOf(g).FieldByName("Y").Uint()
+			y := reflect.ValueOf(g).FieldByName(`Y`).Uint()
 			pos := int(y * 16 / 255)
 			if err = buffer.WriteByte(table[pos]); nil != err {
 				return
