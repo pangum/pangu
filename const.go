@@ -5,6 +5,10 @@ const (
 	defaultsTag = `default`
 	firstIndex  = 0
 
+	copyright   = `https://pangu.pangum.tech`
+	authorName  = `storezhang`
+	authorEmail = `storezhang@gmail.com`
+
 	configLongName  = `conf`
 	configShortName = `c`
 	configUsage     = `指定配置文件路径`

@@ -66,10 +66,10 @@ func defaultOptions() *options {
 		helpSubcommandTemplate: helpSubcommandTemplate,
 
 		// 版权
-		copyright: `https://pangu.pangum.tech`,
+		copyright: copyright,
 		authors: []*author{{
-			name:  `storezhang`,
-			email: `storezhang@gmail.com`,
+			name:  authorName,
+			email: authorEmail,
 		}},
 		banner: banner{
 			data: `pangu`,
