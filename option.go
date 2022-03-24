@@ -24,6 +24,10 @@ type (
 	options struct {
 		*configOptions
 
+		// 合法性验证，包括
+		// 启动器构造方法合法性验证
+		// 构造方法合法性验证
+		verify bool
 		// 应用描述
 		description string
 		// 使用方式

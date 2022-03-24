@@ -10,7 +10,7 @@ type optionAuthor struct {
 	email string
 }
 
-// Author 配置作者
+// Author 作者
 func Author(name string, email string) *optionAuthor {
 	return &optionAuthor{
 		name:  name,
