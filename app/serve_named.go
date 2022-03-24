@@ -1,11 +1,13 @@
 package app
 
+var _ = NewNamedServe
+
 // NamedServe 命名的服务
 type NamedServe struct {
 	name string
 }
 
-// 创建命名服务
+// NewNamedServe 创建命名服务
 func NewNamedServe(name string) *NamedServe {
 	return &NamedServe{
 		name: name,

@@ -1,8 +1,8 @@
 package pangu
 
-var(
-	_=Verify
-	_=DisableVerify
+var (
+	_        = Verify
+	_        = DisableVerify
 	_ option = (*optionVerify)(nil)
 )
 
@@ -18,7 +18,7 @@ func Verify() *optionVerify {
 }
 
 // DisableVerify 禁用合法性验证
-func DisableVerify() *optionVerify{
+func DisableVerify() *optionVerify {
 	return &optionVerify{
 		verify: false,
 	}

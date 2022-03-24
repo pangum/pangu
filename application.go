@@ -276,8 +276,11 @@ func (a *Application) Load(config interface{}, opts ...configOption) (err error)
 }
 
 func (a *Application) validateBoostrap(constructor interface{}) (err error) {
-	constructorType := reflect.TypeOf(constructor)
+	if a.options.verify {
+		return
+	}
 
+	constructorType := reflect.TypeOf(constructor)
 	// 构造方法必须是方法不能是其它类型
 	if reflect.Func != constructorType.Kind() {
 		err = exc.NewField(exceptionConstructorMustFunc, field.String(`constructor`, constructorType.String()))
@@ -305,8 +308,11 @@ func (a *Application) validateBoostrap(constructor interface{}) (err error) {
 }
 
 func (a *Application) validateConstructor(constructor interface{}) (err error) {
-	constructorType := reflect.TypeOf(constructor)
+	if a.options.verify {
+		return
+	}
 
+	constructorType := reflect.TypeOf(constructor)
 	// 构造方法必须是方法不能是其它类型
 	if reflect.Func != constructorType.Kind() {
 		err = exc.NewField(exceptionConstructorMustFunc, field.String(`constructor`, constructorType.String()))
