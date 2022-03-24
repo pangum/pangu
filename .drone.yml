@@ -16,6 +16,8 @@ steps:
     volumes:
       - name: go
         path: /var/lib/go
+    commands:
+      - cat config.go
     settings:
       compress:
         enabled: false
