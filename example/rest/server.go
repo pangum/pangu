@@ -1,17 +1,23 @@
-package rest_test
+package rest
 
 import (
 	`fmt`
 	`net/http`
+
+	`github.com/pangum/pangu/app`
 )
 
 // Server RESTFul服务器
-// 这里只做演示用，实际开发中请使用https://github.com/storezhang/echox开发
-// 也可以使用纯属echo或者gin以及其它框架来做开发
-type Server struct{}
+// 这里只做演示用，实际开发中请使用https://github.com/pangum/web开发
+// 也可以使用纯属Echo或者Gin以及其它框架来做开发
+type Server struct {
+	app.NamedServe
+}
 
 func newServer() *Server {
-	return new(Server)
+	return &Server{
+		NamedServe: app.NewNamedServe(`RESTFul服务器`),
+	}
 }
 
 func (s *Server) Start() error {
@@ -22,8 +28,4 @@ func (s *Server) Start() error {
 
 func (s *Server) indexHandler(w http.ResponseWriter, _ *http.Request) {
 	_, _ = fmt.Fprintf(w, `hello world`)
-}
-
-func (s *Server) Name() string {
-	return `RESTFul服务器`
 }
