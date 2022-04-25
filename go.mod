@@ -13,7 +13,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/pelletier/go-toml v1.9.4
 	github.com/storezhang/dig v0.0.1
-	github.com/urfave/cli/v2 v2.4.0
+	github.com/urfave/cli/v2 v2.4.8
 	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064 // indirect
 	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
@@ -41,10 +41,8 @@ require (
 	go.uber.org/zap v1.21.0 // indirect
 )
 
-retract (
-    // v1 项目从原来的storezhang/pangu迁移过来，原来的版本号不再使用，直到最新发布到该版本
-    [v1.0.0, v1.3.9]
-)
+// v1 项目从原来的storezhang/pangu迁移过来，原来的版本号不再使用，直到最新发布到该版本
+retract [v1.0.0, v1.3.9]
 
 // replace github.com/storezhang/gox => ../gox
 // replace github.com/goexl/gfx => ../../goexl/gfx
