@@ -11,7 +11,7 @@ require (
 	github.com/goexl/simaqian v0.1.3
 	github.com/goexl/xiren v0.0.3
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
-	github.com/pelletier/go-toml v1.9.4
+	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.4.8
 	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064 // indirect
