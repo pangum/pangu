@@ -3,7 +3,7 @@ name: 同意
 on: pull_request_target
 
 jobs:
-  autoapprove:
+  approve:
     name: 自动同意
     runs-on: ubuntu-latest
     steps:
