@@ -18,7 +18,7 @@ func Banner(data interface{}, bannerType bannerType) *optionBanner {
 }
 
 func (b *optionBanner) apply(options *options) {
-	options.banner = banner{
+	options.banner = _banner{
 		data: b.data,
 		typ:  b.typ,
 	}

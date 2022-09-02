@@ -1,10 +1,10 @@
 package pangu
 
 import (
-	_ `embed`
+	_ "embed"
 
-	`github.com/goexl/simaqian`
-	`github.com/pangum/pangu/app`
+	"github.com/goexl/simaqian"
+	"github.com/pangum/pangu/app"
 )
 
 //go:embed asset/template/help_app.tmpl
@@ -41,7 +41,7 @@ type (
 		helpSubcommandTemplate string
 
 		// 标志
-		banner banner
+		banner _banner
 		// 版权
 		copyright string
 		// 作者
@@ -71,7 +71,7 @@ func defaultOptions() *options {
 			name:  authorName,
 			email: authorEmail,
 		}},
-		banner: banner{
+		banner: _banner{
 			data: `pangu`,
 			typ:  BannerTypeAscii,
 		},

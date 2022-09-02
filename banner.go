@@ -10,22 +10,22 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/common-nighthawk/go-figure"
+	"moul.io/banner"
 )
 
 const (
 	// BannerTypeTxt 文本文件
-	BannerTypeTxt bannerType = "txt"
+	BannerTypeTxt bannerType = `txt`
 	// BannerTypeFilepath 图片文件
-	BannerTypeFilepath bannerType = "path"
+	BannerTypeFilepath bannerType = `path`
 	// BannerTypeString 直接显示
-	BannerTypeString bannerType = "string"
+	BannerTypeString bannerType = `string`
 	// BannerTypeAscii 内部转换
-	BannerTypeAscii bannerType = "ascii"
+	BannerTypeAscii bannerType = `ascii`
 	// BannerTypeBinary 二进制文件数据
-	BannerTypeBinary bannerType = "binary"
+	BannerTypeBinary bannerType = `binary`
 	// BannerTypeFile 文件数据
-	BannerTypeFile bannerType = "file"
+	BannerTypeFile bannerType = `file`
 
 	ascii = "MND8OZ$7I?+=~:,.."
 )
@@ -36,13 +36,13 @@ var dividingLine string
 type (
 	bannerType string
 
-	banner struct {
+	_banner struct {
 		data interface{}
 		typ  bannerType
 	}
 )
 
-func (b *banner) print() (err error) {
+func (b *_banner) print() (err error) {
 	var content string
 
 	switch b.typ {
@@ -53,7 +53,7 @@ func (b *banner) print() (err error) {
 	case BannerTypeString:
 		content = b.data.(string)
 	case BannerTypeAscii:
-		content = figure.NewFigure(b.data.(string), ``, true).String()
+		content = banner.Inline(b.data.(string))
 	case BannerTypeFilepath:
 		content, err = b.asciiFromFilepath(b.data.(string))
 	case BannerTypeBinary:
@@ -72,7 +72,7 @@ func (b *banner) print() (err error) {
 	return
 }
 
-func (b *banner) asciiFromFilepath(path string) (data string, err error) {
+func (b *_banner) asciiFromFilepath(path string) (data string, err error) {
 	var imgFile *os.File
 
 	if imgFile, err = os.Open(path); nil != err {
@@ -86,11 +86,11 @@ func (b *banner) asciiFromFilepath(path string) (data string, err error) {
 	return
 }
 
-func (b *banner) asciiFromBytes(fileBytes []byte) (string, error) {
+func (b *_banner) asciiFromBytes(fileBytes []byte) (string, error) {
 	return b.asciiFromReader(bytes.NewReader(fileBytes))
 }
 
-func (b *banner) asciiFromReader(reader io.Reader) (data string, err error) {
+func (b *_banner) asciiFromReader(reader io.Reader) (data string, err error) {
 	var (
 		conf image.Config
 		img  image.Image
