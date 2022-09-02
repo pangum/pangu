@@ -117,3 +117,6 @@ func init() {
 
 ![支持宝](https://github.com/storezhang/donate/raw/master/alipay-small.jpg)
 ![微信](https://github.com/storezhang/donate/raw/master/weipay-small.jpg)
+
+## 感谢Jetbrains
+[![Jetbrains图标](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png)](https://www.jetbrains.com/?from=pangum/pangu)
