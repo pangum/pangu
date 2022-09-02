@@ -10,12 +10,12 @@ type optionValidate struct {
 	validates bool
 }
 
-// DisableValidate 配置是否处理默认值
+// DisableValidate 关闭数据验证
 func DisableValidate() *optionValidate {
 	return DisableValidates()
 }
 
-// DisableValidates 配置是否处理默认值
+// DisableValidates 关闭数据验证
 func DisableValidates() *optionValidate {
 	return &optionValidate{
 		validates: false,
