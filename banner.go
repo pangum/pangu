@@ -1,17 +1,16 @@
 package pangu
 
 import (
-	`bytes`
-	_ `embed`
-	`fmt`
-	`image`
-	`image/color`
-	`io`
-	`io/ioutil`
-	`os`
-	`reflect`
+	"bytes"
+	_ "embed"
+	"fmt"
+	"image"
+	"image/color"
+	"io"
+	"os"
+	"reflect"
 
-	`github.com/common-nighthawk/go-figure`
+	"github.com/common-nighthawk/go-figure"
 )
 
 const (
@@ -49,7 +48,7 @@ func (b *banner) print() (err error) {
 	switch b.typ {
 	case BannerTypeTxt:
 		var data []byte
-		data, err = ioutil.ReadFile(b.data.(string))
+		data, err = os.ReadFile(b.data.(string))
 		content = string(data)
 	case BannerTypeString:
 		content = b.data.(string)

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"flag"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -56,7 +56,7 @@ func (c *Config) loadConfig(config interface{}) (err error) {
 		}
 	} else if c.loadable() {
 		c.path = path
-		c.data, err = ioutil.ReadFile(path)
+		c.data, err = os.ReadFile(path)
 	}
 	if nil != err {
 		return
