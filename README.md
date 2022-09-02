@@ -4,25 +4,25 @@
 
 - 快速开发
 - 内置配置文件加载
-    - `Yaml`
-    - `Toml`
-    - `Json`
-    - `XML`
-    - 很方便定制自己的配置文件加载器
+  - `Yaml`
+  - `Toml`
+  - `Json`
+  - `XML`
+  - 很方便定制自己的配置文件加载器
 - 内置强大的数据验证
-    - 内置强大的且非常多的数据验证器
-    - 很方便的定制自己的数据验证器
+  - 内置强大的且非常多的数据验证器
+  - 很方便的定制自己的数据验证器
 - 强大的扩展功能
 - 强大的配置功能
-    - 徽标
-    - 帮助信息
-    - 命令行
-    - 一切可配置点皆可配置
+  - 徽标
+  - 帮助信息
+  - 命令行
+  - 一切可配置点皆可配置
 - 线程安全
 - 内置依赖注入
 - 语义化
-    - 方便使用
-    - 多态行为，同一个调用在不同的场景下有不同的意义
+  - 方便使用
+  - 多态行为，同一个调用在不同的场景下有不同的意义
 
 ## 快速开始
 
@@ -103,11 +103,11 @@ func init() {
 ## 项目实践
 
 - [基础项目实战代码](https://github.com/pangum/example)
-    - 数据库操作
-    - 数据库迁移
-    - RESTFul接口
-    - 配置加载
-    - MQTT操作
+  - 数据库操作
+  - 数据库迁移
+  - RESTFul接口
+  - 配置加载
+  - MQTT操作
 
 ## 交流
 
@@ -119,5 +119,6 @@ func init() {
 ![微信](https://github.com/storezhang/donate/raw/master/weipay-small.jpg)
 
 ## 感谢Jetbrains
+
 本项目通过`Jetbrains开源许可IDE`编写源代码，特此感谢
 [![Jetbrains图标](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png)](https://www.jetbrains.com/?from=pangum/pangu)
