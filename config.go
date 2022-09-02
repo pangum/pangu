@@ -1,23 +1,23 @@
 package pangu
 
 import (
-	`encoding/json`
-	`encoding/xml`
-	`flag`
-	`io/ioutil`
-	`path/filepath`
-	`strings`
-	`sync`
+	"encoding/json"
+	"encoding/xml"
+	"flag"
+	"io/ioutil"
+	"path/filepath"
+	"strings"
+	"sync"
 
-	`github.com/drone/envsubst`
-	`github.com/goexl/exc`
-	`github.com/goexl/gfx`
-	`github.com/goexl/gox/field`
-	`github.com/goexl/mengpo`
-	`github.com/goexl/xiren`
+	"github.com/drone/envsubst"
+	"github.com/goexl/exc"
+	"github.com/goexl/gfx"
+	"github.com/goexl/gox/field"
+	"github.com/goexl/mengpo"
+	"github.com/goexl/xiren"
 
-	`github.com/pelletier/go-toml`
-	`gopkg.in/yaml.v3`
+	"github.com/pelletier/go-toml"
+	"gopkg.in/yaml.v3"
 )
 
 // Config 描述全局原始配置参数
@@ -48,8 +48,12 @@ func (c *Config) Load(config interface{}, opts ...configOption) (err error) {
 }
 
 func (c *Config) loadConfig(config interface{}) (err error) {
-	if path, existErr := c.configFilepath(c.path); nil != err {
-		err = existErr
+	if path, pe := c.configFilepath(c.path); nil != err {
+		if c.options.configOptions.nullable { // 可以不需要配置文件
+			c.data = []byte(``)
+		} else { // 如果配置为必须要配置文件，抛出错误
+			err = pe
+		}
 	} else if c.loadable() {
 		c.path = path
 		c.data, err = ioutil.ReadFile(path)

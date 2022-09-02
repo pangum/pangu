@@ -6,15 +6,15 @@ require (
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/goexl/exc v0.0.4
 	github.com/goexl/gfx v0.0.8
-	github.com/goexl/gox v0.0.5
+	github.com/goexl/gox v0.0.8
 	github.com/goexl/mengpo v0.1.7
 	github.com/goexl/simaqian v0.1.3
 	github.com/goexl/xiren v0.0.3
-	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.11.2
-	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064 // indirect
+	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
 	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.1
