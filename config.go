@@ -48,7 +48,7 @@ func (c *Config) Load(config interface{}, opts ...configOption) (err error) {
 }
 
 func (c *Config) loadConfig(config interface{}) (err error) {
-	if path, pe := c.configFilepath(c.path); nil != err {
+	if path, pe := c.configFilepath(c.path); nil != pe {
 		if c.options.configOptions.nullable { // 可以不需要配置文件
 			c.data = []byte(``)
 		} else { // 如果配置为必须要配置文件，抛出错误

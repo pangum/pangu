@@ -10,7 +10,7 @@ import (
 	"os"
 	"reflect"
 
-	"moul.io/banner"
+	"github.com/zs5460/art"
 )
 
 const (
@@ -53,7 +53,7 @@ func (b *_banner) print() (err error) {
 	case BannerTypeString:
 		content = b.data.(string)
 	case BannerTypeAscii:
-		content = banner.Inline(b.data.(string))
+		content = art.String(b.data.(string))
 	case BannerTypeFilepath:
 		content, err = b.asciiFromFilepath(b.data.(string))
 	case BannerTypeBinary:
@@ -65,9 +65,9 @@ func (b *_banner) print() (err error) {
 		return
 	}
 
-	fmt.Print(content)
+	fmt.Println(content)
 	fmt.Print(dividingLine)
-	fmt.Print("\n")
+	fmt.Println()
 
 	return
 }

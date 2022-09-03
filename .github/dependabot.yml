@@ -1,23 +1,23 @@
 version: 2
 updates:
-  - package-ecosystem: "gomod"
-    directory: "/"
+  - package-ecosystem: gomod
+    directory: /
     schedule:
-      interval: "weekly"
+      interval: weekly
     pull-request-branch-name:
       separator: "-"
     assignees:
-      - "storezhang"
+      - storezhang
     reviewers:
-      - "storezhang"
+      - storezhang
 
-  - package-ecosystem: "npm"
-    directory: "/doc"
+  - package-ecosystem: npm
+    directory: /doc
     schedule:
-      interval: "weekly"
+      interval: weekly
     pull-request-branch-name:
       separator: "-"
     assignees:
-      - "storezhang"
+      - storezhang
     reviewers:
-      - "storezhang"
+      - storezhang

@@ -22,7 +22,7 @@ require (
 require (
 	github.com/drone/envsubst v1.0.3
 	github.com/goexl/env v0.0.2
-	moul.io/banner v1.0.1
+	github.com/zs5460/art v0.2.0
 )
 
 require (
