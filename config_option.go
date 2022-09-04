@@ -31,6 +31,7 @@ func defaultConfigOptions() *configOptions {
 			applicationName,
 			filepath.Join(configDir, applicationName),
 			filepath.Join(confDir, applicationName),
+			filepath.Join(configurationDir, applicationName),
 		},
 		extensions: []string{
 			ymlExt,

@@ -4,12 +4,13 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newStartup() (startup *cli.App) {
-	startup = cli.NewApp()
-	startup.EnableBashCompletion = true
-	startup.UseShortOptionHandling = true
+func newShell() (shell *cli.App) {
+	shell = cli.NewApp()
+	shell.EnableBashCompletion = true
+	shell.UseShortOptionHandling = true
 	// 定制版本显示，版本号不可改变
-	startup.Version = Version
+	shell.Version = Version
+
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    `version`,
 		Aliases: []string{`v`},

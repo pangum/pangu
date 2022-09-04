@@ -9,12 +9,6 @@ const (
 	authorName  = `storezhang`
 	authorEmail = `storezhang@gmail.com`
 
-	configLongName  = `conf`
-	configShortName = `c`
-	configUsage     = `指定配置文件路径`
-	configDefault   = `./conf/application.yaml`
-	configDir       = `config`
-	confDir         = `conf`
 	applicationName = `application`
 
 	envSeparator = `=`

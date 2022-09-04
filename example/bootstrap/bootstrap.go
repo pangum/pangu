@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	`github.com/pangum/pangu`
-	`github.com/pangum/pangu/example/rest`
+	"github.com/pangum/pangu"
+	"github.com/pangum/pangu/example/rest"
 )
 
 // 启动器，必须实现pangu.Bootstrap接口
@@ -31,6 +31,6 @@ func NewBootstrap(in bootstrapIn) pangu.Bootstrap {
 	}
 }
 
-func (b *bootstrap) Setup() (err error) {
+func (b *bootstrap) Startup() (err error) {
 	return b.application.AddServes(b.rest)
 }

@@ -1,18 +1,18 @@
 package pangu
 
 import (
-	`os`
-	`reflect`
-	`runtime`
-	`sync`
+	"os"
+	"reflect"
+	"runtime"
+	"sync"
 
-	`github.com/goexl/exc`
-	`github.com/goexl/gox`
-	`github.com/goexl/gox/field`
-	`github.com/pangum/pangu/app`
-	`github.com/pangum/pangu/command`
-	`github.com/storezhang/dig`
-	`github.com/urfave/cli/v2`
+	"github.com/goexl/exc"
+	"github.com/goexl/gox"
+	"github.com/goexl/gox/field"
+	"github.com/pangum/pangu/app"
+	"github.com/pangum/pangu/command"
+	"github.com/storezhang/dig"
+	"github.com/urfave/cli/v2"
 )
 
 // Application 应用程序，可以加入两种种类型的程序
@@ -22,6 +22,9 @@ type Application struct {
 	config    *Config
 	options   *options
 	container *dig.Container
+	// 影子启动器，用来处理额外的命令或者参数，因为正常的启动器无法完成此操作，原因是
+	// 正常的启动器只提供一个Run方法来处理传数的参数，而此方法一旦执行，就意味着内部的命令也开始执行，而此时依赖关系还没有准备好
+	shadow *cli.App
 
 	beforeExecutors []app.Executor
 	afterExecutors  []app.Executor
@@ -36,17 +39,17 @@ var (
 // 使用单例模式
 func New(opts ...option) *Application {
 	once.Do(func() {
+		_options := defaultOptions()
 		application = &Application{
-			options:   defaultOptions(),
+			options:   _options,
 			container: dig.New(),
+			shadow:    newShadow(),
 
 			beforeExecutors: make([]app.Executor, 0),
 			afterExecutors:  make([]app.Executor, 0),
 		}
 		// 注入配置对象，后续使用
-		application.config = &Config{
-			options: application.options,
-		}
+		application.config = newConfig(_options)
 
 		// 初始化内置变量及内置命令
 		// 之所以在这儿完全初始化，是因为可能会在任意地方调用方法，而在调用这些方法时要求必须完成初始化
@@ -66,9 +69,6 @@ func New(opts ...option) *Application {
 			panic(err)
 		}
 		// 增加内置的命令及参数
-		if err := application.addInternalFlags(); nil != err {
-			panic(err)
-		}
 		if err := application.addInternalCommands(); nil != err {
 			panic(err)
 		}
@@ -224,7 +224,7 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 	}
 
 	// 输出标志信息
-	if "" != a.options.banner.data {
+	if `` != a.options.banner.data {
 		if err = a.options.banner.print(); nil != err {
 			return
 		}
@@ -234,10 +234,12 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 	if err = a.Provide(bootstrapConstructor); nil != err {
 		return
 	}
+	// 绑定参数和命令到内部变量或者命令上
+	if err = a.Invoke(a.bind); nil != err {
+		return
+	}
 	// 加载用户启动器并做好配置
-	if err = a.Invoke(func(bootstrap Bootstrap) error {
-		return bootstrap.Setup()
-	}); nil != err {
+	if err = a.Invoke(a.bootstrap); nil != err {
 		return
 	}
 
@@ -248,10 +250,8 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 		}
 	}
 
-	// 启动应用
-	if err = a.Invoke(func(startup *cli.App) error {
-		return startup.Run(os.Args)
-	}); nil != err {
+	// 执行整个程序
+	if err = a.Invoke(a.run); nil != err {
 		return
 	}
 
@@ -273,6 +273,25 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 // Load 取得解析后的配置
 func (a *Application) Load(config interface{}, opts ...configOption) (err error) {
 	return a.config.Load(config, opts...)
+}
+
+func (a *Application) bind(shell *cli.App) error {
+	a.config.bind(shell, a.shadow)
+
+	// 影子执行，将所有参数都绑定到具体的变量上或者命令上
+	return a.shadow.Run(a.args())
+}
+
+func (a *Application) bootstrap(bootstrap Bootstrap) error {
+	return bootstrap.Startup()
+}
+
+func (a *Application) run(shell *cli.App) error {
+	return shell.Run(a.args())
+}
+
+func (a *Application) args() []string {
+	return os.Args
 }
 
 func (a *Application) validateBoostrap(constructor interface{}) (err error) {
@@ -373,27 +392,15 @@ func (a *Application) addEnvs() (err error) {
 }
 
 func (a *Application) addInternalCommands() error {
-	type commandsIn struct {
+	type commandIn struct {
 		In
 
 		Serve *command.Serve
 		Info  *command.Info
 	}
 
-	return a.Invoke(func(in commandsIn) error {
+	return a.Invoke(func(in commandIn) error {
 		return a.AddCommands(in.Serve, in.Info)
-	})
-}
-
-func (a *Application) addInternalFlags() error {
-	return a.Invoke(func(startup *cli.App) {
-		startup.Flags = append(startup.Flags, &cli.StringFlag{
-			Name:        `conf`,
-			Aliases:     []string{`c`},
-			Usage:       `指定配置文件路径`,
-			Value:       `./conf/application.yaml`,
-			DefaultText: `./conf/application.yaml`,
-		})
 	})
 }
 
@@ -407,7 +414,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
 		return
 	}
-	if err = a.Provides(newStartup, app.NewDefaultService); nil != err {
+	if err = a.Provides(newShell, app.NewDefaultService); nil != err {
 		return
 	}
 

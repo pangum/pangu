@@ -3,11 +3,9 @@ package pangu
 import (
 	"encoding/json"
 	"encoding/xml"
-	"flag"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/drone/envsubst"
 	"github.com/goexl/exc"
@@ -15,33 +13,38 @@ import (
 	"github.com/goexl/gox/field"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
+	"github.com/urfave/cli/v2"
 
 	"github.com/pelletier/go-toml"
 	"gopkg.in/yaml.v3"
 )
 
-// Config 描述全局原始配置参数
+const (
+	configDir        = `config`
+	confDir          = `conf`
+	configurationDir = `configuration`
+)
+
+// Config 配置处理器
 type Config struct {
+	// 路径
 	path string
 	// 原始数据
 	data []byte
 	// 选项
 	options *options
-	// 单例模式
-	once sync.Once
+}
+
+func newConfig(options *options) *Config {
+	return &Config{
+		options: options,
+	}
 }
 
 func (c *Config) Load(config interface{}, opts ...configOption) (err error) {
 	for _, opt := range opts {
 		opt.applyConfig(c.options.configOptions)
 	}
-
-	// 参数不允许重复定义，只能执行一次
-	c.once.Do(func() {
-		c.path = *flag.String(configLongName, configDefault, configUsage)
-		flag.StringVar(&c.path, configShortName, c.path, configUsage)
-		flag.Parse()
-	})
 	err = c.loadConfig(config)
 
 	return
@@ -109,7 +112,12 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 	)
 	// 如果配置了应用名称，可以使用应用名称的配置文件
 	if defaultName != Name {
-		gfxOptions = append(gfxOptions, gfx.Paths(Name, filepath.Join(configDir, Name), filepath.Join(confDir, Name)))
+		gfxOptions = append(gfxOptions, gfx.Paths(
+			Name,
+			filepath.Join(configDir, Name),
+			filepath.Join(confDir, Name),
+			filepath.Join(configurationDir, Name),
+		))
 	}
 
 	if final, exists := gfx.Exists(conf, gfxOptions...); exists {
@@ -119,6 +127,18 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 	}
 
 	return
+}
+
+func (c *Config) bind(shell *cli.App, shadow *cli.App) {
+	configFlag := &cli.StringFlag{
+		Name:        `config`,
+		Aliases:     []string{`c`, `conf`, `configuration`},
+		Value:       `./conf/application.yaml`,
+		Usage:       `指定配置文件路径`,
+		Destination: &c.path,
+	}
+	shell.Flags = append(shell.Flags, configFlag)
+	shadow.Flags = append(shadow.Flags, configFlag)
 }
 
 func (c *Config) loadable() bool {
