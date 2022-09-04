@@ -12,7 +12,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
-	github.com/urfave/cli/v2 v2.11.2
+	github.com/urfave/cli/v2 v2.14.0
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	golang.org/x/sys v0.0.0-20220829200755-d48e67d00261 // indirect
 	golang.org/x/text v0.3.7 // indirect
