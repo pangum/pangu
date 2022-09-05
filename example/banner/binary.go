@@ -1,10 +1,10 @@
 package banner
 
 import (
-	_ `embed`
+	_ "embed"
 
-	`github.com/pangum/pangu`
-	`github.com/pangum/pangu/example/bootstrap`
+	"github.com/pangum/pangu"
+	"github.com/pangum/pangu/example/bootstrap"
 )
 
 //go:embed github.png

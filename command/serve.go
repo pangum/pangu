@@ -1,16 +1,16 @@
 package command
 
 import (
-	`os`
-	`os/signal`
-	`sync`
-	`syscall`
-	`time`
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+	"time"
 
-	`github.com/goexl/exc`
-	`github.com/goexl/gox/field`
+	"github.com/goexl/exc"
+	"github.com/goexl/gox/field"
 
-	`github.com/pangum/pangu/app`
+	"github.com/pangum/pangu/app"
 )
 
 var _ app.Command = (*Serve)(nil)

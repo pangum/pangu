@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	`strings`
+	"strings"
 )
 
 type environment struct {

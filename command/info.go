@@ -1,12 +1,12 @@
 package command
 
 import (
-	`fmt`
-	`strings`
+	"fmt"
+	"strings"
 
-	`github.com/pangum/pangu/app`
-	`github.com/pangum/pangu/info`
-	`github.com/storezhang/dig`
+	"github.com/pangum/pangu/app"
+	"github.com/pangum/pangu/info"
+	"github.com/storezhang/dig"
 )
 
 var _ app.Command = (*Info)(nil)

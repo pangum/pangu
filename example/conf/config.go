@@ -1,7 +1,7 @@
 package conf
 
 import (
-	`github.com/pangum/pangu`
+	"github.com/pangum/pangu"
 )
 
 // Config 总的配置入口

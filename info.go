@@ -1,9 +1,9 @@
 package pangu
 
 import (
-	`runtime`
+	"runtime"
 
-	`github.com/pangum/pangu/info`
+	"github.com/pangum/pangu/info"
 )
 
 var (

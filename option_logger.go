@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	`github.com/goexl/simaqian`
+	"github.com/goexl/simaqian"
 )
 
 var (

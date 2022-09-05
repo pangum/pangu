@@ -1,10 +1,10 @@
 package rest
 
 import (
-	`fmt`
-	`net/http`
+	"fmt"
+	"net/http"
 
-	`github.com/pangum/pangu/app`
+	"github.com/pangum/pangu/app"
 )
 
 // Server RESTFul服务器

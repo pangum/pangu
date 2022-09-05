@@ -1,9 +1,9 @@
 package example
 
 import (
-	`github.com/pangum/pangu`
-	`github.com/pangum/pangu/example/bootstrap`
-	_ `github.com/pangum/pangu/example/plugin`
+	"github.com/pangum/pangu"
+	"github.com/pangum/pangu/example/bootstrap"
+	_ "github.com/pangum/pangu/example/plugin"
 )
 
 var _ = main

@@ -1,8 +1,8 @@
 package banner
 
 import (
-	`github.com/pangum/pangu`
-	`github.com/pangum/pangu/example/bootstrap`
+	"github.com/pangum/pangu"
+	"github.com/pangum/pangu/example/bootstrap"
 )
 
 const stringBanner = `example`

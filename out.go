@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	`github.com/storezhang/dig`
+	"github.com/storezhang/dig"
 )
 
 // Out 返回值集合

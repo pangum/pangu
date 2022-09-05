@@ -1,11 +1,11 @@
 package command
 
 import (
-	`fmt`
+	"fmt"
 
-	`github.com/pangum/pangu/app`
-	`github.com/pangum/pangu/command`
-	`github.com/pangum/pangu/example/plugin`
+	"github.com/pangum/pangu/app"
+	"github.com/pangum/pangu/command"
+	"github.com/pangum/pangu/example/plugin"
 )
 
 var _ app.Command = (*Test)(nil)

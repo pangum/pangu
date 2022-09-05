@@ -1,7 +1,7 @@
 package plugin
 
 import (
-	`fmt`
+	"fmt"
 )
 
 type Test struct{}
