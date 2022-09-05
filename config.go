@@ -1,22 +1,12 @@
 package pangu
 
 import (
-	"encoding/json"
-	"encoding/xml"
-	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/drone/envsubst"
 	"github.com/goexl/exc"
 	"github.com/goexl/gfx"
 	"github.com/goexl/gox/field"
-	"github.com/goexl/mengpo"
-	"github.com/goexl/xiren"
 	"github.com/urfave/cli/v2"
-
-	"github.com/pelletier/go-toml"
-	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -29,77 +19,44 @@ const (
 type Config struct {
 	// 路径
 	path string
-	// 原始数据
-	data []byte
 	// 选项
-	options *options
+	options *configOptions
 }
 
-func newConfig(options *options) *Config {
+func newConfig(options *configOptions) *Config {
 	return &Config{
 		options: options,
 	}
 }
 
-func (c *Config) Load(config interface{}, opts ...configOption) (err error) {
+func (c *Config) Load(config any, opts ...configOption) (err error) {
 	for _, opt := range opts {
-		opt.applyConfig(c.options.configOptions)
+		opt.applyConfig(c.options)
 	}
+
+	// 加载配置文件
 	err = c.loadConfig(config)
 
 	return
 }
 
-func (c *Config) loadConfig(config interface{}) (err error) {
-	if path, pe := c.configFilepath(c.path); nil != pe {
-		if c.options.configOptions.nullable { // 可以不需要配置文件
-			c.data = []byte(``)
-		} else { // 如果配置为必须要配置文件，抛出错误
-			err = pe
-		}
-	} else if c.loadable() {
-		c.path = path
-		c.data, err = os.ReadFile(path)
-	}
-	if nil != err {
+func (c *Config) Watch(config any, watcher configWatcher) (err error) {
+	return gfx.Watch(c.path, newConfigFileWatcher(config, c.path, watcher, c.options))
+}
+
+func (c *Config) loadConfig(config any) (err error) {
+	if c.path, err = c.configFilepath(c.path); nil != err {
 		return
 	}
 
-	// 处理环境变量，不能修改原始数据，复制一份原始数据做修改
-	var _data string
-	if _data, err = envsubst.Eval(string(c.data), c.options.environmentGetter); nil != err {
+	// 加载数据
+	if err = c.options.Load(c.path, config); nil != err {
 		return
 	}
 
-	switch strings.ToLower(filepath.Ext(c.path)) {
-	case ymlExt:
-		fallthrough
-	case yamlExt:
-		err = yaml.Unmarshal([]byte(_data), config)
-	case jsonExt:
-		err = json.Unmarshal([]byte(_data), config)
-	case tomlExt:
-		err = toml.Unmarshal([]byte(_data), config)
-	case xmlExt:
-		err = xml.Unmarshal([]byte(_data), config)
-	default:
-		err = yaml.Unmarshal([]byte(_data), config)
-	}
-	if nil != err {
-		return
-	}
-
-	// 处理默认值，此处逻辑不能往前，原因
-	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
-	if c.options.defaults {
-		if err = mengpo.Set(config, mengpo.Tag(c.options.tag.defaults)); nil != err {
-			return
-		}
-	}
-
-	// 验证数据
-	if c.options.validates {
-		err = xiren.Struct(config)
+	// 配置文件监控
+	if nil != c.options.watcher {
+		err = c.Watch(config, c.options.watcher)
 	}
 
 	return
@@ -139,8 +96,4 @@ func (c *Config) bind(shell *cli.App, shadow *cli.App) {
 	}
 	shell.Flags = append(shell.Flags, configFlag)
 	shadow.Flags = append(shadow.Flags, configFlag)
-}
-
-func (c *Config) loadable() bool {
-	return `` == c.path || nil == c.data
 }

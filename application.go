@@ -49,7 +49,7 @@ func New(opts ...option) *Application {
 			afterExecutors:  make([]app.Executor, 0),
 		}
 		// 注入配置对象，后续使用
-		application.config = newConfig(_options)
+		application.config = newConfig(_options.configOptions)
 
 		// 初始化内置变量及内置命令
 		// 之所以在这儿完全初始化，是因为可能会在任意地方调用方法，而在调用这些方法时要求必须完成初始化
