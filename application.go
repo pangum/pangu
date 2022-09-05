@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/goexl/exc"
+	"github.com/goexl/gfx"
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/pangu/app"
@@ -273,6 +274,11 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 // Load 取得解析后的配置
 func (a *Application) Load(config interface{}, opts ...configOption) (err error) {
 	return a.config.Load(config, opts...)
+}
+
+// Watch 监控配置变化
+func (a *Application) Watch(config any, watcher configWatcher) (err error) {
+	return gfx.Watch(a.config.path, newConfigFileWatcher(config, a.config.path, watcher, a.config.options))
 }
 
 func (a *Application) bind(shell *cli.App) error {
