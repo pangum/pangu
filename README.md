@@ -4,6 +4,7 @@
 ![版本](https://img.shields.io/github/go-mod/go-version/pangum/pangu)
 ![仓库大小](https://img.shields.io/github/repo-size/pangum/pangu)
 ![最后提交](https://img.shields.io/github/last-commit/pangum/pangu)
+![授权协议](https://img.shields.io/github/license/pangum/pangu)
 ![星星个数](https://img.shields.io/github/stars/pangum/pangu?style=social)
 
 一个Golang应用程序快速开发框架，有以下特性
