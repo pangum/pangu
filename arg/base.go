@@ -13,8 +13,8 @@ type base struct {
 	aliases []string
 	// 使用方法
 	usage string
-	// 环境变量
-	envVars []string
+	// 环境变量列表
+	envs []string
 	// 是否是必须
 	required bool
 	// 是否隐藏
@@ -49,25 +49,25 @@ func NewArg(
 		name:        name,
 		aliases:     aliases,
 		usage:       usage,
-		envVars:     envs,
+		envs:        envs,
 		required:    required,
 		hidden:      hidden,
 		defaultText: text,
 	}
 }
 
-func (a *base) Name() string {
-	return a.name
+func (b *base) Name() string {
+	return b.name
 }
 
-func (a *base) Aliases() []string {
-	return a.aliases
+func (b *base) Aliases() []string {
+	return b.aliases
 }
 
-func (a *base) Usage() string {
-	return a.usage
+func (b *base) Usage() string {
+	return b.usage
 }
 
-func (a *base) DefaultText() string {
-	return a.defaultText
+func (b *base) DefaultText() string {
+	return b.defaultText
 }
