@@ -1,5 +1,5 @@
 pull_request_rules:
-  - name: Automatic merge on approval
+  - name: 自动合并
     conditions:
       - "#approved-reviews-by>=1"
     actions:
