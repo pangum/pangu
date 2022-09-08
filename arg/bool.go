@@ -12,21 +12,13 @@ var (
 
 type boolArg struct {
 	*base
-
-	// 值
-	value bool
 }
 
 // NewBool 创建布尔参数
-func NewBool(base *base, value bool) *boolArg {
+func NewBool(name string, opts ...option) *boolArg {
 	return &boolArg{
-		base:  base,
-		value: value,
+		base: _new(name, opts...),
 	}
-}
-
-func (b *boolArg) Value() interface{} {
-	return b.Value
 }
 
 func (b *boolArg) Flag() app.Flag {
@@ -34,7 +26,10 @@ func (b *boolArg) Flag() app.Flag {
 		Name:        b.Name(),
 		Aliases:     b.Aliases(),
 		Usage:       b.Usage(),
-		Value:       b.Value().(bool),
+		Destination: b.Destination().(*bool),
+		Value:       b.Default().(bool),
 		DefaultText: b.DefaultText(),
+		Required:    b.Required(),
+		Hidden:      b.Hidden(),
 	}
 }

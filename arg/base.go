@@ -1,14 +1,12 @@
 package arg
 
-var (
-	_ = DefaultArg
-	_ = NewRequiredArg
-	_ = NewHiddenArg
-)
-
 type base struct {
 	// 名称
 	name string
+	// 默认值
+	_default any
+	// 绑定
+	destination any
 	// 别名
 	aliases []string
 	// 使用方法
@@ -19,45 +17,39 @@ type base struct {
 	required bool
 	// 是否隐藏
 	hidden bool
-	// 默认值
-	defaultText string
+	// 默认显示字符串
+	dt string
 }
 
-// DefaultArg 创建默认参数
-func DefaultArg(name string, usage string, aliases ...string) *base {
-	return NewArg(name, usage, false, false, ``, []string{}, aliases...)
-}
+func _new(name string, opts ...option) *base {
+	_options := defaultOption()
+	for _, opt := range opts {
+		opt.apply(_options)
+	}
 
-// NewRequiredArg 创建必填参数
-func NewRequiredArg(name string, usage string, aliases ...string) *base {
-	return NewArg(name, usage, true, false, ``, []string{}, aliases...)
-}
-
-// NewHiddenArg 创建隐藏参数
-func NewHiddenArg(name string, usage string, aliases ...string) *base {
-	return NewArg(name, usage, false, true, ``, []string{}, aliases...)
-}
-
-// NewArg 创建参数
-func NewArg(
-	name string, usage string,
-	required bool, hidden bool,
-	text string,
-	envs []string, aliases ...string,
-) *base {
 	return &base{
 		name:        name,
-		aliases:     aliases,
-		usage:       usage,
-		envs:        envs,
-		required:    required,
-		hidden:      hidden,
-		defaultText: text,
+		_default:    _options._default,
+		destination: _options.destination,
+		aliases:     _options.aliases,
+		usage:       _options.usage,
+		envs:        _options.envs,
+		required:    _options.required,
+		hidden:      _options.hidden,
+		dt:          _options.dt,
 	}
 }
 
 func (b *base) Name() string {
 	return b.name
+}
+
+func (b *base) Default() any {
+	return b._default
+}
+
+func (b *base) Destination() any {
+	return b.destination
 }
 
 func (b *base) Aliases() []string {
@@ -68,6 +60,14 @@ func (b *base) Usage() string {
 	return b.usage
 }
 
-func (b *base) Default() string {
-	return b.defaultText
+func (b *base) DefaultText() string {
+	return b.dt
+}
+
+func (b *base) Required() bool {
+	return b.required
+}
+
+func (b *base) Hidden() bool {
+	return b.hidden
 }

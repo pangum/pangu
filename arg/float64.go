@@ -12,29 +12,24 @@ var (
 
 type float64Arg struct {
 	*base
-
-	// 值
-	value float64
 }
 
 // NewFloat64 创建一个浮点型参数
-func NewFloat64(base *base, value float64) *float64Arg {
+func NewFloat64(name string, opts ...option) *float64Arg {
 	return &float64Arg{
-		base:  base,
-		value: value,
+		base: _new(name, opts...),
 	}
 }
 
-func (i *float64Arg) Value() interface{} {
-	return i.Value
-}
-
-func (i *float64Arg) Flag() app.Flag {
+func (f *float64Arg) Flag() app.Flag {
 	return &cli.Float64Flag{
-		Name:        i.Name(),
-		Aliases:     i.Aliases(),
-		Usage:       i.Usage(),
-		Value:       i.Value().(float64),
-		DefaultText: i.DefaultText(),
+		Name:        f.Name(),
+		Aliases:     f.Aliases(),
+		Usage:       f.Usage(),
+		Destination: f.Destination().(*float64),
+		Value:       f.Default().(float64),
+		DefaultText: f.DefaultText(),
+		Required:    f.Required(),
+		Hidden:      f.Hidden(),
 	}
 }

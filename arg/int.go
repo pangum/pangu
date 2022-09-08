@@ -13,21 +13,13 @@ var (
 
 type intArg struct {
 	*base
-
-	// 值
-	value int
 }
 
 // NewInt 创建一个整形参数
-func NewInt(base *base, value int) *intArg {
+func NewInt(name string, opts ...option) *intArg {
 	return &intArg{
-		base:  base,
-		value: value,
+		base: _new(name, opts...),
 	}
-}
-
-func (i *intArg) Value() interface{} {
-	return i.value
 }
 
 func (i *intArg) Flag() app.Flag {
@@ -35,7 +27,10 @@ func (i *intArg) Flag() app.Flag {
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
 		Usage:       i.Usage(),
-		Value:       i.Value().(int),
+		Destination: i.Destination().(*int),
+		Value:       i.Default().(int),
 		DefaultText: i.DefaultText(),
+		Required:    i.Required(),
+		Hidden:      i.Hidden(),
 	}
 }

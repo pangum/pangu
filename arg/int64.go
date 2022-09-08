@@ -12,21 +12,17 @@ var (
 
 type int64Arg struct {
 	*base
-
-	// 值
-	value int64
 }
 
 // NewInt64 创建一个整形参数
-func NewInt64(base *base, value int64) *int64Arg {
+func NewInt64(name string, opts ...option) *int64Arg {
 	return &int64Arg{
-		base:  base,
-		value: value,
+		base: _new(name, opts...),
 	}
 }
 
-func (i *int64Arg) Value() interface{} {
-	return i.Value
+func (i *int64Arg) Default() interface{} {
+	return i.Default
 }
 
 func (i *int64Arg) Flag() app.Flag {
@@ -34,7 +30,10 @@ func (i *int64Arg) Flag() app.Flag {
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
 		Usage:       i.Usage(),
-		Value:       i.Value().(int64),
+		Destination: i.Destination().(*int64),
+		Value:       i.Default().(int64),
 		DefaultText: i.DefaultText(),
+		Required:    i.Required(),
+		Hidden:      i.Hidden(),
 	}
 }

@@ -12,21 +12,13 @@ var (
 
 type stringArg struct {
 	*base
-
-	// 值
-	value string
 }
 
 // NewString 创建一个字符串参数
-func NewString(base *base, value string) *stringArg {
+func NewString(name string, opts ...option) *stringArg {
 	return &stringArg{
-		base:  base,
-		value: value,
+		base: _new(name, opts...),
 	}
-}
-
-func (s *stringArg) Value() interface{} {
-	return s.value
 }
 
 func (s *stringArg) Flag() app.Flag {
@@ -34,7 +26,10 @@ func (s *stringArg) Flag() app.Flag {
 		Name:        s.Name(),
 		Aliases:     s.Aliases(),
 		Usage:       s.Usage(),
-		Value:       s.Value().(string),
+		Destination: s.Destination().(*string),
+		Value:       s.Default().(string),
 		DefaultText: s.DefaultText(),
+		Required:    s.Required(),
+		Hidden:      s.Hidden(),
 	}
 }

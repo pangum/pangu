@@ -25,7 +25,7 @@ func NewInt64s(base *base, values ...int64) *int64sArg {
 	}
 }
 
-func (i *int64sArg) Value() interface{} {
+func (i *int64sArg) Default() interface{} {
 	return i.values
 }
 
@@ -34,7 +34,10 @@ func (i *int64sArg) Flag() app.Flag {
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
 		Usage:       i.Usage(),
-		Value:       cli.NewInt64Slice(i.Value().([]int64)...),
+		Destination: cli.NewInt64Slice(*i.Destination().(*[]int64)...),
+		Value:       cli.NewInt64Slice(i.Default().([]int64)...),
 		DefaultText: i.DefaultText(),
+		Required:    i.Required(),
+		Hidden:      i.Hidden(),
 	}
 }
