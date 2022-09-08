@@ -4,9 +4,12 @@ package app
 type Command interface {
 	parameter
 
-	// Run 命令实际执行
+	// Run 执行命令
 	Run(ctx *Context) error
 
-	// SubCommands 子命令
+	// Args 参数列表
+	Args() []Arg
+
+	// SubCommands 子命令列表
 	SubCommands() []Command
 }

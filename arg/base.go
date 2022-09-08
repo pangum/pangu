@@ -68,6 +68,6 @@ func (b *base) Usage() string {
 	return b.usage
 }
 
-func (b *base) DefaultText() string {
+func (b *base) Default() string {
 	return b.defaultText
 }

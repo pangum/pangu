@@ -6,8 +6,8 @@ type Arg interface {
 	// Value 参数值
 	Value() interface{}
 
-	// DefaultText 默认值
-	DefaultText() string
+	// Default 默认值
+	Default() string
 
 	// Flag 解析出真正使用的参数
 	Flag() Flag
