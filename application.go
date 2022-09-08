@@ -11,7 +11,7 @@ import (
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/pangu/app"
-	"github.com/pangum/pangu/command"
+	"github.com/pangum/pangu/cmd"
 	"github.com/storezhang/dig"
 	"github.com/urfave/cli/v2"
 )
@@ -108,7 +108,7 @@ func (a *Application) Adds(components ...interface{}) (err error) {
 
 // AddServes 添加一个服务器到应用程序中
 func (a *Application) AddServes(serves ...app.Serve) error {
-	return a.Invoke(func(cmd *command.Serve) {
+	return a.Invoke(func(cmd *cmd.Serve) {
 		for _, serve := range serves {
 			cmd.AddServes(serve)
 		}
@@ -118,14 +118,14 @@ func (a *Application) AddServes(serves ...app.Serve) error {
 // AddCommands 添加一个可以被执行的命令到应用程序中
 func (a *Application) AddCommands(commands ...app.Command) error {
 	return a.Invoke(func(startup *cli.App) {
-		for _, cmd := range commands {
-			_cmd := cmd
+		for _, command := range commands {
+			_command := command
 			startup.Commands = append(startup.Commands, &cli.Command{
-				Name:    _cmd.Name(),
-				Aliases: _cmd.Aliases(),
-				Usage:   _cmd.Usage(),
+				Name:    _command.Name(),
+				Aliases: _command.Aliases(),
+				Usage:   _command.Usage(),
 				Action: func(ctx *cli.Context) error {
-					return _cmd.Run(app.NewContext(ctx))
+					return _command.Run(app.NewContext(ctx))
 				},
 			})
 		}
@@ -135,9 +135,9 @@ func (a *Application) AddCommands(commands ...app.Command) error {
 // AddArgs 添加参数
 func (a *Application) AddArgs(args ...app.Arg) error {
 	return a.Invoke(func(startup *cli.App) {
-		for _, argument := range args {
-			parameter := argument
-			startup.Flags = append(startup.Flags, parameter.Flag())
+		for _, arg := range args {
+			_arg := arg
+			startup.Flags = append(startup.Flags, _arg.Flag())
 		}
 	})
 }
@@ -153,7 +153,7 @@ func (a *Application) AddExecutor(executors ...app.Executor) (err error) {
 		case app.ExecutorTypeBeforeServe:
 			fallthrough
 		case app.ExecutorTypeAfterServe:
-			err = a.Invoke(func(serve *command.Serve) {
+			err = a.Invoke(func(serve *cmd.Serve) {
 				serve.AddExecutors(executor)
 			})
 		}
@@ -360,7 +360,7 @@ func (a *Application) setupStartup() error {
 	cli.CommandHelpTemplate = a.options.helpCommandTemplate
 	cli.SubcommandHelpTemplate = a.options.helpSubcommandTemplate
 	cli.VersionPrinter = func(ctx *cli.Context) {
-		_ = a.Invoke(func(info *command.Info) error {
+		_ = a.Invoke(func(info *cmd.Info) error {
 			return info.Run(app.NewContext(ctx))
 		})
 	}
@@ -401,8 +401,8 @@ func (a *Application) addInternalCommands() error {
 	type commandIn struct {
 		In
 
-		Serve *command.Serve
-		Info  *command.Info
+		Serve *cmd.Serve
+		Info  *cmd.Info
 	}
 
 	return a.Invoke(func(in commandIn) error {
@@ -414,7 +414,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(gox.NewSnowflake); nil != err {
 		return
 	}
-	if err = a.Provides(command.NewServe, command.NewInfo); nil != err {
+	if err = a.Provides(cmd.NewServe, cmd.NewInfo); nil != err {
 		return
 	}
 	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {

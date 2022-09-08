@@ -4,22 +4,22 @@ import (
 	"fmt"
 
 	"github.com/pangum/pangu/app"
-	"github.com/pangum/pangu/command"
+	"github.com/pangum/pangu/cmd"
 	"github.com/pangum/pangu/example/plugin"
 )
 
 var _ app.Command = (*Test)(nil)
 
 type Test struct {
-	command.Base
+	cmd.Command
 
 	test plugin.Test
 }
 
 func newTest(test plugin.Test) *Test {
 	return &Test{
-		Base: command.NewBase("test", "测试命令", "t"),
-		test: test,
+		Command: cmd.New("test", "测试命令", "t"),
+		test:    test,
 	}
 }
 

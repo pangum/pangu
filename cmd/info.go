@@ -1,4 +1,4 @@
-package command
+package cmd
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ var _ app.Command = (*Info)(nil)
 // Info 描述一个打印版本信息的命令
 type (
 	Info struct {
-		Base
+		Command
 
 		app       info.Name
 		version   info.Version
@@ -41,7 +41,7 @@ type (
 // NewInfo 创建版本信息命令
 func NewInfo(in infoIn) *Info {
 	return &Info{
-		Base: Base{
+		Command: Command{
 			name:    `info`,
 			aliases: []string{`i`},
 			usage:   `打印应用程序信息`,

@@ -1,4 +1,4 @@
-package command
+package cmd
 
 import (
 	"os"
@@ -17,7 +17,7 @@ var _ app.Command = (*Serve)(nil)
 
 // Serve 描述一个提供服务的命令
 type Serve struct {
-	Base
+	Command
 
 	beforeExecutors []app.Executor
 	afterExecutors  []app.Executor
@@ -30,7 +30,7 @@ type Serve struct {
 // NewServe 创建服务命令
 func NewServe(logger app.Logger) *Serve {
 	return &Serve{
-		Base: Base{
+		Command: Command{
 			name:    `serve`,
 			aliases: []string{`s`},
 			usage:   `启动服务`,
