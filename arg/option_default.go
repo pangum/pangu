@@ -1,11 +1,16 @@
 package arg
 
+import (
+	"time"
+)
+
 var (
 	_        = String
 	_        = Bool
 	_        = Int
 	_        = Int64
 	_        = Float64
+	_        = Duration
 	_ option = (*optionDefault)(nil)
 )
 
@@ -35,6 +40,11 @@ func Int64(value *int64) *optionDefault {
 
 // Float64 默认值
 func Float64(value *float64) *optionDefault {
+	return _default(value)
+}
+
+// Duration 默认值
+func Duration(value *time.Duration) *optionDefault {
 	return _default(value)
 }
 
