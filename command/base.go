@@ -35,6 +35,10 @@ func (b *Base) Usage() string {
 	return b.usage
 }
 
+func (b *Base) Args() (args []app.Arg) {
+	return
+}
+
 func (b *Base) SubCommands() (commands []app.Command) {
 	return
 }
