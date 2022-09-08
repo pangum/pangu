@@ -1,6 +1,7 @@
 package arg
 
-type base struct {
+// Argument 参数
+type Argument struct {
 	// 名称
 	name string
 	// 默认值
@@ -21,13 +22,13 @@ type base struct {
 	dt string
 }
 
-func _new(name string, opts ...option) *base {
+func New(name string, opts ...option) *Argument {
 	_options := defaultOption()
 	for _, opt := range opts {
 		opt.apply(_options)
 	}
 
-	return &base{
+	return &Argument{
 		name:        name,
 		_default:    _options._default,
 		destination: _options.destination,
@@ -40,34 +41,34 @@ func _new(name string, opts ...option) *base {
 	}
 }
 
-func (b *base) Name() string {
+func (b *Argument) Name() string {
 	return b.name
 }
 
-func (b *base) Default() any {
+func (b *Argument) Default() any {
 	return b._default
 }
 
-func (b *base) Destination() any {
+func (b *Argument) Destination() any {
 	return b.destination
 }
 
-func (b *base) Aliases() []string {
+func (b *Argument) Aliases() []string {
 	return b.aliases
 }
 
-func (b *base) Usage() string {
+func (b *Argument) Usage() string {
 	return b.usage
 }
 
-func (b *base) DefaultText() string {
+func (b *Argument) DefaultText() string {
 	return b.dt
 }
 
-func (b *base) Required() bool {
+func (b *Argument) Required() bool {
 	return b.required
 }
 
-func (b *base) Hidden() bool {
+func (b *Argument) Hidden() bool {
 	return b.hidden
 }

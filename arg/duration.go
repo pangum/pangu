@@ -13,13 +13,13 @@ var (
 )
 
 type durationArg struct {
-	*base
+	*Argument
 }
 
 // NewDuration 创建时间区间参数
 func NewDuration(name string, opts ...option) *durationArg {
 	return &durationArg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 

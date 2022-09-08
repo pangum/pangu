@@ -11,13 +11,13 @@ var (
 )
 
 type boolArg struct {
-	*base
+	*Argument
 }
 
 // NewBool 创建布尔参数
 func NewBool(name string, opts ...option) *boolArg {
 	return &boolArg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 

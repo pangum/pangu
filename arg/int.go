@@ -12,13 +12,13 @@ var (
 )
 
 type intArg struct {
-	*base
+	*Argument
 }
 
 // NewInt 创建一个整形参数
 func NewInt(name string, opts ...option) *intArg {
 	return &intArg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 

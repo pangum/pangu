@@ -11,13 +11,13 @@ var (
 )
 
 type float64Arg struct {
-	*base
+	*Argument
 }
 
 // NewFloat64 创建一个浮点型参数
 func NewFloat64(name string, opts ...option) *float64Arg {
 	return &float64Arg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 

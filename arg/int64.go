@@ -11,13 +11,13 @@ var (
 )
 
 type int64Arg struct {
-	*base
+	*Argument
 }
 
 // NewInt64 创建一个整形参数
 func NewInt64(name string, opts ...option) *int64Arg {
 	return &int64Arg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 

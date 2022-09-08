@@ -11,13 +11,13 @@ var (
 )
 
 type stringArg struct {
-	*base
+	*Argument
 }
 
 // NewString 创建一个字符串参数
 func NewString(name string, opts ...option) *stringArg {
 	return &stringArg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 

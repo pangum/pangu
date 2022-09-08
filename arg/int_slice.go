@@ -11,17 +11,17 @@ var (
 )
 
 type intsArg struct {
-	*base
+	*Argument
 
 	// 值
 	values []int
 }
 
 // NewInts 创建一个整形数组参数
-func NewInts(base *base, values ...int) *intsArg {
+func NewInts(base *Argument, values ...int) *intsArg {
 	return &intsArg{
-		base:   base,
-		values: values,
+		Argument: base,
+		values:   values,
 	}
 }
 

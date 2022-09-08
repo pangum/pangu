@@ -11,17 +11,17 @@ var (
 )
 
 type int64sArg struct {
-	*base
+	*Argument
 
 	// 值
 	values []int64
 }
 
 // NewInt64s 创建一个整形数组参数
-func NewInt64s(base *base, values ...int64) *int64sArg {
+func NewInt64s(base *Argument, values ...int64) *int64sArg {
 	return &int64sArg{
-		base:   base,
-		values: values,
+		Argument: base,
+		values:   values,
 	}
 }
 

@@ -11,13 +11,13 @@ var (
 )
 
 type float64sArg struct {
-	*base
+	*Argument
 }
 
 // NewFloat64s 创建一个浮点数组参数
 func NewFloat64s(name string, opts ...option) *float64sArg {
 	return &float64sArg{
-		base: _new(name, opts...),
+		Argument: New(name, opts...),
 	}
 }
 func (f *float64sArg) Flag() app.Flag {
