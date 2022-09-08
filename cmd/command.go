@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/goexl/gox"
 	"github.com/pangum/pangu/app"
 )
 
@@ -12,16 +13,18 @@ type Command struct {
 	aliases []string
 	// 使用方法
 	usage string
+
+	_ gox.CannotCopy
 }
 
 // New 创建命令
-func New(name string, opts ...option) Command {
+func New(name string, opts ...option) *Command {
 	_options := defaultOption()
 	for _, opt := range opts {
 		opt.apply(_options)
 	}
 
-	return Command{
+	return &Command{
 		name:    name,
 		aliases: _options.aliases,
 		usage:   _options.usage,

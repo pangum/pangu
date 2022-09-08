@@ -1,5 +1,9 @@
 package arg
 
+import (
+	"github.com/goexl/gox"
+)
+
 // Argument 参数
 type Argument struct {
 	// 名称
@@ -20,6 +24,8 @@ type Argument struct {
 	hidden bool
 	// 默认显示字符串
 	dt string
+
+	_ gox.CannotCopy
 }
 
 func New(name string, opts ...option) *Argument {
