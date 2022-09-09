@@ -11,14 +11,14 @@ import (
 var _ app.Command = (*Test)(nil)
 
 type Test struct {
-	cmd.Command
+	*cmd.Command
 
 	test plugin.Test
 }
 
 func newTest(test plugin.Test) *Test {
 	return &Test{
-		Command: cmd.New("test", "测试命令", "t"),
+		Command: cmd.New("test", cmd.Usage("测试命令"), cmd.Aliases("t")),
 		test:    test,
 	}
 }
