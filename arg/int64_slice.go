@@ -13,31 +13,37 @@ var (
 type int64sArg struct {
 	*Argument
 
-	// 值
-	values []int64
+	destination []int64
 }
 
 // NewInt64s 创建一个整形数组参数
-func NewInt64s(base *Argument, values ...int64) *int64sArg {
+func NewInt64s(name string, destination []int64, opts ...option) *int64sArg {
 	return &int64sArg{
-		Argument: base,
-		values:   values,
+		Argument:    New(name, opts...),
+		destination: destination,
 	}
 }
 
-func (i *int64sArg) Default() interface{} {
-	return i.values
+func (i *int64sArg) Destination() any {
+	return i.destination
 }
 
-func (i *int64sArg) Flag() app.Flag {
-	return &cli.Int64SliceFlag{
+func (i *int64sArg) Flag() (flag app.Flag) {
+	isf := &cli.Int64SliceFlag{
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
 		Usage:       i.Usage(),
-		Destination: cli.NewInt64Slice(*i.Destination().(*[]int64)...),
-		Value:       cli.NewInt64Slice(i.Default().([]int64)...),
 		DefaultText: i.DefaultText(),
 		Required:    i.Required(),
 		Hidden:      i.Hidden(),
 	}
+	if nil != i.Default() {
+		isf.Value = cli.NewInt64Slice(i.Default().([]int64)...)
+	}
+	if nil != i.Destination() {
+		isf.Destination = cli.NewInt64Slice(*i.Destination().(*[]int64)...)
+	}
+	flag = isf
+
+	return
 }

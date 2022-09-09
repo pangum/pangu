@@ -1,5 +1,6 @@
 package app
 
+// Arg 参数
 type Arg interface {
 	parameter
 

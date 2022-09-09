@@ -47,6 +47,6 @@ func (c *Command) Args() (args []app.Arg) {
 	return
 }
 
-func (c *Command) SubCommands() (commands []app.Command) {
+func (c *Command) Subcommands() (commands []app.Command) {
 	return
 }

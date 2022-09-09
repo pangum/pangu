@@ -10,6 +10,6 @@ type Command interface {
 	// Args 参数列表
 	Args() []Arg
 
-	// SubCommands 子命令列表
-	SubCommands() []Command
+	// Subcommands 子命令列表
+	Subcommands() []Command
 }

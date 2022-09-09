@@ -12,24 +12,38 @@ var (
 
 type float64Arg struct {
 	*Argument
+
+	destination *float64
 }
 
 // NewFloat64 创建一个浮点型参数
-func NewFloat64(name string, opts ...option) *float64Arg {
+func NewFloat64(name string, destination *float64, opts ...option) *float64Arg {
 	return &float64Arg{
-		Argument: New(name, opts...),
+		Argument:    New(name, opts...),
+		destination: destination,
 	}
 }
 
-func (f *float64Arg) Flag() app.Flag {
-	return &cli.Float64Flag{
+func (f *float64Arg) Destination() any {
+	return f.destination
+}
+
+func (f *float64Arg) Flag() (flag app.Flag) {
+	ff := &cli.Float64Flag{
 		Name:        f.Name(),
 		Aliases:     f.Aliases(),
 		Usage:       f.Usage(),
-		Destination: f.Destination().(*float64),
-		Value:       f.Default().(float64),
 		DefaultText: f.DefaultText(),
 		Required:    f.Required(),
 		Hidden:      f.Hidden(),
 	}
+	if nil != f.Default() {
+		ff.Value = f.Default().(float64)
+	}
+	if nil != f.Destination() {
+		ff.Destination = f.Destination().(*float64)
+	}
+	flag = ff
+
+	return
 }

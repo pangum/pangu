@@ -6,14 +6,13 @@ type (
 	}
 
 	options struct {
-		_default    any
-		destination interface{}
-		aliases     []string
-		usage       string
-		envs        []string
-		required    bool
-		hidden      bool
-		dt          string
+		_default any
+		aliases  []string
+		usage    string
+		envs     []string
+		required bool
+		hidden   bool
+		dt       string
 	}
 )
 

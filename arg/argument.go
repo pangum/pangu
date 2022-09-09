@@ -10,8 +10,6 @@ type Argument struct {
 	name string
 	// 默认值
 	_default any
-	// 绑定
-	destination any
 	// 别名
 	aliases []string
 	// 使用方法
@@ -35,15 +33,14 @@ func New(name string, opts ...option) *Argument {
 	}
 
 	return &Argument{
-		name:        name,
-		_default:    _options._default,
-		destination: _options.destination,
-		aliases:     _options.aliases,
-		usage:       _options.usage,
-		envs:        _options.envs,
-		required:    _options.required,
-		hidden:      _options.hidden,
-		dt:          _options.dt,
+		name:     name,
+		_default: _options._default,
+		aliases:  _options.aliases,
+		usage:    _options.usage,
+		envs:     _options.envs,
+		required: _options.required,
+		hidden:   _options.hidden,
+		dt:       _options.dt,
 	}
 }
 
@@ -55,8 +52,8 @@ func (b *Argument) Default() any {
 	return b._default
 }
 
-func (b *Argument) Destination() any {
-	return b.destination
+func (b *Argument) Destination() (destination any) {
+	return
 }
 
 func (b *Argument) Aliases() []string {

@@ -30,7 +30,7 @@ func newDefaultConfigLoader(options *configOptions) *defaultConfigLoader {
 func (dcl *defaultConfigLoader) Load(path string, config any) (err error) {
 	if _, exist := gfx.Exists(path); !exist && !dcl.options.nullable {
 		err = exc.NewField(`配置文件不存在`, field.String(`path`, path))
-	} else {
+	} else if exist {
 		dcl.data, err = os.ReadFile(path)
 	}
 	if nil != err {

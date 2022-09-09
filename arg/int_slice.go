@@ -13,31 +13,37 @@ var (
 type intsArg struct {
 	*Argument
 
-	// 值
-	values []int
+	destination *[]int
 }
 
 // NewInts 创建一个整形数组参数
-func NewInts(base *Argument, values ...int) *intsArg {
+func NewInts(base *Argument, destination *[]int, values ...int) *intsArg {
 	return &intsArg{
-		Argument: base,
-		values:   values,
+		Argument:    base,
+		destination: destination,
 	}
 }
 
-func (i *intsArg) Default() interface{} {
-	return i.values
+func (i *intsArg) Destination() any {
+	return i.destination
 }
 
-func (i *intsArg) Flag() app.Flag {
-	return &cli.IntSliceFlag{
+func (i *intsArg) Flag() (flag app.Flag) {
+	isf := &cli.IntSliceFlag{
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
 		Usage:       i.Usage(),
-		Destination: cli.NewIntSlice(*i.Destination().(*[]int)...),
-		Value:       cli.NewIntSlice(i.Default().([]int)...),
 		DefaultText: i.DefaultText(),
 		Required:    i.Required(),
 		Hidden:      i.Hidden(),
 	}
+	if nil != i.Default() {
+		isf.Value = cli.NewIntSlice(i.Default().([]int)...)
+	}
+	if nil != i.Destination() {
+		isf.Destination = cli.NewIntSlice(*i.Destination().(*[]int)...)
+	}
+	flag = isf
+
+	return
 }

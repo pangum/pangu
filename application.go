@@ -118,17 +118,7 @@ func (a *Application) AddServes(serves ...app.Serve) error {
 // AddCommands 添加一个可以被执行的命令到应用程序中
 func (a *Application) AddCommands(commands ...app.Command) error {
 	return a.Invoke(func(startup *cli.App) {
-		for _, command := range commands {
-			_command := command
-			startup.Commands = append(startup.Commands, &cli.Command{
-				Name:    _command.Name(),
-				Aliases: _command.Aliases(),
-				Usage:   _command.Usage(),
-				Action: func(ctx *cli.Context) error {
-					return _command.Run(app.NewContext(ctx))
-				},
-			})
-		}
+		startup.Commands = append(startup.Commands, a.commands(commands...)...)
 	})
 }
 
@@ -298,6 +288,39 @@ func (a *Application) run(shell *cli.App) error {
 
 func (a *Application) args() []string {
 	return os.Args
+}
+
+func (a *Application) commands(ins ...app.Command) (commands []*cli.Command) {
+	if 0 != len(ins) {
+		commands = make([]*cli.Command, 0, len(ins))
+	}
+
+	for _, in := range ins {
+		commands = append(commands, &cli.Command{
+			Name:        in.Name(),
+			Aliases:     in.Aliases(),
+			Usage:       in.Usage(),
+			Subcommands: a.commands(in.Subcommands()...),
+			Flags:       a.flags(in.Args()...),
+			Action: func(ctx *cli.Context) error {
+				return in.Run(app.NewContext(ctx))
+			},
+		})
+	}
+
+	return
+}
+
+func (a *Application) flags(ins ...app.Arg) (flags []cli.Flag) {
+	if 0 != len(ins) {
+		flags = make([]cli.Flag, 0, len(ins))
+	}
+
+	for _, in := range ins {
+		flags = append(flags, in.Flag())
+	}
+
+	return
 }
 
 func (a *Application) validateBoostrap(constructor interface{}) (err error) {

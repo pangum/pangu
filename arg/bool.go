@@ -21,15 +21,22 @@ func NewBool(name string, opts ...option) *boolArg {
 	}
 }
 
-func (b *boolArg) Flag() app.Flag {
-	return &cli.BoolFlag{
+func (b *boolArg) Flag() (flag app.Flag) {
+	bf := &cli.BoolFlag{
 		Name:        b.Name(),
 		Aliases:     b.Aliases(),
 		Usage:       b.Usage(),
-		Destination: b.Destination().(*bool),
-		Value:       b.Default().(bool),
 		DefaultText: b.DefaultText(),
 		Required:    b.Required(),
 		Hidden:      b.Hidden(),
 	}
+	if nil != b.Default() {
+		bf.Value = b.Default().(bool)
+	}
+	if nil != b.Destination() {
+		bf.Destination = b.Destination().(*bool)
+	}
+	flag = bf
+
+	return
 }

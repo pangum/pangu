@@ -12,23 +12,38 @@ var (
 
 type float64sArg struct {
 	*Argument
+
+	destination *[]float64
 }
 
 // NewFloat64s 创建一个浮点数组参数
-func NewFloat64s(name string, opts ...option) *float64sArg {
+func NewFloat64s(name string, destination *[]float64, opts ...option) *float64sArg {
 	return &float64sArg{
-		Argument: New(name, opts...),
+		Argument:    New(name, opts...),
+		destination: destination,
 	}
 }
-func (f *float64sArg) Flag() app.Flag {
-	return &cli.Float64SliceFlag{
+
+func (f *float64sArg) Destination() any {
+	return f.destination
+}
+
+func (f *float64sArg) Flag() (flag app.Flag) {
+	ff := &cli.Float64SliceFlag{
 		Name:        f.Name(),
 		Aliases:     f.Aliases(),
 		Usage:       f.Usage(),
-		Destination: cli.NewFloat64Slice(*f.Destination().(*[]float64)...),
-		Value:       cli.NewFloat64Slice(f.Default().([]float64)...),
 		DefaultText: f.DefaultText(),
 		Required:    f.Required(),
 		Hidden:      f.Hidden(),
 	}
+	if nil != f.Default() {
+		ff.Value = cli.NewFloat64Slice(f.Default().([]float64)...)
+	}
+	if nil != f.Destination() {
+		ff.Destination = cli.NewFloat64Slice(*f.Destination().(*[]float64)...)
+	}
+	flag = ff
+
+	return
 }

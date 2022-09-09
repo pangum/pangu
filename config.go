@@ -3,9 +3,7 @@ package pangu
 import (
 	"path/filepath"
 
-	"github.com/goexl/exc"
 	"github.com/goexl/gfx"
-	"github.com/goexl/gox/field"
 	"github.com/urfave/cli/v2"
 )
 
@@ -45,7 +43,7 @@ func (c *Config) Watch(config any, watcher configWatcher) (err error) {
 }
 
 func (c *Config) loadConfig(config any) (err error) {
-	if c.path, err = c.configFilepath(c.path); nil != err {
+	if c.path, err = c.configFilepath(); nil != err {
 		return
 	}
 
@@ -62,7 +60,7 @@ func (c *Config) loadConfig(config any) (err error) {
 	return
 }
 
-func (c *Config) configFilepath(conf string) (path string, err error) {
+func (c *Config) configFilepath() (path string, err error) {
 	gfxOptions := gfx.NewExistsOptions(
 		gfx.Paths(c.options.paths...),
 		gfx.Extensions(c.options.extensions...),
@@ -77,10 +75,10 @@ func (c *Config) configFilepath(conf string) (path string, err error) {
 		))
 	}
 
-	if final, exists := gfx.Exists(conf, gfxOptions...); exists {
+	if final, exists := gfx.Exists(c.path, gfxOptions...); exists {
 		path = final
-	} else {
-		err = exc.NewField(`找不到配置文件`, field.String(`path`, final))
+	} else { // 如果找不到配置文件，则所用默认的配置文件
+		path = c.path
 	}
 
 	return
