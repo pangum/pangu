@@ -210,7 +210,7 @@ func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
 // Run 启动应用程序
 func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 	// 验证启动器构造方法是否合法
-	if err = a.validateBoostrap(bootstrapConstructor); nil != err {
+	if err = a.validateBootstrap(bootstrapConstructor); nil != err {
 		return
 	}
 
@@ -323,7 +323,7 @@ func (a *Application) flags(ins ...app.Arg) (flags []cli.Flag) {
 	return
 }
 
-func (a *Application) validateBoostrap(constructor interface{}) (err error) {
+func (a *Application) validateBootstrap(constructor interface{}) (err error) {
 	if a.options.verify {
 		return
 	}
@@ -349,7 +349,7 @@ func (a *Application) validateBoostrap(constructor interface{}) (err error) {
 	// 只能返回一个类型为Bootstrap返回值
 	returnsCount := constructorType.NumOut()
 	if 1 != returnsCount || reflect.TypeOf((*Bootstrap)(nil)).Elem() != constructorType.Out(firstIndex) {
-		err = exc.NewMessage(exceptionBoostrapMustReturnBootstrap)
+		err = exc.NewMessage(exceptionBootstrapMustReturnBootstrap)
 	}
 
 	return
