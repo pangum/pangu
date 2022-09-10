@@ -393,6 +393,7 @@ func (a *Application) setupStartup() error {
 		startup.Description = a.options.description
 		startup.Usage = a.options.usage
 		startup.Copyright = a.options.copyright
+		startup.Metadata = a.options.metadata
 		if 0 != len(a.options.authors) {
 			authors := make([]*cli.Author, 0, len(a.options.authors))
 			for _, _author := range a.options.authors {

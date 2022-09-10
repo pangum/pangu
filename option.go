@@ -46,6 +46,8 @@ type (
 		copyright string
 		// 作者
 		authors []*author
+		// 元数据
+		metadata map[string]any
 
 		// 日志
 		logger app.Logger
@@ -75,6 +77,7 @@ func defaultOptions() *options {
 			data: `pangu`,
 			typ:  BannerTypeAscii,
 		},
+		metadata: make(map[string]any),
 
 		logger: simaqian.Must(simaqian.Zap()),
 	}
