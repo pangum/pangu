@@ -13,6 +13,8 @@ type Command struct {
 	aliases []string
 	// 使用方法
 	usage string
+	// 描述
+	description string
 
 	_ gox.CannotCopy
 }
@@ -49,4 +51,8 @@ func (c *Command) Args() (args []app.Arg) {
 
 func (c *Command) Subcommands() (commands []app.Command) {
 	return
+}
+
+func (c *Command) Description() string {
+	return c.description
 }

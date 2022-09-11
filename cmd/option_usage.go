@@ -9,7 +9,7 @@ type optionUsage struct {
 	usage string
 }
 
-// Usage 参数描述
+// Usage 命令使用描述
 func Usage(usage string) *optionUsage {
 	return &optionUsage{
 		usage: usage,

@@ -301,6 +301,7 @@ func (a *Application) commands(acs ...app.Command) (commands []*cli.Command) {
 			Name:        command.Name(),
 			Aliases:     command.Aliases(),
 			Usage:       command.Usage(),
+			Description: command.Description(),
 			Subcommands: a.commands(command.Subcommands()...),
 			Flags:       a.flags(command.Args()...),
 			Action: func(ctx *cli.Context) error {
@@ -426,8 +427,8 @@ func (a *Application) addInternalCommands() error {
 	type commandIn struct {
 		In
 
-		Serve *cmd.Serve
-		Info  *cmd.Info
+		Serve   *cmd.Serve
+		Info    *cmd.Info
 		Version *cmd.Version
 	}
 

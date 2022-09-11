@@ -6,8 +6,9 @@ type (
 	}
 
 	options struct {
-		aliases []string
-		usage   string
+		aliases     []string
+		usage       string
+		description string
 	}
 )
 

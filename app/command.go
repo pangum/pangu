@@ -12,4 +12,7 @@ type Command interface {
 
 	// Subcommands 子命令列表
 	Subcommands() []Command
+
+	// Description 描述
+	Description() string
 }
