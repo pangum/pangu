@@ -117,17 +117,17 @@ func (a *Application) AddServes(serves ...app.Serve) error {
 
 // AddCommands 添加一个可以被执行的命令到应用程序中
 func (a *Application) AddCommands(commands ...app.Command) error {
-	return a.Invoke(func(startup *cli.App) {
-		startup.Commands = append(startup.Commands, a.commands(commands...)...)
+	return a.Invoke(func(shell *cli.App) {
+		shell.Commands = append(shell.Commands, a.commands(commands...)...)
 	})
 }
 
 // AddArgs 添加参数
 func (a *Application) AddArgs(args ...app.Arg) error {
-	return a.Invoke(func(startup *cli.App) {
+	return a.Invoke(func(shell *cli.App) {
 		for _, arg := range args {
 			_arg := arg
-			startup.Flags = append(startup.Flags, _arg.Flag())
+			shell.Flags = append(shell.Flags, _arg.Flag())
 		}
 	})
 }
@@ -290,20 +290,21 @@ func (a *Application) args() []string {
 	return os.Args
 }
 
-func (a *Application) commands(ins ...app.Command) (commands []*cli.Command) {
-	if 0 != len(ins) {
-		commands = make([]*cli.Command, 0, len(ins))
+func (a *Application) commands(acs ...app.Command) (commands []*cli.Command) {
+	if 0 != len(acs) {
+		commands = make([]*cli.Command, 0, len(acs))
 	}
 
-	for _, in := range ins {
+	for _, ac := range acs {
+		command := ac
 		commands = append(commands, &cli.Command{
-			Name:        in.Name(),
-			Aliases:     in.Aliases(),
-			Usage:       in.Usage(),
-			Subcommands: a.commands(in.Subcommands()...),
-			Flags:       a.flags(in.Args()...),
+			Name:        command.Name(),
+			Aliases:     command.Aliases(),
+			Usage:       command.Usage(),
+			Subcommands: a.commands(command.Subcommands()...),
+			Flags:       a.flags(command.Args()...),
 			Action: func(ctx *cli.Context) error {
-				return in.Run(app.NewContext(ctx))
+				return command.Run(app.NewContext(ctx))
 			},
 		})
 	}
@@ -388,12 +389,12 @@ func (a *Application) setupStartup() error {
 		})
 	}
 
-	return a.Invoke(func(startup *cli.App) {
-		startup.Name = Name
-		startup.Description = a.options.description
-		startup.Usage = a.options.usage
-		startup.Copyright = a.options.copyright
-		startup.Metadata = a.options.metadata
+	return a.Invoke(func(shell *cli.App) {
+		shell.Name = Name
+		shell.Description = a.options.description
+		shell.Usage = a.options.usage
+		shell.Copyright = a.options.copyright
+		shell.Metadata = a.options.metadata
 		if 0 != len(a.options.authors) {
 			authors := make([]*cli.Author, 0, len(a.options.authors))
 			for _, _author := range a.options.authors {
@@ -402,7 +403,7 @@ func (a *Application) setupStartup() error {
 					Email: _author.email,
 				})
 			}
-			startup.Authors = authors
+			shell.Authors = authors
 		}
 	})
 }

@@ -14,7 +14,7 @@ var _ app.Command = (*Info)(nil)
 // Info 描述一个打印版本信息的命令
 type (
 	Info struct {
-		Command
+		*Command
 
 		app       info.Name
 		version   info.Version
@@ -41,11 +41,7 @@ type (
 // NewInfo 创建版本信息命令
 func NewInfo(in infoIn) *Info {
 	return &Info{
-		Command: Command{
-			name:    `info`,
-			aliases: []string{`i`},
-			usage:   `打印应用程序信息`,
-		},
+		Command: New(`info`, Usage(`打印应用程序信息`), Aliases(`i`, `information`)),
 
 		app:       in.App,
 		version:   in.Version,

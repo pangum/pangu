@@ -17,7 +17,7 @@ var _ app.Command = (*Serve)(nil)
 
 // Serve 描述一个提供服务的命令
 type Serve struct {
-	Command
+	*Command
 
 	beforeExecutors []app.Executor
 	afterExecutors  []app.Executor
@@ -30,11 +30,7 @@ type Serve struct {
 // NewServe 创建服务命令
 func NewServe(logger app.Logger) *Serve {
 	return &Serve{
-		Command: Command{
-			name:    `serve`,
-			aliases: []string{`s`},
-			usage:   `启动服务`,
-		},
+		Command: New(`serve`, Usage(`启动服务`), Aliases(`s`)),
 
 		beforeExecutors: make([]app.Executor, 0),
 		afterExecutors:  make([]app.Executor, 0),
