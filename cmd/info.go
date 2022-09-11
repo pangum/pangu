@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/pangum/pangu/app"
@@ -66,6 +67,8 @@ func (v *Info) Run(_ *app.Context) (err error) {
 	sb.WriteString(fmt.Sprintf(`%s\n`, strings.Repeat(`-`, 120)))
 
 	fmt.Print(sb.String())
+	// 刷新缓存，保证以上信息是一起被输出
+	os.Stdout.Sync()
 
 	return
 }
