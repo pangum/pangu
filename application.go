@@ -428,10 +428,11 @@ func (a *Application) addInternalCommands() error {
 
 		Serve *cmd.Serve
 		Info  *cmd.Info
+		Version *cmd.Version
 	}
 
 	return a.Invoke(func(in commandIn) error {
-		return a.AddCommands(in.Serve, in.Info)
+		return a.AddCommands(in.Serve, in.Info, in.Version)
 	})
 }
 
