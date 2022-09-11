@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: gomod
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     pull-request-branch-name:
       separator: "-"
     assignees:
@@ -14,7 +14,7 @@ updates:
   - package-ecosystem: npm
     directory: /doc
     schedule:
-      interval: weekly
+      interval: daily
     pull-request-branch-name:
       separator: "-"
     assignees:
