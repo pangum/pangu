@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/goexl/exc v0.0.4
-	github.com/goexl/gfx v0.1.0
+	github.com/goexl/gfx v0.1.1
 	github.com/goexl/gox v0.0.9
 	github.com/goexl/mengpo v0.2.0
 	github.com/goexl/simaqian v0.1.3
