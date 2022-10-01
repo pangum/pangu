@@ -441,7 +441,7 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(gox.NewSnowflake); nil != err {
 		return
 	}
-	if err = a.Provides(cmd.NewServe, cmd.NewInfo); nil != err {
+	if err = a.Provides(cmd.NewServe, cmd.NewInfo, cmd.NewVersion); nil != err {
 		return
 	}
 	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
