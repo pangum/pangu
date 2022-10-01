@@ -12,12 +12,15 @@ var (
 
 type boolArg struct {
 	*Argument
+
+	destination *bool
 }
 
 // NewBool 创建布尔参数
-func NewBool(name string, opts ...option) *boolArg {
+func NewBool(name string, destination *bool, opts ...option) *boolArg {
 	return &boolArg{
-		Argument: New(name, opts...),
+		Argument:    New(name, opts...),
+		destination: destination,
 	}
 }
 

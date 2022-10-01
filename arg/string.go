@@ -19,7 +19,8 @@ type stringArg struct {
 // NewString 创建一个字符串参数
 func NewString(name string, destination *string, opts ...option) *stringArg {
 	return &stringArg{
-		Argument: New(name, opts...),
+		Argument:    New(name, opts...),
+		destination: destination,
 	}
 }
 
