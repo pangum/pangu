@@ -5,17 +5,17 @@ go 1.18
 require (
 	github.com/goexl/exc v0.0.4
 	github.com/goexl/gfx v0.1.1
-	github.com/goexl/gox v0.0.9
+	github.com/goexl/gox v0.1.1
 	github.com/goexl/mengpo v0.2.0
-	github.com/goexl/simaqian v0.1.3
+	github.com/goexl/simaqian v0.1.4
 	github.com/goexl/xiren v0.0.3
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.20.2
-	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
-	golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 )
 
