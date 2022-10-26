@@ -6,7 +6,7 @@ require (
 	github.com/goexl/exc v0.0.4
 	github.com/goexl/gfx v0.1.1
 	github.com/goexl/gox v0.1.2
-	github.com/goexl/mengpo v0.2.0
+	github.com/goexl/mengpo v0.2.1
 	github.com/goexl/simaqian v0.1.8
 	github.com/goexl/xiren v0.0.3
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
