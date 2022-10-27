@@ -83,7 +83,7 @@ func New(opts ...option) *Application {
 }
 
 // Adds 添加各种组件到系统中
-func (a *Application) Adds(components ...interface{}) (err error) {
+func (a *Application) Adds(components ...any) (err error) {
 	for _, component := range components {
 		switch typ := component.(type) {
 		case app.Executor:
@@ -153,7 +153,7 @@ func (a *Application) AddExecutor(executors ...app.Executor) (err error) {
 }
 
 // Provide 提供依赖关系
-func (a *Application) Provide(constructor interface{}, opts ...provideOption) (err error) {
+func (a *Application) Provide(constructor any, opts ...provideOption) (err error) {
 	_options := defaultProvideOptions()
 	for _, opt := range opts {
 		opt.applyProvide(_options)
@@ -168,16 +168,16 @@ func (a *Application) Provide(constructor interface{}, opts ...provideOption) (e
 	return
 }
 
-// Dependence 提供依赖关系，如果依赖关系有错，退出
+// Dependency 提供依赖关系，如果依赖关系有错，退出
 // Provide 方法的特殊封装，如果有错误直接退出
-func (a *Application) Dependence(constructor interface{}, opts ...provideOption) {
+func (a *Application) Dependency(constructor any, opts ...provideOption) {
 	if err := a.Provide(constructor, opts...); nil != err {
 		panic(err)
 	}
 }
 
 // Provides 提供依赖关系
-func (a *Application) Provides(constructors ...interface{}) (err error) {
+func (a *Application) Provides(constructors ...any) (err error) {
 	for _, constructor := range constructors {
 		if err = a.Provide(constructor); nil != err {
 			return
@@ -189,7 +189,7 @@ func (a *Application) Provides(constructors ...interface{}) (err error) {
 
 // Dependencies 提供依赖关系，如果依赖关系有错，退出
 // Provides 方法的特殊封装，如果有错误直接退出
-func (a *Application) Dependencies(constructors ...interface{}) {
+func (a *Application) Dependencies(constructors ...any) {
 	for _, constructor := range constructors {
 		if err := a.Provide(constructor); nil != err {
 			panic(err)
@@ -198,7 +198,7 @@ func (a *Application) Dependencies(constructors ...interface{}) {
 }
 
 // Invoke 获得依赖对象
-func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
+func (a *Application) Invoke(function any, opts ...invokeOption) error {
 	_options := defaultInvokeOptions()
 	for _, opt := range opts {
 		opt.applyInvoke(_options)
@@ -208,9 +208,9 @@ func (a *Application) Invoke(function interface{}, opts ...invokeOption) error {
 }
 
 // Run 启动应用程序
-func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
+func (a *Application) Run(constructor any) (err error) {
 	// 验证启动器构造方法是否合法
-	if err = a.validateBootstrap(bootstrapConstructor); nil != err {
+	if err = a.validateBootstrap(constructor); nil != err {
 		return
 	}
 
@@ -222,7 +222,7 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 	}
 
 	// 添加启动器到依赖关系中
-	if err = a.Provide(bootstrapConstructor); nil != err {
+	if err = a.Provide(constructor); nil != err {
 		return
 	}
 	// 绑定参数和命令到内部变量或者命令上
@@ -262,7 +262,7 @@ func (a *Application) Run(bootstrapConstructor interface{}) (err error) {
 }
 
 // Load 取得解析后的配置
-func (a *Application) Load(config interface{}, opts ...configOption) (err error) {
+func (a *Application) Load(config any, opts ...configOption) (err error) {
 	return a.config.Load(config, opts...)
 }
 
@@ -325,7 +325,7 @@ func (a *Application) flags(ins ...app.Arg) (flags []cli.Flag) {
 	return
 }
 
-func (a *Application) validateBootstrap(constructor interface{}) (err error) {
+func (a *Application) validateBootstrap(constructor any) (err error) {
 	if a.options.verify {
 		return
 	}
@@ -357,7 +357,7 @@ func (a *Application) validateBootstrap(constructor interface{}) (err error) {
 	return
 }
 
-func (a *Application) validateConstructor(constructor interface{}) (err error) {
+func (a *Application) validateConstructor(constructor any) (err error) {
 	if a.options.verify {
 		return
 	}
