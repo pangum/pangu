@@ -45,6 +45,10 @@ func (c *Command) Usage() string {
 	return c.usage
 }
 
+func (c *Command) Run(_ app.Context) (err error) {
+	return
+}
+
 func (c *Command) Args() (args []app.Arg) {
 	return
 }
