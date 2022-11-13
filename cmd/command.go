@@ -45,7 +45,7 @@ func (c *Command) Usage() string {
 	return c.usage
 }
 
-func (c *Command) Run(_ app.Context) (err error) {
+func (c *Command) Run(_ *app.Context) (err error) {
 	return
 }
 
