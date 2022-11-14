@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	_         = NewFloat64s
+	_         = NewFloat64Slice
 	_ app.Arg = (*float64SliceArg)(nil)
 )
 
@@ -16,8 +16,8 @@ type float64SliceArg struct {
 	destination *[]float64
 }
 
-// NewFloat64s 创建一个浮点数组参数
-func NewFloat64s(name string, destination *[]float64, opts ...option) *float64SliceArg {
+// NewFloat64Slice 创建一个浮点数组参数
+func NewFloat64Slice(name string, destination *[]float64, opts ...option) *float64SliceArg {
 	return &float64SliceArg{
 		Argument:    New(name, opts...),
 		destination: destination,
