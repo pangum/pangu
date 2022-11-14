@@ -7,28 +7,28 @@ import (
 
 var (
 	_         = NewFloat64s
-	_ app.Arg = (*float64sArg)(nil)
+	_ app.Arg = (*float64SliceArg)(nil)
 )
 
-type float64sArg struct {
+type float64SliceArg struct {
 	*Argument
 
 	destination *[]float64
 }
 
 // NewFloat64s 创建一个浮点数组参数
-func NewFloat64s(name string, destination *[]float64, opts ...option) *float64sArg {
-	return &float64sArg{
+func NewFloat64s(name string, destination *[]float64, opts ...option) *float64SliceArg {
+	return &float64SliceArg{
 		Argument:    New(name, opts...),
 		destination: destination,
 	}
 }
 
-func (f *float64sArg) Destination() any {
+func (f *float64SliceArg) Destination() any {
 	return f.destination
 }
 
-func (f *float64sArg) Flag() (flag app.Flag) {
+func (f *float64SliceArg) Flag() (flag app.Flag) {
 	ff := &cli.Float64SliceFlag{
 		Name:        f.Name(),
 		Aliases:     f.Aliases(),

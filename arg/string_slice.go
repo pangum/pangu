@@ -6,29 +6,29 @@ import (
 )
 
 var (
-	_         = NewStrings
-	_ app.Arg = (*stringsArg)(nil)
+	_         = NewStringSlice
+	_ app.Arg = (*stringSliceArg)(nil)
 )
 
-type stringsArg struct {
+type stringSliceArg struct {
 	*Argument
 
 	destination *[]string
 }
 
-// NewStrings 创建一个字符串数组参数
-func NewStrings(name string, destination *[]string, opts ...option) *stringsArg {
-	return &stringsArg{
+// NewStringSlice 创建一个字符串数组参数
+func NewStringSlice(name string, destination *[]string, opts ...option) *stringSliceArg {
+	return &stringSliceArg{
 		Argument:    New(name, opts...),
 		destination: destination,
 	}
 }
 
-func (s *stringsArg) Destination() any {
+func (s *stringSliceArg) Destination() any {
 	return s.destination
 }
 
-func (s *stringsArg) Flag() (flag app.Flag) {
+func (s *stringSliceArg) Flag() (flag app.Flag) {
 	sf := &cli.StringSliceFlag{
 		Name:        s.Name(),
 		Aliases:     s.Aliases(),
@@ -38,10 +38,10 @@ func (s *stringsArg) Flag() (flag app.Flag) {
 		Hidden:      s.Hidden(),
 	}
 	if nil != s.Default() {
-		sf.Value = cli.NewStringSlice(s.Default().([]string)...)
+		sf.Value = cli.NewStringSlice((s.Default().([]string))...)
 	}
 	if nil != s.Destination() {
-		sf.Destination = cli.NewStringSlice(*s.Destination().(*[]string)...)
+		sf.Destination = cli.NewStringSlice((*s.Destination().(*[]string))...)
 	}
 	flag = sf
 

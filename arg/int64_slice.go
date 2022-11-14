@@ -6,29 +6,29 @@ import (
 )
 
 var (
-	_         = NewInt64s
-	_ app.Arg = (*int64sArg)(nil)
+	_         = NewInt64Slice
+	_ app.Arg = (*int64SliceArg)(nil)
 )
 
-type int64sArg struct {
+type int64SliceArg struct {
 	*Argument
 
 	destination []int64
 }
 
-// NewInt64s 创建一个整形数组参数
-func NewInt64s(name string, destination []int64, opts ...option) *int64sArg {
-	return &int64sArg{
+// NewInt64Slice 创建一个整形数组参数
+func NewInt64Slice(name string, destination []int64, opts ...option) *int64SliceArg {
+	return &int64SliceArg{
 		Argument:    New(name, opts...),
 		destination: destination,
 	}
 }
 
-func (i *int64sArg) Destination() any {
+func (i *int64SliceArg) Destination() any {
 	return i.destination
 }
 
-func (i *int64sArg) Flag() (flag app.Flag) {
+func (i *int64SliceArg) Flag() (flag app.Flag) {
 	isf := &cli.Int64SliceFlag{
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),

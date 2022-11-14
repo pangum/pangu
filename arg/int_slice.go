@@ -6,29 +6,29 @@ import (
 )
 
 var (
-	_         = NewInts
-	_ app.Arg = (*intsArg)(nil)
+	_         = NewIntSlice
+	_ app.Arg = (*intSliceArg)(nil)
 )
 
-type intsArg struct {
+type intSliceArg struct {
 	*Argument
 
 	destination *[]int
 }
 
-// NewInts 创建一个整形数组参数
-func NewInts(base *Argument, destination *[]int, values ...int) *intsArg {
-	return &intsArg{
+// NewIntSlice 创建一个整形数组参数
+func NewIntSlice(base *Argument, destination *[]int, values ...int) *intSliceArg {
+	return &intSliceArg{
 		Argument:    base,
 		destination: destination,
 	}
 }
 
-func (i *intsArg) Destination() any {
+func (i *intSliceArg) Destination() any {
 	return i.destination
 }
 
-func (i *intsArg) Flag() (flag app.Flag) {
+func (i *intSliceArg) Flag() (flag app.Flag) {
 	isf := &cli.IntSliceFlag{
 		Name:        i.Name(),
 		Aliases:     i.Aliases(),
