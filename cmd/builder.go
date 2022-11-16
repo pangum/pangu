@@ -27,3 +27,9 @@ func (b *builder) Usage(usage string) *builder {
 
 	return b
 }
+
+func (b *builder) Category(category string) *builder {
+	b.command.category = category
+
+	return b
+}

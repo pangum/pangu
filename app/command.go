@@ -15,4 +15,7 @@ type Command interface {
 
 	// Description 描述文字
 	Description() string
+
+	// Category 分类
+	Category() string
 }

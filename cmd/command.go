@@ -15,6 +15,8 @@ type Command struct {
 	usage string
 	// 描述
 	description string
+	// 分类
+	category string
 
 	_ gox.CannotCopy
 }
@@ -45,4 +47,8 @@ func (c *Command) Subcommands() (commands app.Commands) {
 
 func (c *Command) Description() string {
 	return c.description
+}
+
+func (c *Command) Category() string {
+	return c.category
 }

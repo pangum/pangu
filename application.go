@@ -303,6 +303,7 @@ func (a *Application) commands(acs ...app.Command) (commands []*cli.Command) {
 			Usage:       command.Usage(),
 			Description: command.Description(),
 			Subcommands: a.commands(command.Subcommands()...),
+			Category:    command.Category(),
 			Flags:       a.flags(command.Arguments()...),
 			Action: func(ctx *cli.Context) error {
 				return command.Run(app.NewContext(ctx))
