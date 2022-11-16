@@ -17,22 +17,22 @@ type (
 	Version struct {
 		*Command
 
-		version   info.Version
+		version info.Version
 	}
 
 	versionIn struct {
 		dig.In
 
-		Version   info.Version
+		Version info.Version
 	}
 )
 
 // NewVersion 创建版本信息命令
 func NewVersion(in versionIn) *Version {
 	return &Version{
-		Command: New(`version`, Usage(`打印应用程序版本`), Aliases(`v`, `ver`)),
+		Command: New("version").Usage("打印应用程序版本").Aliases("v", "ver").Build(),
 
-		version:   in.Version,
+		version: in.Version,
 	}
 }
 

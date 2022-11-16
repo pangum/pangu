@@ -30,7 +30,7 @@ type Serve struct {
 // NewServe 创建服务命令
 func NewServe(logger app.Logger) *Serve {
 	return &Serve{
-		Command: New(`serve`, Usage(`启动服务`), Aliases(`s`)),
+		Command: New("serve").Usage("启动服务").Aliases("s").Build(),
 
 		beforeExecutors: make([]app.Executor, 0),
 		afterExecutors:  make([]app.Executor, 0),

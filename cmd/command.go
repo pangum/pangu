@@ -19,20 +19,6 @@ type Command struct {
 	_ gox.CannotCopy
 }
 
-// New 创建命令
-func New(name string, opts ...option) *Command {
-	_options := defaultOption()
-	for _, opt := range opts {
-		opt.apply(_options)
-	}
-
-	return &Command{
-		name:    name,
-		aliases: _options.aliases,
-		usage:   _options.usage,
-	}
-}
-
 func (c *Command) Name() string {
 	return c.name
 }
@@ -49,11 +35,11 @@ func (c *Command) Run(_ *app.Context) (err error) {
 	return
 }
 
-func (c *Command) Args() (args []app.Arg) {
+func (c *Command) Arguments() (args app.Arguments) {
 	return
 }
 
-func (c *Command) Subcommands() (commands []app.Command) {
+func (c *Command) Subcommands() (commands app.Commands) {
 	return
 }
 

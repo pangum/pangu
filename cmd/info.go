@@ -42,7 +42,7 @@ type (
 // NewInfo 创建版本信息命令
 func NewInfo(in infoIn) *Info {
 	return &Info{
-		Command: New(`info`, Usage(`打印应用程序信息`), Aliases(`i`, `information`)),
+		Command: New("info").Usage(`打印应用程序信息`).Aliases(`i`, `information`).Build(),
 
 		app:       in.App,
 		version:   in.Version,
