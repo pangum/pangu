@@ -87,6 +87,8 @@ func (a *argument[T]) Flag() (flag app.Flag) {
 		flag = a.uint64Slice()
 	case *float64:
 		flag = a.float64()
+	case *[]float64:
+		flag = a.float64Slice()
 	case *time.Duration:
 		flag = a.duration()
 	case *bool:
