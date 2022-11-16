@@ -35,13 +35,14 @@ func (a *argument[T]) stringSlice() (flag *cli.StringSliceFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = cli.NewStringSlice(a.Default().([]string)...)
+
+	defaults := a.Default().([]string)
+	flag.Value = cli.NewStringSlice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []string) (err error) {
 		_target := a.Target().(*[]string)
-		if nil != _target {
-			*_target = append(*_target, values...)
-		}
+		*_target = values
 		err = a.runAction(ctx)
+		*_target = append(*_target, defaults...)
 
 		return
 	}

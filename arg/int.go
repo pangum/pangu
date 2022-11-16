@@ -35,11 +35,14 @@ func (a *argument[T]) intSlice() (flag *cli.IntSliceFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = cli.NewIntSlice(a.Default().([]int)...)
+
+	defaults := a.Default().([]int)
+	flag.Value = cli.NewIntSlice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []int) (err error) {
 		_target := a.Target().(*[]int)
-		*_target = append(*_target, values...)
+		*_target = values
 		err = a.runAction(ctx)
+		*_target = append(*_target, defaults...)
 
 		return
 	}
@@ -78,11 +81,14 @@ func (a *argument[T]) int64Slice() (flag *cli.Int64SliceFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = cli.NewInt64Slice(a.Default().([]int64)...)
+
+	defaults := a.Default().([]int64)
+	flag.Value = cli.NewInt64Slice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []int64) (err error) {
 		_target := a.Target().(*[]int64)
-		*_target = append(*_target, values...)
+		*_target = values
 		err = a.runAction(ctx)
+		*_target = append(*_target, defaults...)
 
 		return
 	}
