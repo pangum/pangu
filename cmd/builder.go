@@ -33,3 +33,9 @@ func (b *builder) Category(category string) *builder {
 
 	return b
 }
+
+func (b *builder) Hidden() *builder {
+	b.command.hidden = true
+
+	return b
+}

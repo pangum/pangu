@@ -7,16 +7,12 @@ import (
 
 // Command 命令
 type Command struct {
-	// 名称
-	name string
-	// 别名
-	aliases []string
-	// 使用方法
-	usage string
-	// 描述
+	name        string
+	aliases     []string
+	usage       string
 	description string
-	// 分类
-	category string
+	category    string
+	hidden      bool
 
 	_ gox.CannotCopy
 }
@@ -51,4 +47,8 @@ func (c *Command) Description() string {
 
 func (c *Command) Category() string {
 	return c.category
+}
+
+func (c *Command) Hidden() bool {
+	return c.hidden
 }

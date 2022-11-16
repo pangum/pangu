@@ -9,4 +9,7 @@ type parameter interface {
 
 	// Usage 描述使用方法
 	Usage() string
+
+	// Hidden 是否在帮助信息或者显示命令时隐藏
+	Hidden() bool
 }

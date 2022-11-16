@@ -305,6 +305,7 @@ func (a *Application) commands(acs ...app.Command) (commands []*cli.Command) {
 			Subcommands: a.commands(command.Subcommands()...),
 			Category:    command.Category(),
 			Flags:       a.flags(command.Arguments()...),
+			Hidden:      command.Hidden(),
 			Action: func(ctx *cli.Context) error {
 				return command.Run(app.NewContext(ctx))
 			},

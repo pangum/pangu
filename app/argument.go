@@ -16,9 +16,6 @@ type Argument interface {
 	// Required 是否是必填项
 	Required() bool
 
-	// Hidden 是否是隐藏项
-	Hidden() bool
-
 	// Flag 解析出真正使用的参数
 	Flag() Flag
 }
