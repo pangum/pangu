@@ -92,7 +92,7 @@ func (a *Application) Adds(components ...any) (err error) {
 			err = a.AddServes(typ)
 		case app.Command:
 			err = a.AddCommands(typ)
-		case app.Arg:
+		case app.Argument:
 			err = a.AddArgs(typ)
 		default:
 			err = exc.NewField(`不支持的类型`, field.Any(`type`, typ))
@@ -123,7 +123,7 @@ func (a *Application) AddCommands(commands ...app.Command) error {
 }
 
 // AddArgs 添加参数
-func (a *Application) AddArgs(args ...app.Arg) error {
+func (a *Application) AddArgs(args ...app.Argument) error {
 	return a.Invoke(func(shell *cli.App) {
 		for _, arg := range args {
 			_arg := arg
@@ -303,7 +303,7 @@ func (a *Application) commands(acs ...app.Command) (commands []*cli.Command) {
 			Usage:       command.Usage(),
 			Description: command.Description(),
 			Subcommands: a.commands(command.Subcommands()...),
-			Flags:       a.flags(command.Args()...),
+			Flags:       a.flags(command.Arguments()...),
 			Action: func(ctx *cli.Context) error {
 				return command.Run(app.NewContext(ctx))
 			},
@@ -313,7 +313,7 @@ func (a *Application) commands(acs ...app.Command) (commands []*cli.Command) {
 	return
 }
 
-func (a *Application) flags(ins ...app.Arg) (flags []cli.Flag) {
+func (a *Application) flags(ins ...app.Argument) (flags []cli.Flag) {
 	if 0 != len(ins) {
 		flags = make([]cli.Flag, 0, len(ins))
 	}

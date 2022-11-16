@@ -1,49 +1,48 @@
 package arg
 
 import (
-	"github.com/pangum/pangu/app"
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	_         = NewString
-	_ app.Arg = (*stringArg)(nil)
-)
+func (a *argument[T]) string(target any, value any) (flag *cli.StringFlag) {
+	flag = new(cli.StringFlag)
+	flag.Name = a.name
+	flag.Aliases = a.aliases
+	flag.Usage = a.usage
+	flag.DefaultText = a.text
+	flag.Required = a.required
+	flag.Hidden = a.hidden
+	flag.EnvVars = a.envs
+	flag.Value = value.(string)
 
-type stringArg struct {
-	*Argument
+	_target := target.(*string)
+	if nil != _target {
+		flag.Destination = _target
+	}
+	flag.Action = func(ctx *cli.Context, values string) error {
+		return a.runAction(ctx)
+	}
 
-	destination *string
+	return
 }
 
-// NewString 创建一个字符串参数
-func NewString(name string, destination *string, opts ...option) *stringArg {
-	return &stringArg{
-		Argument:    New(name, opts...),
-		destination: destination,
-	}
-}
+func (a *argument[T]) stringSlice(target any, value any) (flag *cli.StringSliceFlag) {
+	flag = new(cli.StringSliceFlag)
+	flag.Name = a.name
+	flag.Aliases = a.aliases
+	flag.Usage = a.usage
+	flag.DefaultText = a.text
+	flag.Required = a.required
+	flag.Hidden = a.hidden
+	flag.EnvVars = a.envs
+	flag.Value = cli.NewStringSlice(value.([]string)...)
+	flag.Action = func(ctx *cli.Context, values []string) (err error) {
+		_target := target.(*[]string)
+		*_target = append(*_target, values...)
+		err = a.runAction(ctx)
 
-func (s *stringArg) Destination() any {
-	return s.destination
-}
-
-func (s *stringArg) Flag() (flag app.Flag) {
-	sf := &cli.StringFlag{
-		Name:        s.Name(),
-		Aliases:     s.Aliases(),
-		Usage:       s.Usage(),
-		DefaultText: s.DefaultText(),
-		Required:    s.Required(),
-		Hidden:      s.Hidden(),
+		return
 	}
-	if nil != s.Default() {
-		sf.Value = s.Default().(string)
-	}
-	if nil != s.Destination() {
-		sf.Destination = s.Destination().(*string)
-	}
-	flag = sf
 
 	return
 }

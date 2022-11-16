@@ -1,45 +1,27 @@
 package arg
 
 import (
-	"github.com/pangum/pangu/app"
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	_         = NewBool
-	_ app.Arg = (*boolArg)(nil)
-)
+func (a *argument[T]) bool(target any, value any) (flag *cli.BoolFlag) {
+	flag = new(cli.BoolFlag)
+	flag.Name = a.name
+	flag.Aliases = a.aliases
+	flag.Usage = a.usage
+	flag.DefaultText = a.text
+	flag.Required = a.required
+	flag.Hidden = a.hidden
+	flag.EnvVars = a.envs
+	flag.Value = value.(bool)
 
-type boolArg struct {
-	*Argument
-
-	destination *bool
-}
-
-// NewBool 创建布尔参数
-func NewBool(name string, destination *bool, opts ...option) *boolArg {
-	return &boolArg{
-		Argument:    New(name, opts...),
-		destination: destination,
+	_target := target.(*bool)
+	if nil != _target {
+		flag.Destination = _target
 	}
-}
-
-func (b *boolArg) Flag() (flag app.Flag) {
-	bf := &cli.BoolFlag{
-		Name:        b.Name(),
-		Aliases:     b.Aliases(),
-		Usage:       b.Usage(),
-		DefaultText: b.DefaultText(),
-		Required:    b.Required(),
-		Hidden:      b.Hidden(),
+	flag.Action = func(ctx *cli.Context, values bool) error {
+		return a.runAction(ctx)
 	}
-	if nil != b.Default() {
-		bf.Value = b.Default().(bool)
-	}
-	if nil != b.Destination() {
-		bf.Destination = b.Destination().(*bool)
-	}
-	flag = bf
 
 	return
 }

@@ -1,17 +1,17 @@
 package app
 
-// Arg 参数
-type Arg interface {
+// Argument 参数
+type Argument interface {
 	parameter
 
 	// Default 参数默认值
 	Default() any
 
-	// Destination 绑定值
-	Destination() any
+	// Target 绑定值
+	Target() any
 
-	// DefaultText 默认显示文本
-	DefaultText() string
+	// Text 默认显示文本
+	Text() string
 
 	// Required 是否是必填项
 	Required() bool

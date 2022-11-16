@@ -18,7 +18,7 @@ type Test struct {
 
 func newTest(test plugin.Test) *Test {
 	return &Test{
-		Command: cmd.New("test", cmd.Usage("测试命令"), cmd.Aliases("t")),
+		Command: cmd.New("test").Usage("测试命令").Aliases("t").Build(),
 		test:    test,
 	}
 }

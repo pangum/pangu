@@ -1,15 +1,22 @@
 package arg
 
 import (
+	"time"
+
 	"github.com/goexl/gox"
+	"github.com/pangum/pangu/app"
+	"github.com/urfave/cli/v2"
 )
 
-// Argument 参数
-type Argument struct {
+var _ app.Argument = (*argument[int])(nil)
+
+type argument[T argumentType] struct {
 	// 名称
 	name string
 	// 默认值
-	_default any
+	value T
+	// 目标
+	target *T
 	// 别名
 	aliases []string
 	// 使用方法
@@ -21,57 +28,78 @@ type Argument struct {
 	// 是否隐藏
 	hidden bool
 	// 默认显示字符串
-	dt string
+	text string
+	// 动作
+	action action[T]
 
 	_ gox.CannotCopy
 }
 
-func New(name string, opts ...option) *Argument {
-	_options := defaultOption()
-	for _, opt := range opts {
-		opt.apply(_options)
-	}
-
-	return &Argument{
-		name:     name,
-		_default: _options._default,
-		aliases:  _options.aliases,
-		usage:    _options.usage,
-		envs:     _options.envs,
-		required: _options.required,
-		hidden:   _options.hidden,
-		dt:       _options.dt,
-	}
+func (a *argument[T]) Name() string {
+	return a.name
 }
 
-func (b *Argument) Name() string {
-	return b.name
+func (a *argument[T]) Default() any {
+	return a.value
 }
 
-func (b *Argument) Default() any {
-	return b._default
-}
-
-func (b *Argument) Destination() (destination any) {
+func (a *argument[T]) Target() (target any) {
 	return
 }
 
-func (b *Argument) Aliases() []string {
-	return b.aliases
+func (a *argument[T]) Aliases() []string {
+	return a.aliases
 }
 
-func (b *Argument) Usage() string {
-	return b.usage
+func (a *argument[T]) Usage() string {
+	return a.usage
 }
 
-func (b *Argument) DefaultText() string {
-	return b.dt
+func (a *argument[T]) Text() string {
+	return a.text
 }
 
-func (b *Argument) Required() bool {
-	return b.required
+func (a *argument[T]) Required() bool {
+	return a.required
 }
 
-func (b *Argument) Hidden() bool {
-	return b.hidden
+func (a *argument[T]) Hidden() bool {
+	return a.hidden
+}
+
+func (a *argument[T]) Flag() (flag app.Flag) {
+	target := (any)(a.target)
+	value := (any)(a.value)
+
+	switch target.(type) {
+	case *int:
+		flag = a.int(target, value)
+	case *[]int:
+		flag = a.intSlice(target, value)
+	case *int64:
+		flag = a.int64(target, value)
+	case *[]int64:
+		flag = a.int64Slice(target, value)
+	case *float64:
+		flag = a.float64(target, value)
+	case *time.Duration:
+		flag = a.duration(target, value)
+	case *bool:
+		flag = a.bool(target, value)
+	case *string:
+		flag = a.string(target, value)
+	case *[]string:
+		flag = a.stringSlice(target, value)
+	}
+
+	return
+}
+
+func (a *argument[T]) runAction(ctx *cli.Context) (err error) {
+	if nil == a.action {
+		return
+	}
+	err = a.action(app.NewContext(ctx), *a.target)
+
+	return
 }

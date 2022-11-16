@@ -7,12 +7,12 @@ type Command interface {
 	// Run 执行命令
 	Run(ctx *Context) error
 
-	// Args 参数列表
-	Args() []Arg
+	// Arguments 参数列表
+	Arguments() Arguments
 
 	// Subcommands 子命令列表
-	Subcommands() []Command
+	Subcommands() Commands
 
-	// Description 描述
+	// Description 描述文字
 	Description() string
 }
