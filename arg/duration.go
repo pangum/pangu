@@ -6,7 +6,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func (a *argument[T]) duration(target any, value any) (flag *cli.DurationFlag) {
+func (a *argument[T]) duration() (flag *cli.DurationFlag) {
 	flag = new(cli.DurationFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -15,9 +15,9 @@ func (a *argument[T]) duration(target any, value any) (flag *cli.DurationFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = value.(time.Duration)
+	flag.Value = a.Default().(time.Duration)
 
-	_target := target.(*time.Duration)
+	_target := a.Target().(*time.Duration)
 	if nil != _target {
 		flag.Destination = _target
 	}

@@ -4,7 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func (a *argument[T]) int(target any, value any) (flag *cli.IntFlag) {
+func (a *argument[T]) int() (flag *cli.IntFlag) {
 	flag = new(cli.IntFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -13,9 +13,9 @@ func (a *argument[T]) int(target any, value any) (flag *cli.IntFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = value.(int)
+	flag.Value = a.Default().(int)
 
-	_target := target.(*int)
+	_target := a.Target().(*int)
 	if nil != _target {
 		flag.Destination = _target
 	}
@@ -26,7 +26,7 @@ func (a *argument[T]) int(target any, value any) (flag *cli.IntFlag) {
 	return
 }
 
-func (a *argument[T]) intSlice(target any, value any) (flag *cli.IntSliceFlag) {
+func (a *argument[T]) intSlice() (flag *cli.IntSliceFlag) {
 	flag = new(cli.IntSliceFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -35,9 +35,9 @@ func (a *argument[T]) intSlice(target any, value any) (flag *cli.IntSliceFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = cli.NewIntSlice(value.([]int)...)
+	flag.Value = cli.NewIntSlice(a.Default().([]int)...)
 	flag.Action = func(ctx *cli.Context, values []int) (err error) {
-		_target := target.(*[]int)
+		_target := a.Target().(*[]int)
 		*_target = append(*_target, values...)
 		err = a.runAction(ctx)
 
@@ -47,7 +47,7 @@ func (a *argument[T]) intSlice(target any, value any) (flag *cli.IntSliceFlag) {
 	return
 }
 
-func (a *argument[T]) int64(target any, value any) (flag *cli.Int64Flag) {
+func (a *argument[T]) int64() (flag *cli.Int64Flag) {
 	flag = new(cli.Int64Flag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -56,9 +56,9 @@ func (a *argument[T]) int64(target any, value any) (flag *cli.Int64Flag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = value.(int64)
+	flag.Value = a.Default().(int64)
 
-	_target := target.(*int64)
+	_target := a.Target().(*int64)
 	if nil != _target {
 		flag.Destination = _target
 	}
@@ -69,7 +69,7 @@ func (a *argument[T]) int64(target any, value any) (flag *cli.Int64Flag) {
 	return
 }
 
-func (a *argument[T]) int64Slice(target any, value any) (flag *cli.Int64SliceFlag) {
+func (a *argument[T]) int64Slice() (flag *cli.Int64SliceFlag) {
 	flag = new(cli.Int64SliceFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -78,9 +78,9 @@ func (a *argument[T]) int64Slice(target any, value any) (flag *cli.Int64SliceFla
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = cli.NewInt64Slice(value.([]int64)...)
+	flag.Value = cli.NewInt64Slice(a.Default().([]int64)...)
 	flag.Action = func(ctx *cli.Context, values []int64) (err error) {
-		_target := target.(*[]int64)
+		_target := a.Target().(*[]int64)
 		*_target = append(*_target, values...)
 		err = a.runAction(ctx)
 

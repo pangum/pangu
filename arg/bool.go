@@ -4,7 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func (a *argument[T]) bool(target any, value any) (flag *cli.BoolFlag) {
+func (a *argument[T]) bool() (flag *cli.BoolFlag) {
 	flag = new(cli.BoolFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -13,9 +13,9 @@ func (a *argument[T]) bool(target any, value any) (flag *cli.BoolFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = value.(bool)
+	flag.Value = a.Default().(bool)
 
-	_target := target.(*bool)
+	_target := a.Target().(*bool)
 	if nil != _target {
 		flag.Destination = _target
 	}

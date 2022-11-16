@@ -4,7 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func (a *argument[T]) string(target any, value any) (flag *cli.StringFlag) {
+func (a *argument[T]) string() (flag *cli.StringFlag) {
 	flag = new(cli.StringFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -13,9 +13,9 @@ func (a *argument[T]) string(target any, value any) (flag *cli.StringFlag) {
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = value.(string)
+	flag.Value = a.Default().(string)
 
-	_target := target.(*string)
+	_target := a.Target().(*string)
 	if nil != _target {
 		flag.Destination = _target
 	}
@@ -26,7 +26,7 @@ func (a *argument[T]) string(target any, value any) (flag *cli.StringFlag) {
 	return
 }
 
-func (a *argument[T]) stringSlice(target any, value any) (flag *cli.StringSliceFlag) {
+func (a *argument[T]) stringSlice() (flag *cli.StringSliceFlag) {
 	flag = new(cli.StringSliceFlag)
 	flag.Name = a.name
 	flag.Aliases = a.aliases
@@ -35,10 +35,12 @@ func (a *argument[T]) stringSlice(target any, value any) (flag *cli.StringSliceF
 	flag.Required = a.required
 	flag.Hidden = a.hidden
 	flag.EnvVars = a.envs
-	flag.Value = cli.NewStringSlice(value.([]string)...)
+	flag.Value = cli.NewStringSlice(a.Default().([]string)...)
 	flag.Action = func(ctx *cli.Context, values []string) (err error) {
-		_target := target.(*[]string)
-		*_target = append(*_target, values...)
+		_target := a.Target().(*[]string)
+		if nil != _target {
+			*_target = append(*_target, values...)
+		}
 		err = a.runAction(ctx)
 
 		return

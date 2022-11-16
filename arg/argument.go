@@ -43,8 +43,8 @@ func (a *argument[T]) Default() any {
 	return a.value
 }
 
-func (a *argument[T]) Target() (target any) {
-	return
+func (a *argument[T]) Target() any {
+	return a.target
 }
 
 func (a *argument[T]) Aliases() []string {
@@ -68,28 +68,25 @@ func (a *argument[T]) Hidden() bool {
 }
 
 func (a *argument[T]) Flag() (flag app.Flag) {
-	target := (any)(a.target)
-	value := (any)(a.value)
-
-	switch target.(type) {
+	switch a.Target().(type) {
 	case *int:
-		flag = a.int(target, value)
+		flag = a.int()
 	case *[]int:
-		flag = a.intSlice(target, value)
+		flag = a.intSlice()
 	case *int64:
-		flag = a.int64(target, value)
+		flag = a.int64()
 	case *[]int64:
-		flag = a.int64Slice(target, value)
+		flag = a.int64Slice()
 	case *float64:
-		flag = a.float64(target, value)
+		flag = a.float64()
 	case *time.Duration:
-		flag = a.duration(target, value)
+		flag = a.duration()
 	case *bool:
-		flag = a.bool(target, value)
+		flag = a.bool()
 	case *string:
-		flag = a.string(target, value)
+		flag = a.string()
 	case *[]string:
-		flag = a.stringSlice(target, value)
+		flag = a.stringSlice()
 	}
 
 	return
