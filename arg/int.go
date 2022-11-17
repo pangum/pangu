@@ -42,7 +42,9 @@ func (a *argument[T]) intSlice() (flag *cli.IntSliceFlag) {
 		_target := a.Target().(*[]int)
 		*_target = values
 		err = a.runAction(ctx)
-		*_target = append(*_target, defaults...)
+		if a.addable {
+			*_target = append(*_target, defaults...)
+		}
 
 		return
 	}
@@ -88,7 +90,9 @@ func (a *argument[T]) int64Slice() (flag *cli.Int64SliceFlag) {
 		_target := a.Target().(*[]int64)
 		*_target = values
 		err = a.runAction(ctx)
-		*_target = append(*_target, defaults...)
+		if a.addable {
+			*_target = append(*_target, defaults...)
+		}
 
 		return
 	}

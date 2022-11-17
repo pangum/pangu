@@ -42,7 +42,9 @@ func (a *argument[T]) float64Slice() (flag *cli.Float64SliceFlag) {
 		_target := a.Target().(*[]float64)
 		*_target = values
 		err = a.runAction(ctx)
-		*_target = append(*_target, defaults...)
+		if a.addable {
+			*_target = append(*_target, defaults...)
+		}
 
 		return
 	}

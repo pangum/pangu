@@ -25,6 +25,12 @@ func (b *builder[T]) Default(value T) *builder[T] {
 	return b
 }
 
+func (b *builder[T]) Addable() *builder[T] {
+	b.argument.addable = true
+
+	return b
+}
+
 func (b *builder[T]) Aliases(aliases ...string) *builder[T] {
 	b.argument.aliases = aliases
 

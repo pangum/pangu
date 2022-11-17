@@ -42,7 +42,9 @@ func (a *argument[T]) stringSlice() (flag *cli.StringSliceFlag) {
 		_target := a.Target().(*[]string)
 		*_target = values
 		err = a.runAction(ctx)
-		*_target = append(*_target, defaults...)
+		if a.addable {
+			*_target = append(*_target, defaults...)
+		}
 
 		return
 	}

@@ -15,6 +15,8 @@ type argument[T argumentType] struct {
 	name string
 	// 默认值
 	value T
+	// 默认值是否追加
+	addable bool
 	// 目标
 	target *T
 	// 别名
