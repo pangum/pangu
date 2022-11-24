@@ -8,7 +8,6 @@ import (
 
 	"github.com/goexl/exc"
 	"github.com/goexl/gfx"
-	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/pangu/app"
 	"github.com/pangum/pangu/cmd"
@@ -95,7 +94,7 @@ func (a *Application) Adds(components ...any) (err error) {
 		case app.Argument:
 			err = a.AddArgs(typ)
 		default:
-			err = exc.NewField(`不支持的类型`, field.Any(`type`, typ))
+			err = exc.NewField(`不支持的类型`, field.New("type", typ))
 		}
 
 		if nil != err {
@@ -335,7 +334,7 @@ func (a *Application) validateBootstrap(constructor any) (err error) {
 	constructorType := reflect.TypeOf(constructor)
 	// 构造方法必须是方法不能是其它类型
 	if reflect.Func != constructorType.Kind() {
-		err = exc.NewField(exceptionConstructorMustFunc, field.String(`constructor`, constructorType.String()))
+		err = exc.NewField(exceptionConstructorMustFunc, field.New("constructor", constructorType.String()))
 	}
 	if nil != err {
 		return
@@ -344,7 +343,7 @@ func (a *Application) validateBootstrap(constructor any) (err error) {
 	// 构造方法必须有依赖项
 	if 0 == constructorType.NumIn() {
 		constructorName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
-		err = exc.NewField(exceptionBootstrapMustHasDependencies, field.String(`constructor`, constructorName))
+		err = exc.NewField(exceptionBootstrapMustHasDependencies, field.New("constructor", constructorName))
 	}
 	if nil != err {
 		return
@@ -367,7 +366,7 @@ func (a *Application) validateConstructor(constructor any) (err error) {
 	constructorType := reflect.TypeOf(constructor)
 	// 构造方法必须是方法不能是其它类型
 	if reflect.Func != constructorType.Kind() {
-		err = exc.NewField(exceptionConstructorMustFunc, field.String(`constructor`, constructorType.String()))
+		err = exc.NewField(exceptionConstructorMustFunc, field.New("constructor", constructorType.String()))
 	}
 	if nil != err {
 		return
@@ -376,7 +375,7 @@ func (a *Application) validateConstructor(constructor any) (err error) {
 	// 构造方法必须有返回值
 	if 0 == constructorType.NumOut() {
 		constructorName := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
-		err = exc.NewField(exceptionConstructorMustReturn, field.String(`constructor`, constructorName))
+		err = exc.NewField(exceptionConstructorMustReturn, field.New("constructor", constructorName))
 	}
 
 	return
@@ -440,16 +439,10 @@ func (a *Application) addInternalCommands() error {
 }
 
 func (a *Application) addProvides() (err error) {
-	if err = a.Provides(gox.NewSnowflake); nil != err {
-		return
-	}
 	if err = a.Provides(cmd.NewServe, cmd.NewInfo, cmd.NewVersion); nil != err {
 		return
 	}
 	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
-		return
-	}
-	if err = a.Provides(newShell, app.NewDefaultService); nil != err {
 		return
 	}
 

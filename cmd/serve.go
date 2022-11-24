@@ -49,7 +49,7 @@ func (s *Serve) Adds(components ...interface{}) (err error) {
 		case app.Executor:
 			s.AddExecutors(typ)
 		default:
-			err = exc.NewField(`不支持的类型`, field.Any(`type`, typ))
+			err = exc.NewField(`不支持的类型`, field.New[any]("type", typ))
 		}
 
 		if nil != err {
@@ -85,11 +85,11 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 
 	serveCount := len(s.serves)
 	if 0 != serveCount {
-		s.logger.Info(`启动服务开始`, field.Int(`count`, serveCount))
+		s.logger.Info(`启动服务开始`, field.New[int](`count`, serveCount))
 		if err = s.startServes(ctx); nil != err {
 			return
 		}
-		s.logger.Info(`启动服务成功`, field.Int(`count`, serveCount))
+		s.logger.Info(`启动服务成功`, field.New[int](`count`, serveCount))
 	}
 
 	// 执行生命周期方法
@@ -112,13 +112,13 @@ func (s *Serve) startServes(ctx *app.Context) (err error) {
 		go func() {
 			defer wg.Done()
 
-			s.logger.Info(`启动服务成功`, field.String(`name`, _serve.Name()))
+			s.logger.Info(`启动服务成功`, field.New[string](`name`, _serve.Name()))
 			// 记录时间，如果发生错误的时间小于500毫秒，就是执行错误，应该立即退出；如果大于，则只记录日志
 			now := time.Now()
 			if startErr := _serve.Start(); nil != startErr {
 				errTime := time.Now()
 				if errTime.Sub(now) > 500*time.Millisecond {
-					s.logger.Info(`服务执行错误`, field.String(`name`, _serve.Name()), field.Error(startErr))
+					s.logger.Info(`服务执行错误`, field.New[string](`name`, _serve.Name()), field.Error(startErr))
 				} else {
 					panic(startErr)
 				}
@@ -149,9 +149,9 @@ func (s *Serve) stopServes(_ *app.Context) (err error) {
 		go func() {
 			defer wg.Done()
 
-			s.logger.Info(`停止服务成功`, field.String(`name`, _serve.Name()))
+			s.logger.Info("停止服务成功", field.New[string]("name", _serve.Name()))
 			if stopErr := _serve.Stop(); nil != stopErr {
-				s.logger.Info(`停止服务出错`, field.String(`name`, _serve.Name()), field.Error(stopErr))
+				s.logger.Info("停止服务出错", field.New[string]("name", _serve.Name()), field.Error(stopErr))
 			}
 		}()
 	}

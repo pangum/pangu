@@ -23,13 +23,13 @@ type defaultConfigLoader struct {
 func newDefaultConfigLoader(options *configOptions) *defaultConfigLoader {
 	return &defaultConfigLoader{
 		options: options,
-		data:    []byte(``),
+		data:    []byte(""),
 	}
 }
 
 func (dcl *defaultConfigLoader) Load(path string, config any) (err error) {
 	if _, exist := gfx.Exists(path); !exist && !dcl.options.nullable {
-		err = exc.NewField(`配置文件不存在`, field.String(`path`, path))
+		err = exc.NewField("配置文件不存在", field.New("path", path))
 	} else if exist {
 		dcl.data, err = os.ReadFile(path)
 	}

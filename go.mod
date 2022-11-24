@@ -1,20 +1,19 @@
 module github.com/pangum/pangu
 
-go 1.18
+go 1.19
 
 require (
-	github.com/goexl/exc v0.0.4
+	github.com/goexl/exc v0.0.5
 	github.com/goexl/gfx v0.1.6
-	github.com/goexl/gox v0.1.2
-	github.com/goexl/mengpo v0.2.1
-	github.com/goexl/simaqian v0.1.9
-	github.com/goexl/xiren v0.0.3
-	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/goexl/gox v0.1.4
+	github.com/goexl/mengpo v0.2.2
+	github.com/goexl/simaqian v0.2.0
+	github.com/goexl/xiren v0.0.4
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.23.5
-	golang.org/x/crypto v0.1.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/crypto v0.3.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 )
