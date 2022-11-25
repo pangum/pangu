@@ -150,8 +150,8 @@ func (s *Serve) stopServes(_ *app.Context) (err error) {
 			defer wg.Done()
 
 			s.logger.Info("停止服务成功", field.New[string]("name", _serve.Name()))
-			if stopErr := _serve.Stop(); nil != stopErr {
-				s.logger.Info("停止服务出错", field.New[string]("name", _serve.Name()), field.Error(stopErr))
+			if se := _serve.Stop(); nil != se {
+				s.logger.Info("停止服务出错", field.New[string]("name", _serve.Name()), field.Error(se))
 			}
 		}()
 	}

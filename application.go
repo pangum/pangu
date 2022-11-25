@@ -445,6 +445,9 @@ func (a *Application) addProvides() (err error) {
 	if err = a.Provides(name, version, build, timestamp, revision, branch, golang); nil != err {
 		return
 	}
+	if err = a.Provides(newShell); nil != err {
+		return
+	}
 
 	// 注入配置
 	if err = a.Provide(func() *Config {
