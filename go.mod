@@ -5,10 +5,10 @@ go 1.19
 require (
 	github.com/goexl/exc v0.0.5
 	github.com/goexl/gfx v0.1.6
-	github.com/goexl/gox v0.1.4
+	github.com/goexl/gox v0.1.6
 	github.com/goexl/mengpo v0.2.2
 	github.com/goexl/simaqian v0.2.0
-	github.com/goexl/xiren v0.0.4
+	github.com/goexl/xiren v0.0.5
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.23.5
