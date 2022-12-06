@@ -79,6 +79,6 @@ func defaultOptions() *options {
 		},
 		metadata: make(map[string]any),
 
-		logger: simaqian.Must(simaqian.Zap()),
+		logger: simaqian.Must(),
 	}
 }

@@ -7,14 +7,14 @@ require (
 	github.com/goexl/gfx v0.1.6
 	github.com/goexl/gox v0.1.6
 	github.com/goexl/mengpo v0.2.3
-	github.com/goexl/simaqian v0.2.0
+	github.com/goexl/simaqian v0.2.1
 	github.com/goexl/xiren v0.0.5
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
 	github.com/urfave/cli/v2 v2.23.6
 	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -39,12 +39,8 @@ require (
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
-	go.uber.org/zap v1.23.0 // indirect
+	go.uber.org/zap v1.24.0 // indirect
 )
 
 // v1 项目从原来的storezhang/pangu迁移过来，原来的版本号不再使用，直到最新发布到该版本
 retract [v1.0.0, v1.3.9]
-
-// replace github.com/storezhang/gox => ../gox
-// replace github.com/goexl/gfx => ../../goexl/gfx
-// replace github.com/goexl/exc => ../../goexl/exc
