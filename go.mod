@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/goexl/exc v0.0.5
-	github.com/goexl/gfx v0.1.6
+	github.com/goexl/gfx v0.1.7
 	github.com/goexl/gox v0.1.6
 	github.com/goexl/mengpo v0.2.3
 	github.com/goexl/simaqian v0.2.1
