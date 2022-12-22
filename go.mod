@@ -7,7 +7,7 @@ require (
 	github.com/goexl/gfx v0.1.7
 	github.com/goexl/gox v0.1.6
 	github.com/goexl/mengpo v0.2.3
-	github.com/goexl/simaqian v0.2.1
+	github.com/goexl/simaqian v0.2.2
 	github.com/goexl/xiren v0.0.5
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
