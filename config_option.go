@@ -69,7 +69,7 @@ func (co *configOptions) Load(path string, config any) (err error) {
 	// 处理默认值，此处逻辑不能往前，原因
 	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
 	if co.defaults {
-		err = mengpo.Set(config, mengpo.Tag(co.tag.defaults))
+		err = mengpo.New().Tag(co.tag.defaults).Build().Set(config)
 	}
 	if nil != err {
 		return
