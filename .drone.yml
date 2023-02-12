@@ -1,10 +1,14 @@
 kind: pipeline
 type: docker
-name: 盘古
+name: 发布
 
 
 clone:
   disable: true
+
+
+environment:
+  CHANGELOG_TAG_OUTPUT: CHANGELOG.tag.md
 
 
 steps:
