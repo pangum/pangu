@@ -1,17 +1,25 @@
 package app
 
 import (
+	"context"
+
 	"github.com/urfave/cli/v2"
 )
 
 // Context 描述上下文
 type Context struct {
+	context.Context
+
 	context *cli.Context
 }
 
-// NewContext 创建一个上下文
+// NewContext 创建上下文
 func NewContext(ctx *cli.Context) *Context {
-	return &Context{context: ctx}
+	return &Context{
+		Context: context.Background(),
+
+		context: ctx,
+	}
 }
 
 func (c *Context) String(name string) string {
