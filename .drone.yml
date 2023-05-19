@@ -1,3 +1,11 @@
+kind: secret
+name: token_github
+get:
+  path: secrets
+  name: token_github_storezhang
+---
+
+
 kind: pipeline
 type: docker
 name: 发布
@@ -14,9 +22,11 @@ environment:
 steps:
   - name: 代码
     image: ccr.ccs.tencentyun.com/dronestock/git
+    pull: always
 
   - name: 编译
     image: ccr.ccs.tencentyun.com/pangum/drone
+    pull: always
     volumes:
       - name: go
         path: /var/lib/go
@@ -26,6 +36,7 @@ steps:
 
   - name: 改变
     image: ccr.ccs.tencentyun.com/dronestock/changelog
+    pull: always
     when:
       event:
         - tag
@@ -35,32 +46,18 @@ steps:
 
   - name: 发布
     image: ccr.ccs.tencentyun.com/dronestock/github
+    pull: always
     when:
       event:
         - tag
     environment:
-      TOKEN:
+      TOKEN_GITHUB:
         from_secret: token_github
     settings:
       release:
         tag: $${DRONE_TAG}
-        token: $${TOKEN}
-        body: exe:file("$${CHANGELOG_TAG_OUTPUT}")
-
-  - name: 文档
-    image: ccr.ccs.tencentyun.com/dronestock/node
-    settings:
-      folder: doc
-
-  - name: 部署
-    image: ccr.ccs.tencentyun.com/dronestock/cos
-    settings:
-      folder: doc/dist
-      secret_id:
-        from_secret: secret_id_cos
-      secret_key:
-        from_secret: secret_key_cos
-      base_url: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
+        token: $${TOKEN_GITHUB}
+        body: file('$${CHANGELOG_TAG_OUTPUT}')
 
 
 volumes:
