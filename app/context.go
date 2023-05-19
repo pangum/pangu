@@ -30,6 +30,13 @@ func (c *Context) Set(name string, value string) error {
 	return c.context.Set(name, value)
 }
 
-func (c *Context) Value(name string) any {
-	return c.context.Value(name)
+func (c *Context) Value(key any) (value any) {
+	if _key, ok := key.(string); ok {
+		value = c.context.Value(_key)
+	}
+	if nil == value {
+		value = c.Context.Value(key)
+	}
+
+	return
 }
