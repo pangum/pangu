@@ -21,7 +21,7 @@ require (
 require (
 	github.com/drone/envsubst v1.0.3
 	github.com/goexl/env v0.0.2
-	github.com/zs5460/art v0.2.0
+	github.com/zs5460/art v0.3.0
 )
 
 require (
