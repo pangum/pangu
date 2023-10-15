@@ -1,3 +1,3 @@
 package constant
 
-const ApplicationName = `application`
+const ApplicationName = "application"

@@ -14,37 +14,38 @@ import (
 	"github.com/pangum/pangu/internal/config"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/runtime"
 	"github.com/pelletier/go-toml"
 	"gopkg.in/yaml.v3"
 )
 
-var _ config.Loader[int] = (*Config[int])(nil)
+var _ config.Loader = (*Config)(nil)
 
-type Config[T any] struct {
+type Config struct {
 	params *param.Config
 	data   []byte
 }
 
-func NewConfig[T any](params *param.Config) *Config[T] {
-	return &Config[T]{
+func NewConfig(params *param.Config) *Config {
+	return &Config{
 		params: params,
 		data:   []byte(""),
 	}
 }
 
-func (c *Config[T]) Load(path string) (value *T, err error) {
+func (c *Config) Load(path string, config runtime.Pointer) (err error) {
 	if re := c.read(path); nil != re {
 		err = re
 	} else if data, ge := envsubst.Eval(string(c.data), c.params.EnvironmentGetter); nil != ge {
 		err = ge
 	} else {
-		value, err = c.load(path, data)
+		err = c.load(path, data, config)
 	}
 
 	return
 }
 
-func (c *Config[T]) read(path string) (err error) {
+func (c *Config) read(path string) (err error) {
 	if _, exist := gfx.Exists(path); !exist && !c.params.Nullable {
 		err = exc.NewField("配置文件不存在", field.New("path", path))
 	} else if exist {
@@ -54,20 +55,20 @@ func (c *Config[T]) read(path string) (err error) {
 	return
 }
 
-func (c *Config[T]) load(path string, content string) (value *T, err error) {
+func (c *Config) load(path string, content string, config runtime.Pointer) (err error) {
 	switch strings.ToLower(filepath.Ext(path)) {
 	case constant.ExtensionYml:
 		fallthrough
 	case constant.ExtensionYaml:
-		err = yaml.Unmarshal([]byte(content), value)
+		err = yaml.Unmarshal([]byte(content), config)
 	case constant.ExtensionJson:
-		err = json.Unmarshal([]byte(content), value)
+		err = json.Unmarshal([]byte(content), config)
 	case constant.ExtensionToml:
-		err = toml.Unmarshal([]byte(content), value)
+		err = toml.Unmarshal([]byte(content), config)
 	case constant.ExtensionXml:
-		err = xml.Unmarshal([]byte(content), value)
+		err = xml.Unmarshal([]byte(content), config)
 	default:
-		err = yaml.Unmarshal([]byte(content), value)
+		err = yaml.Unmarshal([]byte(content), config)
 	}
 
 	return

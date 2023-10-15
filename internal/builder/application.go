@@ -24,11 +24,7 @@ func (a *Application) Verify() (application *Application) {
 }
 
 func (a *Application) Author(name string, email string) (application *Application) {
-	author := new(internal.Author)
-	author.Name = name
-	author.Email = email
-
-	a.params.Authors = append(a.params.Authors, author)
+	a.params.Authors = append(a.params.Authors, internal.NewAuthor(name, email))
 	application = a
 
 	return
@@ -57,6 +53,10 @@ func (a *Application) Metadata(key string, value any) (application *Application)
 
 func (a *Application) Banner() *Banner {
 	return NewBanner(a)
+}
+
+func (a *Application) Config() *Config {
+	return NewConfig(a)
 }
 
 func (a *Application) Help() *Help {

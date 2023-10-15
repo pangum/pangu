@@ -1,6 +1,10 @@
 package config
 
-type Loader[T any] interface {
+import (
+	"github.com/pangum/pangu/internal/runtime"
+)
+
+type Loader interface {
 	// Load 加载配置
-	Load(path string) (value *T, err error)
+	Load(path string, config runtime.Pointer) (err error)
 }

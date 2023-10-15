@@ -22,15 +22,22 @@ func (c *Config) Nullable() (config *Config) {
 	return
 }
 
-func (c *Config) Path(paths ...string) (config *Config) {
-	c.param.Paths = append(c.param.Paths, paths...)
+func (c *Config) Required() (config *Config) {
+	c.param.Nullable = false
 	config = c
 
 	return
 }
 
-func (c *Config) Extension(extensions ...string) (config *Config) {
-	c.param.Extensions = append(c.param.Extensions, extensions...)
+func (c *Config) Path(path string) (config *Config) {
+	c.param.Paths = append(c.param.Paths, path)
+	config = c
+
+	return
+}
+
+func (c *Config) Extension(extension string) (config *Config) {
+	c.param.Extensions = append(c.param.Extensions, extension)
 	config = c
 
 	return
@@ -44,11 +51,7 @@ func (c *Config) Default() (config *Config) {
 }
 
 func (c *Config) Environment(key string, value string) (config *Config) {
-	author := new(internal.Environment)
-	author.Key = key
-	author.Value = value
-
-	c.param.Environments = append(c.param.Environments, author)
+	c.param.Environments = append(c.param.Environments, internal.NewEnvironment(key, value))
 	config = c
 
 	return

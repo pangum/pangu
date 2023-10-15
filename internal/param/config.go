@@ -10,6 +10,7 @@ import (
 	"github.com/pangum/pangu/internal/config"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal"
+	"github.com/pangum/pangu/internal/runtime"
 )
 
 type Config struct {
@@ -20,7 +21,7 @@ type Config struct {
 	Validate bool
 	Nullable bool
 
-	Tag               *config.Tag
+	Tag               *Tag
 	EnvironmentGetter getter.Environment
 	Environments      internal.Environments
 	Watcher           config.Watcher
@@ -42,36 +43,25 @@ func NewConfig() *Config {
 			constant.ExtensionJson,
 			constant.ExtensionXml,
 		},
-
 		Default:  true,
 		Validate: true,
 		Nullable: true,
 
-		Tag: &config.Tag{
-			Default: constant.DefaultTag,
-		},
-
+		Tag:               NewTag(),
 		EnvironmentGetter: env.Get,
 		Environments:      make(internal.Environments, 0),
 	}
 }
 
-func (co *Config) Load(path string, config any) (err error) {
-	if err = co.Loader.Load(path, config); nil != err {
-		return
-	}
-
-	// 处理默认值，此处逻辑不能往前，原因
-	// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
-	if co.Default {
-		err = mengpo.New().Tag(co.Tag.Default).Build().Set(config)
-	}
-	if nil != err {
-		return
-	}
-
-	// 数据验证
-	if co.Validate {
+func (c *Config) Fill(path string, config runtime.Pointer) (err error) {
+	if le := c.Loader.Load(path, config); nil != le {
+		err = le
+	} else if c.Default {
+		// 处理默认值，此处逻辑不能往前，原因
+		// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
+		err = mengpo.New().Tag(c.Tag.Default).Build().Set(config)
+	} else if c.Validate {
+		// 数据验证
 		err = xiren.Struct(config)
 	}
 
