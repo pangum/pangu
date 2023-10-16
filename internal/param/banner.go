@@ -10,37 +10,38 @@ import (
 	"reflect"
 
 	"github.com/pangum/pangu/internal/asset"
-	banner2 "github.com/pangum/pangu/internal/internal/banner"
+	"github.com/pangum/pangu/internal/internal/banner"
 	"github.com/zs5460/art"
 )
 
 type Banner struct {
 	Data any
-	Type banner2.Type
+	Type banner.Type
 }
 
-func NewBanner() *Banner {
+func newBanner() *Banner {
 	return &Banner{
-		Type: banner2.TypeAscii,
+		Data: "Pangu",
+		Type: banner.TypeAscii,
 	}
 }
 
 func (b *Banner) Print() (err error) {
 	content := ""
 	switch b.Type {
-	case banner2.TypeTxt:
+	case banner.TypeTxt:
 		var data []byte
 		data, err = os.ReadFile(b.Data.(string))
 		content = string(data)
-	case banner2.TypeString:
+	case banner.TypeString:
 		content = b.Data.(string)
-	case banner2.TypeAscii:
+	case banner.TypeAscii:
 		content = art.String(b.Data.(string))
-	case banner2.TypeFilepath:
+	case banner.TypeFilepath:
 		content, err = b.asciiFromFilepath(b.Data.(string))
-	case banner2.TypeBinary:
+	case banner.TypeBinary:
 		content, err = b.asciiFromBytes(b.Data.([]byte))
-	case banner2.TypeFile:
+	case banner.TypeFile:
 		content, err = b.asciiFromReader(b.Data.(*os.File))
 	}
 	if nil != err {
@@ -85,7 +86,7 @@ func (b *Banner) asciiFromReader(reader io.Reader) (data string, err error) {
 		return
 	}
 
-	table := []byte(banner2.Ascii)
+	table := []byte(banner.Ascii)
 	buffer := new(bytes.Buffer)
 
 	for i := 0; i < conf.Height; i++ {

@@ -16,7 +16,7 @@ type Info struct {
 	*Base
 }
 
-func newInfo() *Info {
+func NewInfo() *Info {
 	return &Info{
 		Base: New("info").Usage(`打印应用程序信息`).Aliases(`i`, `information`).Build(),
 	}

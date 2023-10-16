@@ -22,7 +22,7 @@ type Serve struct {
 	logger app.Logger
 }
 
-func newServe(logger app.Logger) *Serve {
+func NewServe(logger app.Logger) *Serve {
 	return &Serve{
 		Base: New("serve").Usage("启动服务").Aliases("s").Build(),
 

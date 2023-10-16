@@ -28,7 +28,7 @@ type Config struct {
 	Loader            config.Loader
 }
 
-func NewConfig() *Config {
+func newConfig() *Config {
 	return &Config{
 		Paths: []string{
 			constant.ApplicationName,

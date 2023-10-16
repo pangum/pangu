@@ -1,4 +1,4 @@
-package exception
+package message
 
 const (
 	ConstructorMustReturn = "构造方法必须有返回值"

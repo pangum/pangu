@@ -1,25 +1,33 @@
 package container
 
 import (
+	"github.com/pangum/pangu/internal/internal/verifier"
 	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/runtime"
 	"github.com/storezhang/dig"
 )
 
 type Dependencies struct {
-	container *dig.Container
-	param     *param.Dependencies
+	container   *dig.Container
+	params      *param.Dependencies
+	constructor *verifier.Constructor
 }
 
-func NewDependencies(container *dig.Container, param *param.Dependencies) *Dependencies {
+func NewDependencies(
+	container *dig.Container,
+	params *param.Dependencies,
+	constructor *verifier.Constructor,
+) *Dependencies {
 	return &Dependencies{
-		container: container,
-		param:     param,
+		container:   container,
+		params:      params,
+		constructor: constructor,
 	}
 }
 
-func (d *Dependencies) Put(constructors ...any) (err error) {
+func (d *Dependencies) Put(constructors ...runtime.Constructor) (err error) {
 	for _, constructor := range constructors {
-		err = d.container.Provide(constructor)
+		err = d.put(constructor)
 		if nil != err {
 			break
 		}
@@ -28,13 +36,13 @@ func (d *Dependencies) Put(constructors ...any) (err error) {
 	return
 }
 
-func (d *Dependencies) Provide(constructors ...any) {
+func (d *Dependencies) Provide(constructors ...runtime.Constructor) {
 	if err := d.Put(constructors...); nil != err {
 		panic(err)
 	}
 }
 
-func (d *Dependencies) Get(functions ...any) (err error) {
+func (d *Dependencies) Get(functions ...runtime.Getter) (err error) {
 	for _, function := range functions {
 		err = d.container.Invoke(function)
 		if nil != err {
@@ -45,8 +53,18 @@ func (d *Dependencies) Get(functions ...any) (err error) {
 	return
 }
 
-func (d *Dependencies) Invoke(functions ...any) {
+func (d *Dependencies) Invoke(functions ...runtime.Getter) {
 	if err := d.Get(functions...); nil != err {
 		panic(err)
 	}
+}
+
+func (d *Dependencies) put(constructor runtime.Constructor) (err error) {
+	if ve := d.constructor.Verify(constructor); nil != ve {
+		err = ve
+	} else if pe := d.container.Provide(constructor); nil != pe {
+		err = pe
+	}
+
+	return
 }

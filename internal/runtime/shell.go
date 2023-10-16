@@ -10,12 +10,11 @@ type Shell struct {
 
 func NewShell() (shell *Shell) {
 	shell = new(Shell)
-
-	app := cli.NewApp()
-	app.EnableBashCompletion = true
-	app.UseShortOptionHandling = true
+	shell.App = cli.NewApp()
+	shell.App.EnableBashCompletion = true
+	shell.App.UseShortOptionHandling = true
 	// 定制版本显示，版本号不可改变
-	app.Version = Version
+	shell.App.Version = Version
 
 	// 定制版本标志
 	cli.VersionFlag = &cli.BoolFlag{

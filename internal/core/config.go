@@ -5,58 +5,53 @@ import (
 
 	"github.com/goexl/gfx"
 	"github.com/pangum/pangu/internal/constant"
+	"github.com/pangum/pangu/internal/internal/builder"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 
 type Config struct {
-	path  string
-	param *param.Config
+	*builder.Config
+
+	path     string
+	original *param.Config
+	params   *param.Config
 }
 
-func NewConfig(options *param.Config) *Config {
-	return &Config{
-		param: options,
-	}
-}
+func NewConfig(params *param.Config) (config *Config) {
+	original := new(param.Config)
+	*original = *params
 
-func (c *Config) Load(config any) (err error) {
-	// 加载配置文件
-	err = c.load(config)
+	config = new(Config)
+	config.Config = builder.NewConfig(original)
+	config.original = params
+	config.params = original
 
 	return
 }
 
-/* TODO func (c *Config) Watch(config any, watcher config.Watcher) (err error) {
-	return gfx.Watch(c.path, pangu.newConfigFileWatcher(config, c.path, watcher, c.param))
-}*/
-
-func (c *Config) load(config any) (err error) {
-	if c.path, err = c.configFilepath(); nil != err {
-		return
-	}
-
-	// 加载数据
-	if err = c.param.Load(c.path, config); nil != err {
-		return
-	}
-
-	// 配置文件监控
-	if nil != c.param.Watcher {
-		// TODO err = c.Watch(config, c.param.Watcher)
+func (c *Config) Load(config runtime.Pointer) (err error) {
+	if path, fpe := c.filepath(); nil != fpe {
+		err = fpe
+	} else if fe := c.params.Fill(path, config); nil != fe { // 加载数据
+		err = fe
+	} else if nil != c.params.Watcher { // 配置文件监控
+		// TODO err = c.Watch(config, c.params.Watcher)
+	} else {
+		c.path = path
 	}
 
 	return
 }
 
-func (c *Config) configFilepath() (path string, err error) {
+func (c *Config) filepath() (path string, err error) {
 	gfxOptions := gfx.NewExistsOptions(
-		gfx.Paths(c.param.Paths...),
-		gfx.Extensions(c.param.Extensions...),
+		gfx.Paths(c.params.Paths...),
+		gfx.Extensions(c.params.Extensions...),
 	)
 	// 如果配置了应用名称，可以使用应用名称的配置文件
-	if constant.DefaultName != runtime.Name {
+	if constant.ApplicationDefaultName != runtime.Name {
 		gfxOptions = append(gfxOptions, gfx.Paths(
 			runtime.Name,
 			filepath.Join(constant.ConfigDir, runtime.Name),
@@ -76,9 +71,13 @@ func (c *Config) configFilepath() (path string, err error) {
 
 func (c *Config) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 	flag := new(cli.StringFlag)
-	flag.Name = "config"
-	flag.Aliases = []string{"c", "conf", "configuration"}
-	flag.Value = "./conf/application.yaml"
+	flag.Name = constant.ConfigName
+	flag.Aliases = []string{
+		constant.ConfigAliasC,
+		constant.ConfigAliasConf,
+		constant.ConfigAliasConfiguration,
+	}
+	flag.Value = constant.ConfigDefaultFilepath
 	flag.Usage = "指定配置文件路径"
 	flag.Destination = &c.path
 

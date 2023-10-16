@@ -10,11 +10,12 @@ type Banner struct {
 	application *Application
 }
 
-func NewBanner(application *Application) *Banner {
-	return &Banner{
-		params:      param.NewBanner(),
-		application: application,
-	}
+func NewBanner(application *Application) (banner *Banner) {
+	banner = new(Banner)
+	banner.params = application.params.Banner
+	banner.application = application
+
+	return
 }
 
 func (b *Banner) Ascii(ascii string) (ban *Banner) {

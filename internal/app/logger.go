@@ -4,4 +4,6 @@ import (
 	"github.com/goexl/simaqian"
 )
 
-type Logger simaqian.Logger
+type Logger interface {
+	simaqian.Logger
+}

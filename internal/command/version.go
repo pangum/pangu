@@ -16,7 +16,7 @@ type Version struct {
 	*Base
 }
 
-func newVersion() *Version {
+func NewVersion() *Version {
 	return &Version{
 		Base: New("version").Usage("打印应用程序版本").Aliases("v", "ver").Build(),
 	}

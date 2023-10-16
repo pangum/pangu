@@ -9,11 +9,12 @@ type Help struct {
 	application *Application
 }
 
-func NewHelp(application *Application) *Help {
-	return &Help{
-		params:      param.NewHelp(),
-		application: application,
-	}
+func NewHelp(application *Application) (help *Help) {
+	help = new(Help)
+	help.params = application.params.Help
+	help.application = application
+
+	return
 }
 
 func (h *Help) App(tooltip string) (help *Help) {

@@ -8,6 +8,7 @@ type Application struct {
 	*Config
 	*Help
 	*Banner
+	*Code
 
 	// 合法性验证，包括
 	// 启动器构造方法合法性验证
@@ -28,8 +29,10 @@ type Application struct {
 
 func NewApplication() *Application {
 	return &Application{
-		Config: NewConfig(),
-		Help:   NewHelp(),
+		Config: newConfig(),
+		Help:   newHelp(),
+		Banner: newBanner(),
+		Code:   newCode(),
 	}
 }
 

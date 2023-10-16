@@ -13,7 +13,7 @@ type Help struct {
 	Subcommand string
 }
 
-func NewHelp() *Help {
+func newHelp() *Help {
 	return &Help{
 		App:        asset.HelpApp,
 		Command:    asset.HelpCommand,
