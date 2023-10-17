@@ -14,6 +14,9 @@ import (
 )
 
 type Config struct {
+	config.Loader
+	config.Watcher
+
 	Paths      []string
 	Extensions []string
 
@@ -24,8 +27,6 @@ type Config struct {
 	Tag               *Tag
 	EnvironmentGetter getter.Environment
 	Environments      internal.Environments
-	Watcher           config.Watcher
-	Loader            config.Loader
 }
 
 func newConfig() *Config {
@@ -54,14 +55,12 @@ func newConfig() *Config {
 }
 
 func (c *Config) Fill(path string, config runtime.Pointer) (err error) {
-	if le := c.Loader.Load(path, config); nil != le {
+	if le := c.Load(path, config); nil != le { // 从路径中加载数据
 		err = le
-	} else if c.Default {
-		// 处理默认值，此处逻辑不能往前，原因
-		// 如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成nil
+	} else if c.Default { // 处理默认值
+		// 此处逻辑不能往前，原因是如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成空值
 		err = mengpo.New().Tag(c.Tag.Default).Build().Set(config)
-	} else if c.Validate {
-		// 数据验证
+	} else if c.Validate { // 数据验证
 		err = xiren.Struct(config)
 	}
 
