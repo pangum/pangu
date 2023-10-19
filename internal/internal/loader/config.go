@@ -11,9 +11,9 @@ import (
 	"github.com/goexl/exc"
 	"github.com/goexl/gfx"
 	"github.com/goexl/gox/field"
+	"github.com/pangum/pangu/internal/callback/getter"
 	"github.com/pangum/pangu/internal/config"
 	"github.com/pangum/pangu/internal/constant"
-	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/pelletier/go-toml"
 	"gopkg.in/yaml.v3"
@@ -22,21 +22,23 @@ import (
 var _ config.Loader = (*Config)(nil)
 
 type Config struct {
-	params *param.Config
-	data   []byte
+	getter   getter.Environment
+	nullable bool
+	data     []byte
 }
 
-func NewConfig(params *param.Config) *Config {
+func NewConfig(getter getter.Environment, nullable bool) *Config {
 	return &Config{
-		params: params,
-		data:   []byte(""),
+		getter:   getter,
+		nullable: nullable,
+		data:     []byte(""),
 	}
 }
 
 func (c *Config) Load(path string, config runtime.Pointer) (err error) {
 	if re := c.read(path); nil != re {
 		err = re
-	} else if data, ge := envsubst.Eval(string(c.data), c.params.EnvironmentGetter); nil != ge {
+	} else if data, ge := envsubst.Eval(string(c.data), c.getter); nil != ge {
 		err = ge
 	} else {
 		err = c.load(path, data, config)
@@ -46,7 +48,7 @@ func (c *Config) Load(path string, config runtime.Pointer) (err error) {
 }
 
 func (c *Config) read(path string) (err error) {
-	if _, exist := gfx.Exists(path); !exist && !c.params.Nullable {
+	if _, exist := gfx.Exists(path); !exist && !c.nullable {
 		err = exc.NewField("配置文件不存在", field.New("path", path))
 	} else if exist {
 		c.data, err = os.ReadFile(path)

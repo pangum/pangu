@@ -37,12 +37,12 @@ func (d *Dependency) Provide(constructor runtime.Constructor) {
 	}
 }
 
-func (d *Dependency) Get(function runtime.Getter) error {
-	return d.container.Invoke(function)
+func (d *Dependency) Get(getter runtime.Getter) error {
+	return d.container.Invoke(getter)
 }
 
-func (d *Dependency) Invoke(function runtime.Getter) {
-	if err := d.Get(function); nil != err {
+func (d *Dependency) Invoke(getter runtime.Getter) {
+	if err := d.Get(getter); nil != err {
 		panic(err)
 	}
 }

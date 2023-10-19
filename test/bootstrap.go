@@ -5,7 +5,7 @@ import (
 )
 
 type Bootstrap struct {
-	pangu.Bootstrapper
+	pangu.Lifecycle
 }
 
 func NewBootstrap() *Bootstrap {

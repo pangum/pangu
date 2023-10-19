@@ -10,6 +10,7 @@ import (
 	"github.com/pangum/pangu/internal/config"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal"
+	"github.com/pangum/pangu/internal/internal/loader"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
@@ -29,29 +30,31 @@ type Config struct {
 	Environments      internal.Environments
 }
 
-func newConfig() *Config {
-	return &Config{
-		Paths: []string{
-			constant.ApplicationName,
-			filepath.Join(constant.ConfigDir, constant.ApplicationName),
-			filepath.Join(constant.ConfigConfDir, constant.ApplicationName),
-			filepath.Join(constant.ConfigConfigurationDir, constant.ApplicationName),
-		},
-		Extensions: []string{
-			constant.ExtensionYml,
-			constant.ExtensionYaml,
-			constant.ExtensionToml,
-			constant.ExtensionJson,
-			constant.ExtensionXml,
-		},
-		Default:  true,
-		Validate: true,
-		Nullable: true,
-
-		Tag:               NewTag(),
-		EnvironmentGetter: env.Get,
-		Environments:      make(internal.Environments, 0),
+func newConfig() (config *Config) {
+	config = new(Config)
+	config.Paths = []string{
+		constant.ApplicationName,
+		filepath.Join(constant.ConfigDir, constant.ApplicationName),
+		filepath.Join(constant.ConfigConfDir, constant.ApplicationName),
+		filepath.Join(constant.ConfigConfigurationDir, constant.ApplicationName),
 	}
+	config.Extensions = []string{
+		constant.ExtensionYml,
+		constant.ExtensionYaml,
+		constant.ExtensionToml,
+		constant.ExtensionJson,
+		constant.ExtensionXml,
+	}
+	config.Default = true
+	config.Validate = true
+	config.Nullable = true
+
+	config.Tag = NewTag()
+	config.EnvironmentGetter = env.Get
+	config.Environments = make(internal.Environments, 0)
+	config.Loader = loader.NewConfig(config.EnvironmentGetter, config.Nullable)
+
+	return
 }
 
 func (c *Config) Fill(path string, config runtime.Pointer) (err error) {
