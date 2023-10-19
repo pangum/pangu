@@ -1,12 +1,12 @@
 package command
 
 import (
-	"fmt"
 	"os"
-	"strings"
 
+	"github.com/olekukonko/tablewriter"
+	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/pangu/internal/command/internal/constant"
 )
 
 var _ app.Command = (*Info)(nil)
@@ -23,20 +23,16 @@ func NewInfo() *Info {
 }
 
 func (i *Info) Run(_ *app.Context) (err error) {
-	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf(`%s\n`, strings.Repeat(`-`, 120)))
-	sb.WriteString(fmt.Sprintf(`Name: %s\n`, runtime.Name))
-	sb.WriteString(fmt.Sprintf(`Version: %s\n`, runtime.Version))
-	sb.WriteString(fmt.Sprintf(`Build: %s\n`, runtime.Build))
-	sb.WriteString(fmt.Sprintf(`Timestamp: %s\n`, runtime.Timestamp))
-	sb.WriteString(fmt.Sprintf(`Revision: %s\n`, runtime.Revision))
-	sb.WriteString(fmt.Sprintf(`Branch: %s\n`, runtime.Branch))
-	sb.WriteString(fmt.Sprintf(`Golang: %s\n`, runtime.Golang))
-	sb.WriteString(fmt.Sprintf(`%s\n`, strings.Repeat(`-`, 120)))
-
-	fmt.Print(sb.String())
-	// 刷新缓存，保证以上信息是一起被输出
-	os.Stdout.Sync()
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{constant.HeaderName, constant.HeaderValue})
+	table.Append([]string{constant.ColumnName, internal.Name})
+	table.Append([]string{constant.ColumnVersion, internal.Version})
+	table.Append([]string{constant.ColumnBuild, internal.Build})
+	table.Append([]string{constant.ColumnTimestamp, internal.Timestamp})
+	table.Append([]string{constant.ColumnRevision, internal.Revision})
+	table.Append([]string{constant.ColumnBranch, internal.Branch})
+	table.Append([]string{constant.ColumnGolang, internal.Golang})
+	table.Render()
 
 	return
 }

@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/goexl/gfx"
+	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/builder"
 	"github.com/pangum/pangu/internal/param"
@@ -51,12 +52,12 @@ func (c *Config) filepath() (path string, err error) {
 		gfx.Extensions(c.params.Extensions...),
 	)
 	// 如果配置了应用名称，可以使用应用名称的配置文件
-	if constant.ApplicationDefaultName != runtime.Name {
+	if constant.ApplicationDefaultName != internal.Name {
 		gfxOptions = append(gfxOptions, gfx.Paths(
-			runtime.Name,
-			filepath.Join(constant.ConfigDir, runtime.Name),
-			filepath.Join(constant.ConfigConfDir, runtime.Name),
-			filepath.Join(constant.ConfigConfigurationDir, runtime.Name),
+			internal.Name,
+			filepath.Join(constant.ConfigDir, internal.Name),
+			filepath.Join(constant.ConfigConfDir, internal.Name),
+			filepath.Join(constant.ConfigConfigurationDir, internal.Name),
 		))
 	}
 

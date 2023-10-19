@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
-	"github.com/pangum/pangu/internal/runtime"
 )
 
 var _ app.Command = (*Version)(nil)
@@ -25,7 +25,7 @@ func NewVersion() *Version {
 func (v *Version) Run(_ *app.Context) (err error) {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
-	sb.WriteString(fmt.Sprintf("Version: %s\n", runtime.Version))
+	sb.WriteString(fmt.Sprintf("Version: %s\n", internal.Version))
 	sb.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
 
 	fmt.Print(sb.String())

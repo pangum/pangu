@@ -20,6 +20,7 @@ require (
 	github.com/goexl/env v0.0.2
 	github.com/goexl/mengpo v0.2.4
 	github.com/goexl/xiren v0.0.5
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/zs5460/art v0.3.0
 )
 
@@ -35,6 +36,7 @@ require (
 	github.com/goexl/http v0.0.6 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
+	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect

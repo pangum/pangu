@@ -9,6 +9,7 @@ import (
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/goexl/simaqian"
+	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/command"
 	"github.com/pangum/pangu/internal/constant"
@@ -223,7 +224,7 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 }
 
 func (a *Application) setupApp(shell *runtime.Shell) {
-	shell.Name = runtime.Name
+	shell.Name = internal.Name
 	shell.Description = a.params.Description
 	shell.Usage = a.params.Usage
 	shell.Copyright = a.params.Copyright

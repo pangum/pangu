@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"github.com/pangum/pangu/internal"
 	"github.com/urfave/cli/v2"
 )
 
@@ -14,7 +15,7 @@ func NewShell() (shell *Shell) {
 	shell.App.EnableBashCompletion = true
 	shell.App.UseShortOptionHandling = true
 	// 定制版本显示，版本号不可改变
-	shell.App.Version = Version
+	shell.App.Version = internal.Version
 
 	// 定制版本标志
 	cli.VersionFlag = &cli.BoolFlag{
