@@ -76,14 +76,14 @@ func (a *Application) Run(constructor runtime.Constructor) {
 		err = ese
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
 		err = ape
+	} else if bde := dependency.Get(a.bind); nil != bde { // 绑定参数和命令到内部变量或者命令上
+		err = bde
 	} else if cae := a.createApp(); nil != cae { // 创建应用
 		err = cae
 	} else if ace := dependency.Get(a.addCommands); nil != ace { // 增加内置的命令及参数
 		err = ace
 	} else if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
 		err = bpe
-	} else if bde := dependency.Get(a.bind); nil != bde { // 绑定参数和命令到内部变量或者命令上
-		err = bde
 	} else {
 		err = dependency.Get(a.boot)
 	}
