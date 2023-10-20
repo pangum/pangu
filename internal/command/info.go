@@ -7,22 +7,23 @@ import (
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/command/internal/constant"
+	"github.com/pangum/pangu/internal/runtime"
 )
 
 var _ app.Command = (*Info)(nil)
 
 // Info 描述一个打印版本信息的命令
 type Info struct {
-	*Base
+	*Default
 }
 
 func NewInfo() *Info {
 	return &Info{
-		Base: New("info").Usage(`打印应用程序信息`).Aliases(`i`, `information`).Build(),
+		Default: New("info").Usage(`打印应用程序信息`).Aliases(`i`, `information`).Build(),
 	}
 }
 
-func (i *Info) Run(_ *app.Context) (err error) {
+func (i *Info) Run(_ *runtime.Context) (err error) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{constant.HeaderName, constant.HeaderValue})
 	table.Append([]string{constant.ColumnName, internal.Name})

@@ -15,6 +15,7 @@ import (
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/get"
 	"github.com/pangum/pangu/internal/internal/builder"
+	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/internal/verifier"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
@@ -28,7 +29,7 @@ var (
 )
 
 type Application struct {
-	config    *Config
+	config    *config.Setup
 	params    *param.Application
 	container *dig.Container
 	// 影子启动器，用来处理额外的命令或者参数，因为正常的启动器无法完成此操作，原因是
@@ -55,7 +56,7 @@ func create(params *param.Application) {
 	application.params = params
 	application.container = dig.New()
 	application.shadow = runtime.NewShadow()
-	application.config = NewConfig(params.Config)
+	application.config = config.NewSetup(params.Config)
 }
 
 func (a *Application) Dependency() *builder.Dependency {
@@ -152,14 +153,14 @@ func (a *Application) addArg(args ...app.Argument) error {
 
 func (a *Application) bind(shell *runtime.Shell) (err error) {
 	// 接收配置文件路径参数
-	a.config.bind(shell, a.shadow)
+	a.config.Bind(shell, a.shadow)
 	// 影子执行，只有这样才能正确的使用配置文件的路径参数
 	err = a.shadow.Run(a.args())
 
 	return
 }
 
-func (a *Application) boot(bootstrap runtime.Bootstrap) (err error) {
+func (a *Application) boot(bootstrap app.Bootstrap) (err error) {
 	dependency := a.Dependency().Build()
 	if bse := bootstrap.Startup(); nil != bse { // 加载用户启动器并做好配置
 		err = bse
@@ -234,12 +235,12 @@ func (a *Application) setupApp(shell *runtime.Shell) {
 
 func (a *Application) versionPrinter(ctx *cli.Context) {
 	_ = a.Dependency().Build().Get(func(info *command.Info) error {
-		return info.Run(app.NewContext(ctx))
+		return info.Run(runtime.NewContext(ctx))
 	})
 }
 
 func (a *Application) putConfig() *Config {
-	return a.config
+	return NewConfig(a.config, a.params.Config)
 }
 
 func (a *Application) putSelf() *Application {

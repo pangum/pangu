@@ -6,10 +6,10 @@ import (
 
 	"github.com/goexl/exc"
 	"github.com/goexl/gox/field"
+	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/message"
 	"github.com/pangum/pangu/internal/param"
-	runtime2 "github.com/pangum/pangu/internal/runtime"
 )
 
 type Bootstrap struct {
@@ -47,7 +47,7 @@ func (b *Bootstrap) Verify(bootstrap any) (err error) {
 
 	// 只能返回一个类型为Bootstrap返回值
 	returnsCount := constructorType.NumOut()
-	if 1 != returnsCount || reflect.TypeOf((*runtime2.Bootstrap)(nil)).Elem() != constructorType.Out(constant.IndexFirst) {
+	if 1 != returnsCount || reflect.TypeOf((*app.Bootstrap)(nil)).Elem() != constructorType.Out(constant.IndexFirst) {
 		err = exc.NewMessage(message.BootstrapMustReturnBootstrap)
 	}
 

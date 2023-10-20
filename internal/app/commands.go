@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 
@@ -29,6 +30,6 @@ func (c Commands) Cli() (commands []*cli.Command) {
 
 func (c Commands) action(command Command) func(ctx *cli.Context) error {
 	return func(ctx *cli.Context) error {
-		return command.Run(NewContext(ctx))
+		return command.Run(runtime.NewContext(ctx))
 	}
 }

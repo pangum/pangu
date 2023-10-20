@@ -1,7 +1,7 @@
 package builder
 
 import (
-	internal2 "github.com/pangum/pangu/internal/core"
+	"github.com/pangum/pangu/internal/core"
 	"github.com/pangum/pangu/internal/internal"
 	"github.com/pangum/pangu/internal/param"
 )
@@ -63,6 +63,6 @@ func (a *Application) Help() *Help {
 	return NewHelp(a)
 }
 
-func (a *Application) Get() *internal2.Application {
-	return internal2.New(a.params)
+func (a *Application) Get() *core.Application {
+	return core.New(a.params)
 }

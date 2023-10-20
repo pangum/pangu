@@ -10,5 +10,5 @@
 
 ::: success 提示
 
-更多关于参数的细节[请移步](/internal/arg)
+更多关于参数的细节[请移步](/internal/argument)
 :::

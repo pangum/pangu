@@ -1,11 +1,15 @@
 package app
 
+import (
+	"github.com/pangum/pangu/internal/runtime"
+)
+
 // Command 描述一个可以被执行的命令
 type Command interface {
 	Parameter
 
 	// Run 执行命令
-	Run(ctx *Context) error
+	Run(context *runtime.Context) error
 
 	// Arguments 参数列表
 	Arguments() Arguments

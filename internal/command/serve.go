@@ -9,13 +9,14 @@ import (
 
 	"github.com/goexl/gox/field"
 	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/runtime"
 )
 
 var _ app.Command = (*Serve)(nil)
 
 // Serve 描述一个提供服务的命令
 type Serve struct {
-	*Base
+	*Default
 
 	serves []app.Serve
 	signal chan os.Signal
@@ -24,7 +25,7 @@ type Serve struct {
 
 func NewServe(logger app.Logger) *Serve {
 	return &Serve{
-		Base: New("serve").Usage("启动服务").Aliases("s").Build(),
+		Default: New("serve").Usage("启动服务").Aliases("s").Build(),
 
 		serves: make([]app.Serve, 0, 1),
 		signal: make(chan os.Signal),
@@ -36,7 +37,7 @@ func (s *Serve) Add(serves ...app.Serve) {
 	s.serves = append(s.serves, serves...)
 }
 
-func (s *Serve) Run(ctx *app.Context) (err error) {
+func (s *Serve) Run(ctx *runtime.Context) (err error) {
 	count := len(s.serves)
 	if 0 != count {
 		s.logger.Info("启动服务开始", field.New("count", count))
@@ -49,7 +50,7 @@ func (s *Serve) Run(ctx *app.Context) (err error) {
 	return
 }
 
-func (s *Serve) start(ctx *app.Context) (err error) {
+func (s *Serve) start(ctx *runtime.Context) (err error) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(s.serves))
 
@@ -86,7 +87,7 @@ func (s *Serve) startServe(serve app.Serve, wg *sync.WaitGroup, err *error) {
 	}
 }
 
-func (s *Serve) stop(_ *app.Context) (err error) {
+func (s *Serve) stop(_ *runtime.Context) (err error) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(s.serves))
 

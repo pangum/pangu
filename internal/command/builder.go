@@ -1,10 +1,10 @@
 package command
 
 type Builder struct {
-	base *Base
+	base *Default
 }
 
-func (b *Builder) Build() *Base {
+func (b *Builder) Build() *Default {
 	return b.base
 }
 
