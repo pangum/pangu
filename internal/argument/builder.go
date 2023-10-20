@@ -1,9 +1,5 @@
 package argument
 
-import (
-	"github.com/pangum/pangu/internal/argument/internal"
-)
-
 var _ = New[int]
 
 type Builder[T Type] struct {
@@ -76,7 +72,7 @@ func (b *Builder[T]) Text(text string) (builder *Builder[T]) {
 	return
 }
 
-func (b *Builder[T]) Action(action internal.Action[T]) (builder *Builder[T]) {
+func (b *Builder[T]) Action(action Action[T]) (builder *Builder[T]) {
 	b.argument.action = action
 	builder = b
 

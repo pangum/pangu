@@ -5,7 +5,6 @@ import (
 
 	"github.com/goexl/gox"
 	"github.com/pangum/pangu/internal/app"
-	"github.com/pangum/pangu/internal/argument/internal"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
@@ -34,7 +33,7 @@ type Default[T Type] struct {
 	// 默认显示字符串
 	text string
 	// 动作
-	action internal.Action[T]
+	action Action[T]
 
 	_ gox.CannotCopy
 }
