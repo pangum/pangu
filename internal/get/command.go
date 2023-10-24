@@ -2,11 +2,11 @@ package get
 
 import (
 	"github.com/pangum/pangu/internal/command"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/pangu/internal/container"
 )
 
 type Command struct {
-	runtime.Get
+	container.Get
 
 	Serve   *command.Serve
 	Info    *command.Info

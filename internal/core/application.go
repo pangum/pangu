@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"sync"
 
 	"github.com/goexl/exc"
@@ -57,14 +58,13 @@ func create(params *param.Application) {
 	application.container = dig.New()
 	application.shadow = runtime.NewShadow()
 	application.config = config.NewSetup(params.Config)
+	if err := application.addCore(); nil != err {
+		panic(err)
+	}
 }
 
 func (a *Application) Dependency() *builder.Dependency {
 	return builder.NewDependency(a.container, a.params)
-}
-
-func (a *Application) Dependencies() *builder.Dependencies {
-	return builder.NewDependencies(a.container, a.params)
 }
 
 // Run 启动应用程序
@@ -72,21 +72,21 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	var err error
 	defer a.finally(&err)
 
-	dependency := a.Dependency().Build()
+	dependency := a.Dependency()
 	if ese := a.params.Environments.Set(); nil != ese { // 添加环境变量
 		err = ese
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
 		err = ape
-	} else if bde := dependency.Get(a.bind); nil != bde { // 绑定参数和命令到内部变量或者命令上
+	} else if bde := dependency.Get(a.bind).Build().Build().Inject(); nil != bde { // 绑定参数和命令到内部变量或者命令上
 		err = bde
 	} else if cae := a.createApp(); nil != cae { // 创建应用
 		err = cae
-	} else if ace := dependency.Get(a.addCommands); nil != ace { // 增加内置的命令及参数
+	} else if ace := dependency.Get(a.addCommands).Build().Build().Inject(); nil != ace { // 增加内置的命令及参数
 		err = ace
 	} else if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
 		err = bpe
 	} else {
-		err = dependency.Get(a.boot)
+		err = dependency.Get(a.boot).Build().Build().Inject()
 	}
 
 	return
@@ -103,7 +103,7 @@ func (a *Application) Add(components ...any) (err error) {
 		case app.Argument:
 			err = a.addArg(converted)
 		default:
-			err = exc.NewField("不支持的类型", field.New("type", converted))
+			err = exc.NewField("不支持组件类型", field.New("type", reflect.TypeOf(component).String()))
 		}
 
 		if nil != err {
@@ -129,26 +129,26 @@ func (a *Application) finally(err *error) {
 }
 
 func (a *Application) addServe(serves ...app.Serve) error {
-	return a.Dependency().Build().Get(func(cmd *command.Serve) {
+	return a.Dependency().Get(func(cmd *command.Serve) {
 		for _, serve := range serves {
 			cmd.Add(serve)
 		}
-	})
+	}).Build().Build().Inject()
 }
 
 func (a *Application) addCommand(commands ...app.Command) error {
-	return a.Dependency().Build().Get(func(shell *runtime.Shell) {
+	return a.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Commands = append(shell.Commands, app.Commands(commands).Cli()...)
-	})
+	}).Build().Build().Inject()
 }
 
 func (a *Application) addArg(args ...app.Argument) error {
-	return a.Dependency().Build().Get(func(shell *runtime.Shell) {
+	return a.Dependency().Get(func(shell *runtime.Shell) {
 		for _, arg := range args {
 			_arg := arg
 			shell.Flags = append(shell.Flags, _arg.Flag())
 		}
-	})
+	}).Build().Build().Inject()
 }
 
 func (a *Application) bind(shell *runtime.Shell) (err error) {
@@ -161,12 +161,11 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 }
 
 func (a *Application) boot(bootstrap app.Bootstrap) (err error) {
-	dependency := a.Dependency().Build()
 	if bse := bootstrap.Startup(); nil != bse { // 加载用户启动器并做好配置
 		err = bse
 	} else if rbe := bootstrap.Before(); nil != rbe { // 执行生命周期方法
 		err = rbe
-	} else if re := dependency.Get(a.run); nil != re { // 执行整个程序
+	} else if re := a.Dependency().Get(a.run).Build().Build().Inject(); nil != re { // 执行整个程序
 		err = re
 	} else if rae := bootstrap.After(); nil != rae { // 执行生命周期方法
 		err = rae
@@ -188,7 +187,7 @@ func (a *Application) createApp() (err error) {
 	cli.CommandHelpTemplate = a.params.Command
 	cli.SubcommandHelpTemplate = a.params.Subcommand
 	cli.VersionPrinter = a.versionPrinter
-	err = a.Dependency().Build().Get(a.setupApp)
+	err = a.Dependency().Get(a.setupApp).Build().Build().Inject()
 
 	return
 }
@@ -198,30 +197,31 @@ func (a *Application) addCommands(get get.Command) error {
 }
 
 func (a *Application) addDependency(constructor runtime.Constructor) (err error) {
-	dependency := a.Dependency().Build()
-	dependencies := a.Dependencies().Build()
+	dependency := a.Dependency()
 	boostrap := verifier.NewBoostrap(a.params)
 	if ve := boostrap.Verify(constructor); nil != ve {
 		err = ve
-	} else if pce := dependency.Put(constructor); nil != pce {
+	} else if pce := dependency.Put(constructor).Build().Build().Inject(); nil != pce {
 		err = pce
-	} else if ple := dependency.Put(a.putLogger); nil != ple {
+	} else if ple := dependency.Put(a.putLogger).Build().Build().Inject(); nil != ple {
 		err = ple
-	} else if pse := dependencies.Put(command.NewServe); nil != pse { // 注入服务命令
+	} else if pse := dependency.Put(command.NewServe).Build().Build().Inject(); nil != pse { // 注入服务命令
 		err = pse
-	} else if pie := dependencies.Put(command.NewInfo); nil != pie { // 注入信息命令
+	} else if pie := dependency.Put(command.NewInfo).Build().Build().Inject(); nil != pie { // 注入信息命令
 		err = pie
-	} else if pve := dependencies.Put(command.NewVersion); nil != pve { // 注入版本命令
+	} else if pve := dependency.Put(command.NewVersion).Build().Build().Inject(); nil != pve { // 注入版本命令
 		err = pve
-	} else if nse := dependency.Put(runtime.NewShell); nil != nse { // 注入运行壳
-		err = nse
-	} else if ce := dependency.Put(a.putConfig); nil != ce { // 注入配置
-		err = ce
-	} else if se := dependency.Put(a.putSelf); nil != se { // 注入自身
-		err = se
 	}
 
 	return
+}
+
+func (a *Application) addCore() error {
+	return a.Dependency().Put(
+		a.putConfig,      // 注入配置
+		a.putSelf,        // 注入自身
+		runtime.NewShell, // 注入运行壳
+	).Build().Build().Inject()
 }
 
 func (a *Application) setupApp(shell *runtime.Shell) {
@@ -234,9 +234,9 @@ func (a *Application) setupApp(shell *runtime.Shell) {
 }
 
 func (a *Application) versionPrinter(ctx *cli.Context) {
-	_ = a.Dependency().Build().Get(func(info *command.Info) error {
+	_ = a.Dependency().Get(func(info *command.Info) error {
 		return info.Run(runtime.NewContext(ctx))
-	})
+	}).Build().Build().Inject()
 }
 
 func (a *Application) putConfig() *Config {
@@ -248,9 +248,9 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (logger app.Logger) {
-	err := a.Dependency().Build().Get(func(dependency simaqian.Logger) {
+	err := a.Dependency().Get(func(dependency simaqian.Logger) {
 		logger = dependency
-	})
+	}).Build().Build().Inject()
 	if nil != err {
 		logger = simaqian.Default()
 	}

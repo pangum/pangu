@@ -39,6 +39,7 @@ func (h *Help) Subcommand(tooltip string) (help *Help) {
 }
 
 func (h *Help) Build() (application *Application) {
+	h.params.Set = true
 	h.application.params.Help = h.params
 	application = h.application
 

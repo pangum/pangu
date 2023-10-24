@@ -6,6 +6,7 @@ import (
 
 type Tag struct {
 	Default string
+	Set     bool
 }
 
 func NewTag() *Tag {

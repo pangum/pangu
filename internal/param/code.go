@@ -8,6 +8,7 @@ type Code struct {
 	Success int
 	Failed  int
 	Panic   int
+	Set     bool
 }
 
 func newCode() *Code {

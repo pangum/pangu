@@ -23,6 +23,7 @@ func NewConfig(application *Application) (config *Config) {
 }
 
 func (c *Config) Build() (application *Application) {
+	c.params.Set = true
 	application.params.Config = c.params
 	application = c.application
 

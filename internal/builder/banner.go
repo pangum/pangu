@@ -35,6 +35,7 @@ func (b *Banner) Binary(binary []byte) (ban *Banner) {
 }
 
 func (b *Banner) Build() (application *Application) {
+	b.params.Set = true
 	b.application.params.Banner = b.params
 	application = b.application
 

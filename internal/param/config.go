@@ -28,6 +28,7 @@ type Config struct {
 	Tag               *Tag
 	EnvironmentGetter getter.Environment
 	Environments      internal.Environments
+	Set               bool
 }
 
 func newConfig() (config *Config) {

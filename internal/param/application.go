@@ -33,7 +33,28 @@ func NewApplication() *Application {
 		Help:   newHelp(),
 		Banner: newBanner(),
 		Code:   newCode(),
+
+		Verify:      true,
+		Description: "一个使用github.com/pangum构建的应用程序",
+		Authors: internal.Authors{{
+			Name:  "storezhang",
+			Email: "storezhang@gmail.com",
+		}},
+		Metadata: make(map[string]any),
 	}
 }
 
-func (a *Application) Override(application *Application) {}
+func (a *Application) Override(latest *Application) {
+	if latest.Config.Set {
+		a.Config = latest.Config
+	}
+	if latest.Help.Set {
+		a.Help = latest.Help
+	}
+	if latest.Banner.Set {
+		a.Banner = latest.Banner
+	}
+	if latest.Code.Set {
+		a.Code = latest.Code
+	}
+}

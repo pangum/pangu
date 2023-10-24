@@ -55,7 +55,8 @@ func (s *Serve) start(ctx *runtime.Context) (err error) {
 	wg.Add(len(s.serves))
 
 	for _, serve := range s.serves {
-		go s.startServe(serve, wg, &err)
+		cloned := serve
+		go s.startServe(cloned, wg, &err)
 	}
 
 	// 注册退出信号处理
