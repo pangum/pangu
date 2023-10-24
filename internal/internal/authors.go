@@ -6,13 +6,13 @@ import (
 
 type Authors []*Author
 
-func (a *Authors) Cli() (authors []*cli.Author) {
-	authors = make([]*cli.Author, 0, len(*a))
-	for _, author := range *a {
-		to := new(cli.Author)
-		to.Name = author.Name
-		to.Email = author.Email
-		authors = append(authors, to)
+func (as *Authors) Cli() (authors []*cli.Author) {
+	authors = make([]*cli.Author, 0, len(*as))
+	for _, a := range *as {
+		author := new(cli.Author)
+		author.Name = a.Name
+		author.Email = a.Email
+		authors = append(authors, author)
 	}
 
 	return

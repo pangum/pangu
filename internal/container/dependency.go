@@ -101,8 +101,7 @@ func (d *Dependency) verify(constructor any) (err error) {
 	}
 
 	typ := reflect.TypeOf(constructor)
-
-	if reflect.Func != typ.Kind() { // 构造方法必须是方法不能是其它类型
+	if reflect.Func != typ.Kind() { // 构造方法必须是方法，不能是其它类型
 		err = exc.NewField(message.ConstructorMustFunc, field.New("constructor", typ.String()))
 	} else if 0 == typ.NumOut() { // 构造方法必须有返回值
 		name := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
