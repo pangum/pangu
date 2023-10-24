@@ -14,10 +14,10 @@ import (
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/command"
 	"github.com/pangum/pangu/internal/constant"
-	"github.com/pangum/pangu/internal/get"
 	"github.com/pangum/pangu/internal/internal/builder"
 	"github.com/pangum/pangu/internal/internal/config"
-	"github.com/pangum/pangu/internal/internal/verifier"
+	"github.com/pangum/pangu/internal/internal/get"
+	"github.com/pangum/pangu/internal/message"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/storezhang/dig"
@@ -160,8 +160,8 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	return
 }
 
-func (a *Application) boot(bootstrap app.Bootstrap) (err error) {
-	if bse := bootstrap.Startup(); nil != bse { // 加载用户启动器并做好配置
+func (a *Application) boot(bootstrap Bootstrap) (err error) {
+	if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
 	} else if rbe := bootstrap.Before(); nil != rbe { // 执行生命周期方法
 		err = rbe
@@ -197,12 +197,9 @@ func (a *Application) addCommands(get get.Command) error {
 }
 
 func (a *Application) addDependency(constructor runtime.Constructor) (err error) {
-	dependency := a.Dependency()
-	boostrap := verifier.NewBoostrap(a.params)
-	if ve := boostrap.Verify(constructor); nil != ve {
+	dependency := a.Dependency().Invalidate()
+	if ve := a.verify(constructor); nil != ve {
 		err = ve
-	} else if pce := dependency.Put(constructor).Build().Build().Inject(); nil != pce {
-		err = pce
 	} else if ple := dependency.Put(a.putLogger).Build().Build().Inject(); nil != ple {
 		err = ple
 	} else if pse := dependency.Put(command.NewServe).Build().Build().Inject(); nil != pse { // 注入服务命令
@@ -211,6 +208,8 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 		err = pie
 	} else if pve := dependency.Put(command.NewVersion).Build().Build().Inject(); nil != pve { // 注入版本命令
 		err = pve
+	} else if pce := dependency.Put(constructor).Build().Build().Inject(); nil != pce {
+		err = pce
 	}
 
 	return
@@ -221,7 +220,7 @@ func (a *Application) addCore() error {
 		a.putConfig,      // 注入配置
 		a.putSelf,        // 注入自身
 		runtime.NewShell, // 注入运行壳
-	).Build().Build().Inject()
+	).Build().Invalidate().Build().Inject()
 }
 
 func (a *Application) setupApp(shell *runtime.Shell) {
@@ -248,11 +247,30 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (logger app.Logger) {
-	err := a.Dependency().Get(func(dependency simaqian.Logger) {
-		logger = dependency
+	err := a.Dependency().Get(func(external simaqian.Logger) {
+		logger = external
 	}).Build().Build().Inject()
 	if nil != err {
 		logger = simaqian.Default()
+	}
+
+	return
+}
+
+func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
+	if a.params.Verify {
+		return
+	}
+
+	typ := reflect.TypeOf(bootstrap)
+	if reflect.Func != typ.Kind() { // 构造方法必须是方法不能是其它类型
+		err = exc.NewField(message.ConstructorMustFunc, field.New("bootstrap", typ.String()))
+	} else if 0 == typ.NumIn() { // 构造方法必须有依赖项
+		constructorName := runtime.FuncForPC(reflect.ValueOf(bootstrap).Pointer()).Name()
+		err = exc.NewField(message.BootstrapMustHasDependencies, field.New("bootstrap", constructorName))
+	} else if 1 != typ.NumOut() || reflect.TypeOf((*Bootstrap)(nil)).Elem() != typ.Out(constant.IndexFirst) {
+		// 只能返回一个类型为Bootstrap返回值
+		err = exc.NewMessage(message.BootstrapMustReturnBootstrap)
 	}
 
 	return

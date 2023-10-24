@@ -1,8 +1,8 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/core"
 )
 
 // Bootstrap 启动接口
-type Bootstrap = app.Bootstrap
+type Bootstrap = core.Bootstrap

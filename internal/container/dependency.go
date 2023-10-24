@@ -1,23 +1,25 @@
 package container
 
 import (
-	"github.com/pangum/pangu/internal/internal/verifier"
+	"reflect"
+
+	"github.com/goexl/exc"
+	"github.com/goexl/gox/field"
+	"github.com/pangum/pangu/internal/message"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/storezhang/dig"
 )
 
 type Dependency struct {
-	container   *dig.Container
-	params      *param.Dependency
-	constructor *verifier.Constructor
+	container *dig.Container
+	params    *param.Dependency
 }
 
-func NewDependency(container *dig.Container, params *param.Dependency, constructor *verifier.Constructor) *Dependency {
+func NewDependency(container *dig.Container, params *param.Dependency) *Dependency {
 	return &Dependency{
-		container:   container,
-		constructor: constructor,
-		params:      params,
+		container: container,
+		params:    params,
 	}
 }
 
@@ -26,6 +28,8 @@ func (d *Dependency) Inject() (err error) {
 		err = de
 	} else if ge := d.gets(); nil != ge {
 		err = ge
+	} else {
+		d.params.Clear() // 确保连续调用时，不会有脏数据
 	}
 
 	return
@@ -82,10 +86,27 @@ func (d *Dependency) put(put *param.Put) (err error) {
 }
 
 func (d *Dependency) provide(constructor runtime.Constructor) (err error) {
-	if ve := d.constructor.Verify(constructor); nil != ve {
+	if ve := d.verify(constructor); nil != ve {
 		err = ve
 	} else if pe := d.container.Provide(constructor); nil != pe {
 		err = pe
+	}
+
+	return
+}
+
+func (d *Dependency) verify(constructor any) (err error) {
+	if d.params.Verify {
+		return
+	}
+
+	typ := reflect.TypeOf(constructor)
+
+	if reflect.Func != typ.Kind() { // 构造方法必须是方法不能是其它类型
+		err = exc.NewField(message.ConstructorMustFunc, field.New("constructor", typ.String()))
+	} else if 0 == typ.NumOut() { // 构造方法必须有返回值
+		name := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
+		err = exc.NewField(message.ConstructorMustReturn, field.New("constructor", name))
 	}
 
 	return
