@@ -13,6 +13,6 @@ func NewDependency(verify bool) *Dependency {
 }
 
 func (d *Dependency) Clear() {
-	d.Puts = make([]*Put, 0)
-	d.Gets = make([]*Get, 0)
+	d.Puts = make([]*Put, 0, 1)
+	d.Gets = make([]*Get, 0, 1)
 }
