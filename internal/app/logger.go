@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/goexl/simaqian"
+	"github.com/goexl/log"
 )
 
 type Logger interface {
-	simaqian.Logger
+	log.Logger
 }

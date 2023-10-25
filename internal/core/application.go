@@ -9,7 +9,7 @@ import (
 	"github.com/goexl/exc"
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
-	"github.com/goexl/simaqian"
+	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/command"
@@ -247,11 +247,11 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (logger app.Logger) {
-	err := a.Dependency().Get(func(external simaqian.Logger) {
+	err := a.Dependency().Get(func(external log.Logger) {
 		logger = external
 	}).Build().Build().Inject()
 	if nil != err {
-		logger = simaqian.Default()
+		logger = log.New().Apply()
 	}
 
 	return
