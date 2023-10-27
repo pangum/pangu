@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/internal"
+	"github.com/pangum/pangu/internal/internal/app"
 )
 
 type Application struct {
@@ -22,7 +22,7 @@ type Application struct {
 	// 版权
 	Copyright string
 	// 作者
-	Authors internal.Authors
+	Authors app.Authors
 	// 元数据
 	Metadata map[string]any
 }
@@ -36,7 +36,7 @@ func NewApplication() *Application {
 
 		Verify:      true,
 		Description: "一个使用github.com/pangum构建的应用程序",
-		Authors: internal.Authors{{
+		Authors: app.Authors{{
 			Name:  "storezhang",
 			Email: "storezhang@gmail.com",
 		}},

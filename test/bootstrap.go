@@ -12,6 +12,6 @@ func NewBootstrap() *Bootstrap {
 	return &Bootstrap{}
 }
 
-func (b *Bootstrap) Startup() (err error) {
+func (b *Bootstrap) Startup(_ *pangu.App) (err error) {
 	return
 }

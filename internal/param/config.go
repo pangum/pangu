@@ -9,7 +9,7 @@ import (
 	"github.com/pangum/pangu/internal/callback/getter"
 	"github.com/pangum/pangu/internal/config"
 	"github.com/pangum/pangu/internal/constant"
-	"github.com/pangum/pangu/internal/internal"
+	"github.com/pangum/pangu/internal/internal/app"
 	"github.com/pangum/pangu/internal/internal/loader"
 	"github.com/pangum/pangu/internal/runtime"
 )
@@ -27,7 +27,7 @@ type Config struct {
 
 	Tag               *Tag
 	EnvironmentGetter getter.Environment
-	Environments      internal.Environments
+	Environments      app.Environments
 	Set               bool
 }
 
@@ -52,7 +52,7 @@ func newConfig() (config *Config) {
 
 	config.Tag = NewTag()
 	config.EnvironmentGetter = env.Get
-	config.Environments = make(internal.Environments, 0)
+	config.Environments = make(app.Environments, 0)
 	config.Loader = loader.NewConfig(config.EnvironmentGetter, config.Nullable)
 
 	return

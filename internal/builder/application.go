@@ -1,8 +1,9 @@
 package builder
 
 import (
+	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/core"
-	"github.com/pangum/pangu/internal/internal"
+	"github.com/pangum/pangu/internal/internal/app"
 	"github.com/pangum/pangu/internal/param"
 )
 
@@ -24,7 +25,7 @@ func (a *Application) Verify() (application *Application) {
 }
 
 func (a *Application) Author(name string, email string) (application *Application) {
-	a.params.Authors = append(a.params.Authors, internal.NewAuthor(name, email))
+	a.params.Authors = append(a.params.Authors, app.NewAuthor(name, email))
 	application = a
 
 	return
@@ -46,6 +47,13 @@ func (a *Application) Description(description string) (application *Application)
 
 func (a *Application) Metadata(key string, value any) (application *Application) {
 	a.params.Metadata[key] = value
+	application = a
+
+	return
+}
+
+func (a *Application) Name(name string) (application *Application) {
+	internal.Name = name
 	application = a
 
 	return
