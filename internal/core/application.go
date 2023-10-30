@@ -235,7 +235,7 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 	dependency := a.Dependency().Invalidate()
 	if ve := a.verify(constructor); nil != ve {
 		err = ve
-	} else if ple := dependency.Put(a.putLogger).Build().Build().Inject(); nil != ple {
+	} else if ple := a.putLogger(); nil != ple {
 		err = ple
 	} else if pse := dependency.Put(command.NewServe).Build().Build().Inject(); nil != pse { // 注入服务命令
 		err = pse
@@ -281,18 +281,24 @@ func (a *Application) putSelf() *Application {
 	return a
 }
 
-func (a *Application) putLogger() (logger app.Logger) {
-	err := a.Dependency().Get(func(external log.Logger) {
-		logger = external
-	}).Build().Build().Inject()
-	if nil != err {
-		logger = log.New().Apply()
-	}
-	if nil == err {
-		a.logger = logger
+func (a *Application) putLogger() (err error) {
+	dependency := a.Dependency()
+	if gle := dependency.Get(a.getLogger).Build().Build().Inject(); nil != gle {
+		err = gle
+	} else {
+		a.logger = log.New().Apply()
+		err = dependency.Put(a.supplyLogger).Build().Build().Inject()
 	}
 
 	return
+}
+
+func (a *Application) getLogger(logger log.Logger) {
+	a.logger = logger
+}
+
+func (a *Application) supplyLogger(logger log.Logger) log.Logger {
+	return logger
 }
 
 func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
