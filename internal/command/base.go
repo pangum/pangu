@@ -1,6 +1,8 @@
 package command
 
 import (
+	"context"
+
 	"github.com/goexl/gox"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/runtime"
@@ -29,38 +31,42 @@ func New(name string) *Builder {
 	}
 }
 
-func (b *Default) Name() string {
-	return b.name
+func (d *Default) Name() string {
+	return d.name
 }
 
-func (b *Default) Aliases() []string {
-	return b.aliases
+func (d *Default) Aliases() []string {
+	return d.aliases
 }
 
-func (b *Default) Usage() string {
-	return b.usage
+func (d *Default) Usage() string {
+	return d.usage
 }
 
-func (b *Default) Run(_ *runtime.Context) (err error) {
+func (d *Default) Run(_ *runtime.Context) (err error) {
 	return
 }
 
-func (b *Default) Arguments() (args app.Arguments) {
+func (d *Default) Arguments() (args app.Arguments) {
 	return
 }
 
-func (b *Default) Subcommands() (commands app.Commands) {
+func (d *Default) Subcommands() (commands app.Commands) {
 	return
 }
 
-func (b *Default) Description() string {
-	return b.description
+func (d *Default) Description() string {
+	return d.description
 }
 
-func (b *Default) Category() string {
-	return b.category
+func (d *Default) Category() string {
+	return d.category
 }
 
-func (b *Default) Hidden() bool {
-	return b.hidden
+func (d *Default) Hidden() bool {
+	return d.hidden
+}
+
+func (d *Default) Stop(_ context.Context) (err error) {
+	return
 }

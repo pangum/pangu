@@ -1,6 +1,8 @@
 package builder
 
 import (
+	"time"
+
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/core"
 	"github.com/pangum/pangu/internal/internal/app"
@@ -54,6 +56,13 @@ func (a *Application) Metadata(key string, value any) (application *Application)
 
 func (a *Application) Name(name string) (application *Application) {
 	internal.Name = name
+	application = a
+
+	return
+}
+
+func (a *Application) Timeout(timeout time.Duration) (application *Application) {
+	a.params.Timeout = timeout
 	application = a
 
 	return

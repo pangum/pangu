@@ -9,7 +9,6 @@ type Commands []Command
 
 func (c Commands) Cli() (commands []*cli.Command) {
 	commands = make([]*cli.Command, 0, len(c))
-
 	for _, command := range c {
 		cloned := command
 		commands = append(commands, &cli.Command{

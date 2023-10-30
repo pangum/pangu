@@ -1,10 +1,13 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"reflect"
 	"sync"
+	"syscall"
 
 	"github.com/goexl/exc"
 	"github.com/goexl/gox"
@@ -36,6 +39,9 @@ type Application struct {
 	// 影子启动器，用来处理额外的命令或者参数，因为正常的启动器无法完成此操作，原因是
 	// 正常的启动器只提供一个Run方法来处理传数的参数，而此方法一旦执行，就意味着内部的命令也开始执行，而此时依赖关系还没有准备好
 	shadow *runtime.Shadow
+	// 存储所有可被停止的命令或者服务
+	stoppers []app.Stopper
+	logger   app.Logger
 }
 
 func New(param *param.Application) *Application {
@@ -58,6 +64,7 @@ func create(params *param.Application) {
 	application.container = dig.New()
 	application.shadow = runtime.NewShadow()
 	application.config = config.NewSetup(params.Config)
+	application.stoppers = make([]app.Stopper, 0)
 	if err := application.addCore(); nil != err {
 		panic(err)
 	}
@@ -128,26 +135,33 @@ func (a *Application) finally(err *error) {
 	}
 }
 
-func (a *Application) addServe(serves ...app.Serve) error {
-	return a.Dependency().Get(func(cmd *command.Serve) {
-		for _, serve := range serves {
-			cmd.Add(serve)
-		}
+func (a *Application) addServe(serve app.Serve) error {
+	return a.Dependency().Get(func(command *command.Serve) {
+		command.Add(serve)
+		a.stoppers = append(a.stoppers, serve)
 	}).Build().Build().Inject()
 }
 
-func (a *Application) addCommand(commands ...app.Command) error {
+func (a *Application) addCommand(command app.Command) error {
 	return a.Dependency().Get(func(shell *runtime.Shell) {
-		shell.Commands = append(shell.Commands, app.Commands(commands).Cli()...)
+		shell.Commands = append(shell.Commands, &cli.Command{
+			Name:        command.Name(),
+			Aliases:     command.Aliases(),
+			Usage:       command.Usage(),
+			Description: command.Description(),
+			Subcommands: command.Subcommands().Cli(),
+			Category:    command.Category(),
+			Flags:       command.Arguments().Flags(),
+			Hidden:      command.Hidden(),
+			Action:      a.action(command),
+		})
+		a.stoppers = append(a.stoppers, command)
 	}).Build().Build().Inject()
 }
 
-func (a *Application) addArg(args ...app.Argument) error {
+func (a *Application) addArg(argument app.Argument) error {
 	return a.Dependency().Get(func(shell *runtime.Shell) {
-		for _, arg := range args {
-			_arg := arg
-			shell.Flags = append(shell.Flags, _arg.Flag())
-		}
+		shell.Flags = append(shell.Flags, argument.Flag())
 	}).Build().Build().Inject()
 }
 
@@ -161,6 +175,9 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 }
 
 func (a *Application) boot(bootstrap Bootstrap) (err error) {
+	// 优雅退出
+	go a.graceful(&err)
+
 	if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
 	} else if rbe := bootstrap.Before(); nil != rbe { // 执行生命周期方法
@@ -192,8 +209,16 @@ func (a *Application) createApp() (err error) {
 	return
 }
 
-func (a *Application) addCommands(get get.Command) error {
-	return a.addCommand(get.Serve, get.Info, get.Version)
+func (a *Application) addCommands(get get.Command) (err error) {
+	if se := a.addCommand(get.Serve); nil != se {
+		err = se
+	} else if ie := a.addCommand(get.Info); nil != ie {
+		err = ie
+	} else {
+		err = a.addCommand(get.Version)
+	}
+
+	return
 }
 
 func (a *Application) addDependency(constructor runtime.Constructor) (err error) {
@@ -253,6 +278,9 @@ func (a *Application) putLogger() (logger app.Logger) {
 	if nil != err {
 		logger = log.New().Apply()
 	}
+	if nil == err {
+		a.logger = logger
+	}
 
 	return
 }
@@ -271,6 +299,30 @@ func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
 	} else if 1 != typ.NumOut() || reflect.TypeOf((*Bootstrap)(nil)).Elem() != typ.Out(constant.IndexFirst) {
 		// 只能返回一个类型为Bootstrap返回值
 		err = exc.NewMessage(message.BootstrapMustReturnBootstrap)
+	}
+
+	return
+}
+
+func (a *Application) action(command app.Command) func(ctx *cli.Context) error {
+	return func(ctx *cli.Context) error {
+		return command.Run(runtime.NewContext(ctx))
+	}
+}
+
+func (a *Application) graceful(err *error) {
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, os.Kill)
+	current := <-signals
+	a.logger.Info("收到信号", field.New("signal", current))
+
+	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout)
+	defer cancel()
+	for _, stopper := range a.stoppers {
+		*err = stopper.Stop(canceled)
+		if nil != *err {
+			break
+		}
 	}
 
 	return

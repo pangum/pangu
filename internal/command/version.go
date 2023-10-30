@@ -31,7 +31,7 @@ func (v *Version) Run(_ *runtime.Context) (err error) {
 
 	fmt.Print(sb.String())
 	// 刷新缓存，保证以上信息是一起被输出
-	os.Stdout.Sync()
+	err = os.Stdout.Sync()
 
 	return
 }

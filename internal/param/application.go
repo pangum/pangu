@@ -1,6 +1,8 @@
 package param
 
 import (
+	"time"
+
 	"github.com/pangum/pangu/internal/internal/app"
 )
 
@@ -25,6 +27,9 @@ type Application struct {
 	Authors app.Authors
 	// 元数据
 	Metadata map[string]any
+
+	// 超时
+	Timeout time.Duration
 }
 
 func NewApplication() *Application {
@@ -41,6 +46,8 @@ func NewApplication() *Application {
 			Email: "storezhang@gmail.com",
 		}},
 		Metadata: make(map[string]any),
+
+		Timeout: 15 * time.Second,
 	}
 }
 
