@@ -4,18 +4,11 @@ package app
 // 泛指一个可以长期执行的服务
 type Serve interface {
 	Stopper
-
-	// Before 生命周期方法
-	// 启动前执行
-	Before() error
+	Lifecycle
 
 	// Start 运行服务
 	Start() (err error)
 
 	// Name 服务名称
 	Name() string
-
-	// After 生命周期方法
-	// 退出前执行
-	After() error
 }

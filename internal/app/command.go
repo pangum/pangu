@@ -8,6 +8,7 @@ import (
 type Command interface {
 	Parameter
 	Stopper
+	Lifecycle
 
 	// Run 执行命令
 	Run(context *runtime.Context) error

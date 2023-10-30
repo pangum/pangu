@@ -67,6 +67,14 @@ func (d *Default) Hidden() bool {
 	return d.hidden
 }
 
+func (d *Default) Before(_ context.Context) (err error) {
+	return
+}
+
 func (d *Default) Stop(_ context.Context) (err error) {
+	return
+}
+
+func (d *Default) After(_ context.Context) (err error) {
 	return
 }

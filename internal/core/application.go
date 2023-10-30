@@ -40,8 +40,9 @@ type Application struct {
 	// 正常的启动器只提供一个Run方法来处理传数的参数，而此方法一旦执行，就意味着内部的命令也开始执行，而此时依赖关系还没有准备好
 	shadow *runtime.Shadow
 	// 存储所有可被停止的命令或者服务
-	stoppers []app.Stopper
-	logger   app.Logger
+	stoppers   []app.Stopper
+	lifecycles []app.Lifecycle
+	logger     app.Logger
 }
 
 func New(param *param.Application) *Application {
@@ -65,6 +66,7 @@ func create(params *param.Application) {
 	application.shadow = runtime.NewShadow()
 	application.config = config.NewSetup(params.Config)
 	application.stoppers = make([]app.Stopper, 0)
+	application.lifecycles = make([]app.Lifecycle, 0)
 	if err := application.addCore(); nil != err {
 		panic(err)
 	}
@@ -156,6 +158,7 @@ func (a *Application) addCommand(command app.Command) error {
 			Action:      a.action(command),
 		})
 		a.stoppers = append(a.stoppers, command)
+		a.lifecycles = append(a.lifecycles, command)
 	}).Build().Build().Inject()
 }
 
@@ -178,14 +181,21 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 	// 优雅退出
 	go a.graceful(&err)
 
+	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Boot)
+	defer cancel()
+
 	if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
-	} else if rbe := bootstrap.Before(); nil != rbe { // 执行生命周期方法
-		err = rbe
+	} else if bbe := bootstrap.Before(canceled); nil != bbe { // 执行生命周期方法
+		err = bbe
+	} else if cbe := a.before(canceled); nil != cbe { // 执行命令生命周期方法
+		err = cbe
 	} else if re := a.Dependency().Get(a.run).Build().Build().Inject(); nil != re { // 执行整个程序
 		err = re
-	} else if rae := bootstrap.After(); nil != rae { // 执行生命周期方法
-		err = rae
+	} else if cae := a.after(canceled); nil != cae { // 执行命令生命周期方法
+		err = cae
+	} else if bae := bootstrap.After(canceled); nil != bae { // 执行生命周期方法
+		err = bae
 	}
 
 	return
@@ -316,11 +326,33 @@ func (a *Application) graceful(err *error) {
 	current := <-signals
 	a.logger.Info("收到信号", field.New("signal", current))
 
-	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout)
+	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Quit)
 	defer cancel()
 	for _, stopper := range a.stoppers {
 		*err = stopper.Stop(canceled)
 		if nil != *err {
+			break
+		}
+	}
+
+	return
+}
+
+func (a *Application) before(ctx context.Context) (err error) {
+	for _, after := range a.lifecycles {
+		err = after.Before(ctx)
+		if nil != err {
+			break
+		}
+	}
+
+	return
+}
+
+func (a *Application) after(ctx context.Context) (err error) {
+	for _, after := range a.lifecycles {
+		err = after.After(ctx)
+		if nil != err {
 			break
 		}
 	}

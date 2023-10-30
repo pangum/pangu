@@ -57,6 +57,28 @@ func (s *Serve) Stop(ctx context.Context) (err error) {
 	return
 }
 
+func (s *Serve) Before(ctx context.Context) (err error) {
+	for _, serve := range s.serves {
+		err = serve.Before(ctx)
+		if nil != err {
+			break
+		}
+	}
+
+	return
+}
+
+func (s *Serve) After(ctx context.Context) (err error) {
+	for _, serve := range s.serves {
+		err = serve.After(ctx)
+		if nil != err {
+			break
+		}
+	}
+
+	return
+}
+
 func (s *Serve) start(_ *runtime.Context, count int) (err error) {
 	wg := new(sync.WaitGroup)
 	wg.Add(count)

@@ -1,8 +1,6 @@
 package param
 
 import (
-	"time"
-
 	"github.com/pangum/pangu/internal/internal/app"
 )
 
@@ -11,6 +9,7 @@ type Application struct {
 	*Help
 	*Banner
 	*Code
+	*Timeout
 
 	// 合法性验证，包括
 	// 启动器构造方法合法性验证
@@ -27,17 +26,15 @@ type Application struct {
 	Authors app.Authors
 	// 元数据
 	Metadata map[string]any
-
-	// 超时
-	Timeout time.Duration
 }
 
 func NewApplication() *Application {
 	return &Application{
-		Config: newConfig(),
-		Help:   newHelp(),
-		Banner: newBanner(),
-		Code:   newCode(),
+		Config:  newConfig(),
+		Help:    newHelp(),
+		Banner:  newBanner(),
+		Code:    newCode(),
+		Timeout: NewTimeout(),
 
 		Verify:      true,
 		Description: "一个使用github.com/pangum构建的应用程序",
@@ -46,8 +43,6 @@ func NewApplication() *Application {
 			Email: "storezhang@gmail.com",
 		}},
 		Metadata: make(map[string]any),
-
-		Timeout: 15 * time.Second,
 	}
 }
 
