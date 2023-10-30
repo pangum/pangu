@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/goexl/gox/field"
+	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/runtime"
 )
@@ -17,11 +18,11 @@ type Serve struct {
 	*Default
 
 	serves  []app.Serve
-	logger  app.Logger
+	logger  log.Logger
 	exiting bool
 }
 
-func NewServe(logger app.Logger) *Serve {
+func NewServe(logger log.Logger) *Serve {
 	return &Serve{
 		Default: New("serve").Usage("启动服务").Aliases("s").Build(),
 

@@ -42,7 +42,7 @@ type Application struct {
 	// 存储所有可被停止的命令或者服务
 	stoppers   []app.Stopper
 	lifecycles []app.Lifecycle
-	logger     app.Logger
+	logger     log.Logger
 }
 
 func New(param *param.Application) *Application {
