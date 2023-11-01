@@ -328,9 +328,9 @@ func (a *Application) action(command app.Command) func(ctx *cli.Context) error {
 
 func (a *Application) graceful(err *error) {
 	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, os.Kill)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 	current := <-signals
-	a.logger.Info("收到信号", field.New("signal", current))
+	a.logger.Info("收到系统信号", field.New("signal", current))
 
 	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Quit)
 	defer cancel()
