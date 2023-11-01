@@ -284,8 +284,6 @@ func (a *Application) putSelf() *Application {
 func (a *Application) putLogger() (err error) {
 	dependency := a.Dependency()
 	if gle := dependency.Get(a.getLogger).Build().Build().Inject(); nil != gle {
-		err = gle
-	} else {
 		a.logger = log.New().Apply()
 		err = dependency.Put(a.supplyLogger).Build().Build().Inject()
 	}
@@ -297,8 +295,8 @@ func (a *Application) getLogger(logger log.Logger) {
 	a.logger = logger
 }
 
-func (a *Application) supplyLogger(logger log.Logger) log.Logger {
-	return logger
+func (a *Application) supplyLogger() log.Logger {
+	return a.logger
 }
 
 func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
