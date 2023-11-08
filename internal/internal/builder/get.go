@@ -6,13 +6,13 @@ import (
 )
 
 type Get struct {
-	core *Dependency
-	gets []*param.Get
+	dependency *Dependency
+	gets       []*param.Get
 }
 
-func NewGet(core *Dependency, getter runtime.Getter, getters ...runtime.Getter) *Get {
+func NewGet(dependency *Dependency, getter runtime.Getter, getters ...runtime.Getter) *Get {
 	return &Get{
-		core: core,
+		dependency: dependency,
 		gets: []*param.Get{
 			param.NewGet(getter, getters...),
 		},
@@ -20,8 +20,8 @@ func NewGet(core *Dependency, getter runtime.Getter, getters ...runtime.Getter) 
 }
 
 func (g *Get) Build() (dependency *Dependency) {
-	g.core.params.Gets = append(g.core.params.Gets, g.gets...)
-	dependency = g.core
+	g.dependency.params.Gets = append(g.dependency.params.Gets, g.gets...)
+	dependency = g.dependency
 
 	return
 }

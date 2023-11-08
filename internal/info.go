@@ -13,5 +13,5 @@ var (
 	Timestamp = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu/internal.Timestamp=$TIMESTAMP"来注入值`
 	Revision  = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu/internal.Revision=$REVISION"来注入值`
 	Branch    = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu/internal.Branch=$BRANCH"来注入值`
-	Golang    = runtime.Version()
+	Runtime   = runtime.Version()
 )

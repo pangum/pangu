@@ -343,6 +343,16 @@ func (a *Application) graceful(err *error) {
 }
 
 func (a *Application) before(ctx context.Context) (err error) {
+	a.logger.Info(
+		"准备启动应用",
+		field.New("name", internal.Name),
+		field.New("version", internal.Version),
+		field.New("build", internal.Build),
+		field.New("timestamp", internal.Timestamp),
+		field.New("revision", internal.Revision),
+		field.New("branch", internal.Branch),
+		field.New("runtime", internal.Runtime),
+	)
 	for _, after := range a.lifecycles {
 		err = after.Before(ctx)
 		if nil != err {

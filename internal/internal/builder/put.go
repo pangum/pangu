@@ -6,13 +6,13 @@ import (
 )
 
 type Put struct {
-	core *Dependency
-	puts []*param.Put
+	dependency *Dependency
+	puts       []*param.Put
 }
 
-func NewPut(core *Dependency, constructor runtime.Constructor, constructors ...runtime.Constructor) (put *Put) {
+func NewPut(dependency *Dependency, constructor runtime.Constructor, constructors ...runtime.Constructor) (put *Put) {
 	return &Put{
-		core: core,
+		dependency: dependency,
 		puts: []*param.Put{
 			param.NewPut(constructor, constructors...),
 		},
@@ -20,8 +20,8 @@ func NewPut(core *Dependency, constructor runtime.Constructor, constructors ...r
 }
 
 func (p *Put) Build() (dependency *Dependency) {
-	p.core.params.Puts = append(p.core.params.Puts, p.puts...)
-	dependency = p.core
+	p.dependency.params.Puts = append(p.dependency.params.Puts, p.puts...)
+	dependency = p.dependency
 
 	return
 }
