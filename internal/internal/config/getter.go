@@ -42,7 +42,7 @@ func (g *Getter) filepath() (path string, err error) {
 		gfx.Extensions(g.params.Extensions...),
 	)
 	// 如果配置了应用名称，可以使用应用名称的配置文件
-	if constant.ApplicationDefaultName != internal.Name {
+	if constant.EnvironmentNotSet != internal.Name {
 		gfxOptions = append(gfxOptions, gfx.Paths(
 			internal.Name,
 			filepath.Join(constant.ConfigDir, internal.Name),

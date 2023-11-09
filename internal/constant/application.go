@@ -7,5 +7,4 @@ const (
 	ApplicationCodeSuccess = 0
 	ApplicationCodeFailed  = 1
 	ApplicationCodePanic   = -1
-	ApplicationDefaultName = `没有设置，请使用-ldflags "-s -X 'github.com/pangum/pangu/internal.Name=$NAME"来注入值`
 )
