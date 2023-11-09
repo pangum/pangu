@@ -348,7 +348,7 @@ func (a *Application) before(ctx context.Context) (err error) {
 		field.New("name", internal.Name),
 		field.New("version", internal.Version),
 		field.New("build", internal.Build),
-		field.New("datetime", internal.Timestamp),
+		field.New("time", internal.Time),
 		field.New("revision", internal.Revision),
 		field.New("branch", internal.Branch),
 		field.New("runtime", internal.Runtime),

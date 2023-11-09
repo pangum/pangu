@@ -8,7 +8,7 @@ const (
 	EnvironmentName      = "NAME"
 	EnvironmentVersion   = "VERSION"
 	EnvironmentBuild     = "BUILD"
-	EnvironmentTimestamp = "TIMESTAMP"
+	EnvironmentTime      = "TIME"
 	EnvironmentRevision  = "REVISION"
 	EnvironmentBranch    = "BRANCH"
 )

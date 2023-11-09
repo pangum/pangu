@@ -29,7 +29,7 @@ func (i *Info) Run(_ *runtime.Context) (err error) {
 	table.Append([]string{constant.ColumnName, internal.Name})
 	table.Append([]string{constant.ColumnVersion, internal.Version})
 	table.Append([]string{constant.ColumnBuild, internal.Build})
-	table.Append([]string{constant.ColumnTimestamp, internal.Timestamp})
+	table.Append([]string{constant.ColumnTimestamp, internal.Time})
 	table.Append([]string{constant.ColumnRevision, internal.Revision})
 	table.Append([]string{constant.ColumnBranch, internal.Branch})
 	table.Append([]string{constant.ColumnGolang, internal.Runtime})
