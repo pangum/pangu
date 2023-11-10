@@ -172,7 +172,7 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	// 接收配置文件路径参数
 	a.config.Bind(shell, a.shadow)
 	// 影子执行，只有这样才能正确的使用配置文件的路径参数
-	err = a.shadow.Run(a.args())
+	err = a.shadow.RunContext(context.Background(), append([]string{constant.CommandSilent}, a.args()...))
 
 	return
 }

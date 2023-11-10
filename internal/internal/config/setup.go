@@ -16,7 +16,7 @@ func NewSetup(params *param.Config) *Setup {
 }
 
 func (s *Setup) Bind(shell *runtime.Shell, shadow *runtime.Shadow) {
-	s.config.bind(shell, shadow)
+	s.getter.bind(shell, shadow)
 }
 
 func (s *Setup) Copy(params *param.Config) (config *Getter) {

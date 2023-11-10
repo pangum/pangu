@@ -61,9 +61,9 @@ func (g *Getter) filepath() (path string, err error) {
 }
 
 func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
-	flag := new(cli.StringFlag)
-	flag.Name = constant.ConfigName
-	flag.Aliases = []string{
+	config := new(cli.StringFlag)
+	config.Name = constant.ConfigName
+	config.Aliases = []string{
 		constant.ConfigAliasC,
 		constant.ConfigAliasConf,
 		constant.ConfigAliasConfiguration,
@@ -72,6 +72,6 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 	config.Usage = "指定配置文件路径"
 	config.Destination = &g.path
 
-	shell.Flags = append(shell.Flags, flag)
-	shadow.Flags = append(shadow.Flags, flag)
+	shell.Flags = append(shell.Flags, config)
+	shadow.Flags = append(shadow.Flags, config)
 }

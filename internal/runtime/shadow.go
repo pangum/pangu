@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"github.com/pangum/pangu/internal/constant"
 	"github.com/urfave/cli/v2"
 )
 
@@ -9,17 +10,20 @@ type Shadow struct {
 }
 
 func NewShadow() (shadow *Shadow) {
-	shadow = new(Shadow)
-
 	app := cli.NewApp()
 	app.EnableBashCompletion = false
 	app.UseShortOptionHandling = false
-	// 对于找不到的命令，暂时不做任何处理
-	app.CommandNotFound = shadow.notfound
+	app.Commands = append(app.Commands, &cli.Command{
+		Name:   constant.CommandSilent,
+		Action: shadow.silent,
+	})
 
+	shadow = new(Shadow)
 	shadow.App = app
 
 	return
 }
 
-func (s *Shadow) notfound(_ *cli.Context, _ string) {}
+func (s *Shadow) silent(_ *cli.Context) (err error) {
+	return
+}
