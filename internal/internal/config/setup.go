@@ -6,12 +6,12 @@ import (
 )
 
 type Setup struct {
-	config *Getter
+	getter *Getter
 }
 
 func NewSetup(params *param.Config) *Setup {
 	return &Setup{
-		config: newConfig(params),
+		getter: newConfig(params),
 	}
 }
 
@@ -20,8 +20,8 @@ func (s *Setup) Bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 }
 
 func (s *Setup) Copy(params *param.Config) (config *Getter) {
-	s.config.params = params
-	config = s.config
+	s.getter.params = params
+	config = s.getter
 
 	return
 }

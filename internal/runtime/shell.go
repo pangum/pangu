@@ -10,30 +10,18 @@ type Shell struct {
 }
 
 func NewShell() (shell *Shell) {
-	shell = new(Shell)
-	shell.App = cli.NewApp()
-	shell.App.EnableBashCompletion = true
-	shell.App.UseShortOptionHandling = true
+	app := cli.NewApp()
+	app.EnableBashCompletion = true
+	app.UseShortOptionHandling = true
 	// 定制版本显示，版本号不可改变
-	shell.App.Version = internal.Version
+	app.Version = internal.Version
+	// 对于找不到的命令，暂时不做任何处理
+	app.CommandNotFound = shell.notfound
 
-	// 定制版本标志
-	cli.VersionFlag = &cli.BoolFlag{
-		Name: "version",
-		Aliases: []string{
-			"v",
-			"ver",
-		},
-		Usage: "显示应用程序版本信息",
-	}
-	// 定制帮助信息
-	cli.HelpFlag = &cli.BoolFlag{
-		Name: "help",
-		Aliases: []string{
-			"h",
-		},
-		Usage: "显示所有命令或者帮助信息",
-	}
+	shell = new(Shell)
+	shell.App = app
 
 	return
 }
+
+func (s *Shell) notfound(_ *cli.Context, _ string) {}

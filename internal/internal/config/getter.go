@@ -68,9 +68,9 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 		constant.ConfigAliasConf,
 		constant.ConfigAliasConfiguration,
 	}
-	flag.Value = constant.ConfigDefaultFilepath
-	flag.Usage = "指定配置文件路径"
-	flag.Destination = &g.path
+	config.Value = constant.ConfigDefaultFilepath
+	config.Usage = "指定配置文件路径"
+	config.Destination = &g.path
 
 	shell.Flags = append(shell.Flags, flag)
 	shadow.Flags = append(shadow.Flags, flag)
