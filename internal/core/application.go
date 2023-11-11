@@ -384,8 +384,8 @@ func (a *Application) before(ctx context.Context) (err error) {
 		field.New(strings.ToLower(constant.ColumnBranch), internal.Branch),
 		field.New(strings.ToLower(constant.ColumnRuntime), internal.Runtime),
 	)
-	for _, after := range a.lifecycles {
-		err = after.Before(ctx)
+	for _, lifecycle := range a.lifecycles {
+		err = lifecycle.Before(ctx)
 		if nil != err {
 			break
 		}
@@ -395,8 +395,8 @@ func (a *Application) before(ctx context.Context) (err error) {
 }
 
 func (a *Application) after(ctx context.Context) (err error) {
-	for _, after := range a.lifecycles {
-		err = after.After(ctx)
+	for _, lifecycle := range a.lifecycles {
+		err = lifecycle.After(ctx)
 		if nil != err {
 			break
 		}
