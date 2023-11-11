@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"reflect"
+	"strings"
 	"sync"
 	"syscall"
 
@@ -293,6 +294,8 @@ func (a *Application) setupApp(shell *runtime.Shell) {
 	shell.Copyright = a.params.Copyright
 	shell.Metadata = a.params.Metadata
 	shell.Authors = a.params.Authors.Cli()
+	shell.AllowExtFlags = true
+	shell.DefaultCommand = constant.CommandInfo
 }
 
 func (a *Application) versionPrinter(ctx *cli.Context) {
@@ -373,13 +376,13 @@ func (a *Application) graceful(err *error) {
 func (a *Application) before(ctx context.Context) (err error) {
 	a.logger.Info(
 		"准备启动应用",
-		field.New("name", internal.Name),
-		field.New("version", internal.Version),
-		field.New("build", internal.Build),
-		field.New("time", internal.Time),
-		field.New("revision", internal.Revision),
-		field.New("branch", internal.Branch),
-		field.New("runtime", internal.Runtime),
+		field.New(strings.ToLower(constant.ColumnName), internal.Name),
+		field.New(strings.ToLower(constant.ColumnVersion), internal.Version),
+		field.New(strings.ToLower(constant.ColumnBuild), internal.Build),
+		field.New(strings.ToLower(constant.ColumnComplied), internal.Compiled),
+		field.New(strings.ToLower(constant.ColumnRevision), internal.Revision),
+		field.New(strings.ToLower(constant.ColumnBranch), internal.Branch),
+		field.New(strings.ToLower(constant.ColumnRuntime), internal.Runtime),
 	)
 	for _, after := range a.lifecycles {
 		err = after.Before(ctx)

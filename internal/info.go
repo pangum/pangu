@@ -11,7 +11,7 @@ var (
 	Name     = os.GetEnvironment(constant.EnvironmentName)
 	Version  = os.GetEnvironment(constant.EnvironmentVersion)
 	Build    = os.GetEnvironment(constant.EnvironmentBuild)
-	Time     = os.GetEnvironment(constant.EnvironmentTime)
+	Compiled = os.GetEnvironment(constant.EnvironmentCompiled)
 	Revision = os.GetEnvironment(constant.EnvironmentRevision)
 	Branch   = os.GetEnvironment(constant.EnvironmentBranch)
 	Runtime  = runtime.Version()

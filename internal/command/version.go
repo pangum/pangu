@@ -7,6 +7,7 @@ import (
 
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
@@ -19,7 +20,7 @@ type Version struct {
 
 func NewVersion() *Version {
 	return &Version{
-		Default: New("version").Usage("打印应用程序版本").Aliases("v", "ver").Build(),
+		Default: New(constant.CommandVersion).Usage("打印应用程序版本").Aliases("v", "ver").Build(),
 	}
 }
 

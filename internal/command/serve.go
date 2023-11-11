@@ -8,6 +8,7 @@ import (
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
@@ -24,7 +25,7 @@ type Serve struct {
 
 func NewServe(logger log.Logger) *Serve {
 	return &Serve{
-		Default: New("serve").Usage("启动服务").Aliases("s").Build(),
+		Default: New(constant.CommandServe).Usage("启动服务").Aliases("s").Build(),
 
 		serves:  make([]app.Serve, 0, 1),
 		logger:  logger,
