@@ -26,6 +26,7 @@ type Application struct {
 	Authors app.Authors
 	// 元数据
 	Metadata map[string]any
+	Set      bool
 }
 
 func NewApplication() *Application {
@@ -37,7 +38,8 @@ func NewApplication() *Application {
 		Timeout: NewTimeout(),
 
 		Verify:      true,
-		Description: "一个使用github.com/pangum构建的应用程序",
+		Description: "一个使用github.com/pangum/pangu构建的应用程序，可以使用应用程序提供的命令来使用本程序",
+		Usage:       "一个使用github.com/pangum/pangu构建的应用程序",
 		Authors: app.Authors{{
 			Name:  "storezhang",
 			Email: "storezhang@gmail.com",
@@ -58,5 +60,13 @@ func (a *Application) Override(latest *Application) {
 	}
 	if latest.Code.Set {
 		a.Code = latest.Code
+	}
+	if latest.Set {
+		a.Verify = latest.Verify
+		a.Description = latest.Description
+		a.Usage = latest.Usage
+		a.Copyright = latest.Copyright
+		a.Authors = latest.Authors
+		a.Metadata = latest.Metadata
 	}
 }

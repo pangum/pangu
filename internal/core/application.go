@@ -12,6 +12,7 @@ import (
 	"github.com/goexl/exc"
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
+	"github.com/goexl/gox/rand"
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
@@ -171,8 +172,14 @@ func (a *Application) addArg(argument app.Argument) error {
 func (a *Application) bind(shell *runtime.Shell) (err error) {
 	// 接收配置文件路径参数
 	a.config.Bind(shell, a.shadow)
+	// 组装影子应用执行的参数
+	args := a.args()
+	if 1 == len(args) { // 如果没有传任何参数，可以随机生成一个命令来模拟执行，因为如果没有任何命令，会出现一个未被配置的提示信息
+		// ! 注意，应用执行时，第一个参数是应用本身的路径
+		args = append(args, rand.New().String().Build().Generate())
+	}
 	// 影子执行，只有这样才能正确的使用配置文件的路径参数
-	err = a.shadow.RunContext(context.Background(), append([]string{constant.CommandSilent}, a.args()...))
+	err = a.shadow.RunContext(context.Background(), args)
 
 	return
 }
@@ -214,6 +221,27 @@ func (a *Application) createApp() (err error) {
 	cli.CommandHelpTemplate = a.params.Command
 	cli.SubcommandHelpTemplate = a.params.Subcommand
 	cli.VersionPrinter = a.versionPrinter
+
+	// 定制版本标志
+	version := new(cli.BoolFlag)
+	version.Name = "version"
+	version.Aliases = []string{
+		"v",
+		"ver",
+	}
+	version.Usage = "显示应用程序版本信息"
+	cli.VersionFlag = version
+
+	// 定制帮助信息
+	help := new(cli.BoolFlag)
+	help.Name = "help"
+	help.Aliases = []string{
+		"h",
+	}
+	help.Usage = "显示所有命令或者帮助信息"
+	cli.HelpFlag = help
+
+	// 配置应用
 	err = a.Dependency().Get(a.setupApp).Build().Build().Inject()
 
 	return
@@ -252,9 +280,9 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 
 func (a *Application) addCore() error {
 	return a.Dependency().Put(
+		runtime.NewShell, // 注入运行壳
 		a.putConfig,      // 注入配置
 		a.putSelf,        // 注入自身
-		runtime.NewShell, // 注入运行壳
 	).Build().Invalidate().Build().Inject()
 }
 

@@ -2,6 +2,7 @@ package builder
 
 import (
 	"github.com/pangum/pangu/internal"
+	"github.com/pangum/pangu/internal/builder/internal/function"
 	"github.com/pangum/pangu/internal/core"
 	"github.com/pangum/pangu/internal/internal/app"
 	"github.com/pangum/pangu/internal/param"
@@ -17,46 +18,46 @@ func NewApplication() *Application {
 	}
 }
 
-func (a *Application) Verify() (application *Application) {
-	a.params.Verify = true
-	application = a
-
-	return
+func (a *Application) Verify() *Application {
+	return a.set(func() {
+		a.params.Verify = true
+	})
 }
 
-func (a *Application) Author(name string, email string) (application *Application) {
-	a.params.Authors = append(a.params.Authors, app.NewAuthor(name, email))
-	application = a
-
-	return
+func (a *Application) Author(name string, email string) *Application {
+	return a.set(func() {
+		a.params.Authors = append(a.params.Authors, app.NewAuthor(name, email))
+	})
 }
 
-func (a *Application) Copyright(copyright string) (application *Application) {
-	a.params.Copyright = copyright
-	application = a
-
-	return
+func (a *Application) Copyright(copyright string) *Application {
+	return a.set(func() {
+		a.params.Copyright = copyright
+	})
 }
 
-func (a *Application) Description(description string) (application *Application) {
-	a.params.Description = description
-	application = a
-
-	return
+func (a *Application) Description(description string) *Application {
+	return a.set(func() {
+		a.params.Description = description
+	})
 }
 
-func (a *Application) Metadata(key string, value any) (application *Application) {
-	a.params.Metadata[key] = value
-	application = a
-
-	return
+func (a *Application) Usage(usage string) *Application {
+	return a.set(func() {
+		a.params.Usage = usage
+	})
 }
 
-func (a *Application) Name(name string) (application *Application) {
-	internal.Name = name
-	application = a
+func (a *Application) Metadata(key string, value any) *Application {
+	return a.set(func() {
+		a.params.Metadata[key] = value
+	})
+}
 
-	return
+func (a *Application) Name(name string) *Application {
+	return a.set(func() {
+		internal.Name = name
+	})
 }
 
 func (a *Application) Timeout() *Timeout {
@@ -77,4 +78,12 @@ func (a *Application) Help() *Help {
 
 func (a *Application) Get() *core.Application {
 	return core.New(a.params)
+}
+
+func (a *Application) set(set function.Set) (application *Application) {
+	set()
+	a.params.Set = true
+	application = a
+
+	return
 }
