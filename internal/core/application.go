@@ -68,7 +68,7 @@ func create(params *param.Application) {
 	application.config = config.NewSetup(params.Config)
 	application.stoppers = make([]app.Stopper, 0)
 	application.lifecycles = make([]app.Lifecycle, 0)
-	if err := application.addCore(); nil != err {
+	if err := application.setup(); nil != err {
 		panic(err)
 	}
 }
@@ -87,8 +87,6 @@ func (a *Application) Run(constructor runtime.Constructor) {
 		err = ese
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
 		err = ape
-	} else if bde := dependency.Get(a.bind).Build().Build().Inject(); nil != bde { // 绑定参数和命令到内部变量或者命令上
-		err = bde
 	} else if cae := a.createApp(); nil != cae { // 创建应用
 		err = cae
 	} else if ace := dependency.Get(a.addCommands).Build().Build().Inject(); nil != ace { // 增加内置的命令及参数
@@ -167,21 +165,6 @@ func (a *Application) addArg(argument app.Argument) error {
 	return a.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Flags = append(shell.Flags, argument.Flag())
 	}).Build().Build().Inject()
-}
-
-func (a *Application) bind(shell *runtime.Shell) (err error) {
-	// 接收配置文件路径参数
-	a.config.Bind(shell, a.shadow)
-	// 组装影子应用执行的参数
-	args := a.args()
-	if 1 == len(args) { // ! 如果没有传任何参数，可以随机生成一个命令来模拟执行，因为如果没有任何命令，会出现一个未被配置的提示信息
-		// ! 注意，应用执行时，第一个参数是应用本身的路径
-		args = append(args, constant.CommandNonexistent)
-	}
-	// 影子执行，只有这样才能正确的使用配置文件的路径参数
-	err = a.shadow.RunContext(context.Background(), args)
-
-	return
 }
 
 func (a *Application) boot(bootstrap Bootstrap) (err error) {
@@ -281,12 +264,37 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 	return
 }
 
-func (a *Application) addCore() error {
+func (a *Application) setup() error {
 	return a.Dependency().Put(
 		runtime.NewShell, // 注入运行壳
 		a.putConfig,      // 注入配置
 		a.putSelf,        // 注入自身
+	).Build().Get(
+		a.bind, // 绑定参数和命令到内部变量或者命令上
 	).Build().Invalidate().Build().Inject()
+}
+
+func (a *Application) bind(shell *runtime.Shell) (err error) {
+	// 接收配置文件路径参数
+	a.config.Bind(shell, a.shadow)
+	// 组装影子应用执行的参数
+	original := a.args()
+	args := make([]string, 0, 3)
+	args = append(args, original[0])
+	for index := 1; index < len(a.args()); index++ {
+		flag := strings.ReplaceAll(original[index], constant.Strike, constant.Empty)
+		if constant.ConfigName == flag || constant.ConfigAliasC == flag || constant.ConfigAliasConf == flag {
+			args = append(args, original[index], original[index+1])
+		}
+	}
+	if 1 == len(args) { // ! 如果没有传任何参数，可以随机生成一个命令来模拟执行，因为如果没有任何命令，会出现一个未被配置的提示信息
+		// ! 注意，应用执行时，第一个参数是应用本身的路径
+		args = append(args, constant.CommandNonexistent)
+	}
+	// 影子执行，只有这样才能正确的使用配置文件的路径参数
+	err = a.shadow.RunContext(context.Background(), args)
+
+	return
 }
 
 func (a *Application) setupApp(shell *runtime.Shell) {

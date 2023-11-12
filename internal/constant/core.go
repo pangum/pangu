@@ -1,3 +1,7 @@
 package constant
 
-const Copyright = "https://pangu.pangum.tech"
+const (
+	Strike    = "-"
+	Empty     = ""
+	Copyright = "https://pangu.pangum.tech"
+)
