@@ -3,6 +3,7 @@ package runtime
 import (
 	"context"
 
+	"github.com/pangum/pangu/internal/internal/app"
 	"github.com/urfave/cli/v2"
 )
 
@@ -28,6 +29,10 @@ func (c *Context) String(name string) string {
 
 func (c *Context) Set(name string, value string) error {
 	return c.context.Set(name, value)
+}
+
+func (c *Context) Arguments() app.Arguments {
+	return c.context.Args()
 }
 
 func (c *Context) Value(key any) (value any) {
