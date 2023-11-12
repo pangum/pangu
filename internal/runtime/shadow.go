@@ -9,14 +9,14 @@ type Shadow struct {
 }
 
 func NewShadow() (shadow *Shadow) {
-	app := cli.NewApp()
-	app.EnableBashCompletion = false
-	app.UseShortOptionHandling = false
-	// 对于找不到的命令，暂时不做任何处理
-	app.CommandNotFound = shadow.notfound
-
 	shadow = new(Shadow)
-	shadow.App = app
+	shadow.App = cli.NewApp()
+	shadow.App.EnableBashCompletion = false
+	shadow.App.UseShortOptionHandling = false
+	// 对于找不到的命令，暂时不做任何处理
+	shadow.App.CommandNotFound = shadow.notfound
+	shadow.App.HideHelpCommand = true
+	shadow.App.HideVersion = true
 
 	return
 }

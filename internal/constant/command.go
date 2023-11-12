@@ -1,7 +1,8 @@
 package constant
 
 const (
-	CommandServe   = "serve"
-	CommandInfo    = "info"
-	CommandVersion = "version"
+	CommandServe       = "serve"
+	CommandInfo        = "info"
+	CommandVersion     = "version"
+	CommandNonexistent = "nonexistent"
 )

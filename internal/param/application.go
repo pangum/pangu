@@ -1,6 +1,7 @@
 package param
 
 import (
+	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/app"
 )
 
@@ -40,9 +41,11 @@ func NewApplication() *Application {
 		Verify:      true,
 		Description: "一个使用github.com/pangum/pangu构建的应用程序，可以使用应用程序提供的命令来使用本程序",
 		Usage:       "一个使用github.com/pangum/pangu构建的应用程序",
+
+		Copyright: constant.Copyright,
 		Authors: app.Authors{{
-			Name:  "storezhang",
-			Email: "storezhang@gmail.com",
+			Name:  constant.AuthorName,
+			Email: constant.AuthorEmail,
 		}},
 		Metadata: make(map[string]any),
 	}

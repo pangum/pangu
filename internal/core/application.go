@@ -13,7 +13,6 @@ import (
 	"github.com/goexl/exc"
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
-	"github.com/goexl/gox/rand"
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
@@ -175,9 +174,9 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	a.config.Bind(shell, a.shadow)
 	// 组装影子应用执行的参数
 	args := a.args()
-	if 1 == len(args) { // 如果没有传任何参数，可以随机生成一个命令来模拟执行，因为如果没有任何命令，会出现一个未被配置的提示信息
+	if 1 == len(args) { // ! 如果没有传任何参数，可以随机生成一个命令来模拟执行，因为如果没有任何命令，会出现一个未被配置的提示信息
 		// ! 注意，应用执行时，第一个参数是应用本身的路径
-		args = append(args, rand.New().String().Build().Generate())
+		args = append(args, constant.CommandNonexistent)
 	}
 	// 影子执行，只有这样才能正确的使用配置文件的路径参数
 	err = a.shadow.RunContext(context.Background(), args)
@@ -192,13 +191,16 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Boot)
 	defer cancel()
 
-	if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
+	dependency := a.Dependency()
+	if sle := dependency.Get(a.setLogger).Build().Build().Inject(); nil != sle { // 为执行壳设置日志器
+		err = sle
+	} else if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
 	} else if bbe := bootstrap.Before(canceled); nil != bbe { // 执行生命周期方法
 		err = bbe
 	} else if cbe := a.before(canceled); nil != cbe { // 执行命令生命周期方法
 		err = cbe
-	} else if re := a.Dependency().Get(a.run).Build().Build().Inject(); nil != re { // 执行整个程序
+	} else if re := dependency.Get(a.run).Build().Build().Inject(); nil != re { // 执行整个程序
 		err = re
 	} else if cae := a.after(canceled); nil != cae { // 执行命令生命周期方法
 		err = cae
@@ -295,7 +297,6 @@ func (a *Application) setupApp(shell *runtime.Shell) {
 	shell.Metadata = a.params.Metadata
 	shell.Authors = a.params.Authors.Cli()
 	shell.AllowExtFlags = true
-	shell.DefaultCommand = constant.CommandInfo
 }
 
 func (a *Application) versionPrinter(ctx *cli.Context) {
@@ -371,6 +372,10 @@ func (a *Application) graceful(err *error) {
 	}
 
 	return
+}
+
+func (a *Application) setLogger(shell *runtime.Shell) {
+	shell.Logger(a.logger)
 }
 
 func (a *Application) before(ctx context.Context) (err error) {
