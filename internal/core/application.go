@@ -282,8 +282,8 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	args := make([]string, 0, 3)
 	args = append(args, original[0])
 	for index := 1; index < len(a.args()); index++ {
-		flag := strings.ReplaceAll(original[index], constant.Strike, constant.Empty)
-		if constant.ConfigName == flag || constant.ConfigAliasC == flag || constant.ConfigAliasConf == flag {
+		argument := strings.ReplaceAll(original[index], constant.Strike, constant.Empty)
+		if a.isConfigArgument(argument) {
 			args = append(args, original[index], original[index+1])
 		}
 	}
@@ -416,4 +416,8 @@ func (a *Application) after(ctx context.Context) (err error) {
 	}
 
 	return
+}
+
+func (a *Application) isConfigArgument(argument string) bool {
+	return constant.ConfigName == argument || constant.ConfigAliasC == argument || constant.ConfigAliasConf == argument
 }
