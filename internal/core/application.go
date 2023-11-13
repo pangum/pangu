@@ -274,17 +274,16 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	// 接收配置文件路径参数
 	a.config.Bind(shell, a.shadow)
 	// 组装影子应用执行的参数
-	original := a.args()
+	originals := a.args()
 	args := make([]string, 0, 3)
-	args = append(args, original[0])
+	args = append(args, originals[0])
 	for index := 1; index < len(a.args()); index++ {
-		argument := strings.ReplaceAll(original[index], constant.Strike, constant.Empty)
-		if a.isConfigArgument(argument) {
-			args = append(args, original[index], original[index+1])
+		argument := strings.ReplaceAll(originals[index], constant.Strike, constant.Empty)
+		if a.isConfigArgument(argument) { // 只接收和配置相关的参数
+			args = append(args, originals[index], originals[index+1])
 		}
 	}
-	if 1 == len(args) { // ! 如果没有传任何参数，可以随机生成一个命令来模拟执行，因为如果没有任何命令，会出现一个未被配置的提示信息
-		// ! 注意，应用执行时，第一个参数是应用本身的路径
+	if 3 >= len(args) { // ! 检查是否是只有配置相关参数，没有任何其它命令，加入一个不存在的命令调用，防止没有传任何命令时系统给出用法提示
 		args = append(args, constant.CommandNonexistent)
 	}
 	// 影子执行，只有这样才能正确的使用配置文件的路径参数
