@@ -384,12 +384,12 @@ func (a *Application) setLogger(shell *runtime.Shell) {
 func (a *Application) before(ctx context.Context) (err error) {
 	a.logger.Info(
 		"准备启动应用",
-		field.New(strings.ToLower(constant.ColumnName), internal.Name),
-		field.New(strings.ToLower(constant.ColumnVersion), internal.Version),
-		field.New(strings.ToLower(constant.ColumnBuild), internal.Build),
-		field.New(strings.ToLower(constant.ColumnComplied), internal.Compiled),
-		field.New(strings.ToLower(constant.ColumnRevision), internal.Revision),
-		field.New(strings.ToLower(constant.ColumnBranch), internal.Branch),
+		field.New(strings.ToLower(constant.ColumnName), internal.GetName()),
+		field.New(strings.ToLower(constant.ColumnVersion), internal.GetVersion()),
+		field.New(strings.ToLower(constant.ColumnBuild), internal.GetBuild()),
+		field.New(strings.ToLower(constant.ColumnComplied), internal.GetCompiled()),
+		field.New(strings.ToLower(constant.ColumnRevision), internal.GetRevision()),
+		field.New(strings.ToLower(constant.ColumnBranch), internal.GetBranch()),
 		field.New(strings.ToLower(constant.ColumnRuntime), internal.Runtime),
 	)
 	for _, lifecycle := range a.lifecycles {

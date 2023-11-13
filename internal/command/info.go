@@ -26,12 +26,12 @@ func NewInfo() *Info {
 func (i *Info) Run(_ *runtime.Context) (err error) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{constant.HeaderName, constant.HeaderValue})
-	table.Append([]string{constant.ColumnName, internal.Name})
-	table.Append([]string{constant.ColumnVersion, internal.Version})
-	table.Append([]string{constant.ColumnBuild, internal.Build})
-	table.Append([]string{constant.ColumnComplied, internal.Compiled})
-	table.Append([]string{constant.ColumnRevision, internal.Revision})
-	table.Append([]string{constant.ColumnBranch, internal.Branch})
+	table.Append([]string{constant.ColumnName, internal.GetName()})
+	table.Append([]string{constant.ColumnVersion, internal.GetVersion()})
+	table.Append([]string{constant.ColumnBuild, internal.GetBuild()})
+	table.Append([]string{constant.ColumnComplied, internal.GetCompiled()})
+	table.Append([]string{constant.ColumnRevision, internal.GetRevision()})
+	table.Append([]string{constant.ColumnBranch, internal.GetBranch()})
 	table.Append([]string{constant.ColumnRuntime, internal.Runtime})
 	table.Render()
 

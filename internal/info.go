@@ -8,11 +8,35 @@ import (
 )
 
 var (
-	Name     = os.GetEnvironment(constant.EnvironmentName)
-	Version  = os.GetEnvironment(constant.EnvironmentVersion)
-	Build    = os.GetEnvironment(constant.EnvironmentBuild)
-	Compiled = os.GetEnvironment(constant.EnvironmentCompiled)
-	Revision = os.GetEnvironment(constant.EnvironmentRevision)
-	Branch   = os.GetEnvironment(constant.EnvironmentBranch)
+	Name     = constant.EnvironmentNotSet
+	Version  = constant.EnvironmentNotSet
+	Build    = constant.EnvironmentNotSet
+	Compiled = constant.EnvironmentNotSet
+	Revision = constant.EnvironmentNotSet
+	Branch   = constant.EnvironmentNotSet
 	Runtime  = runtime.Version()
 )
+
+func GetName() string {
+	return os.GetEnvironment(constant.EnvironmentName, Name, constant.EnvironmentNotSet)
+}
+
+func GetVersion() string {
+	return os.GetEnvironment(constant.EnvironmentVersion, Version, constant.EnvironmentNotSet)
+}
+
+func GetBuild() string {
+	return os.GetEnvironment(constant.EnvironmentBuild, Build, constant.EnvironmentNotSet)
+}
+
+func GetCompiled() string {
+	return os.GetEnvironment(constant.EnvironmentCompiled, Compiled, constant.EnvironmentNotSet)
+}
+
+func GetRevision() string {
+	return os.GetEnvironment(constant.EnvironmentRevision, Revision, constant.EnvironmentNotSet)
+}
+
+func GetBranch() string {
+	return os.GetEnvironment(constant.EnvironmentBranch, Branch, constant.EnvironmentNotSet)
+}
