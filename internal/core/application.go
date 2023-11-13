@@ -68,9 +68,15 @@ func create(params *param.Application) {
 	application.config = config.NewSetup(params.Config)
 	application.stoppers = make([]app.Stopper, 0)
 	application.lifecycles = make([]app.Lifecycle, 0)
-	if err := application.setup(); nil != err {
-		panic(err)
-	}
+
+	// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
+	application.Dependency().Put(
+		runtime.NewShell,      // 注入运行壳
+		application.putConfig, // 注入配置
+		application.putSelf,   // 注入自身
+	).Build().Get(
+		application.bind, // 绑定参数和命令到内部变量或者命令上
+	).Build().Invalidate().Build().Apply()
 }
 
 func (a *Application) Dependency() *builder.Dependency {
@@ -262,16 +268,6 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 	}
 
 	return
-}
-
-func (a *Application) setup() error {
-	return a.Dependency().Put(
-		runtime.NewShell, // 注入运行壳
-		a.putConfig,      // 注入配置
-		a.putSelf,        // 注入自身
-	).Build().Get(
-		a.bind, // 绑定参数和命令到内部变量或者命令上
-	).Build().Invalidate().Build().Inject()
 }
 
 func (a *Application) bind(shell *runtime.Shell) (err error) {
