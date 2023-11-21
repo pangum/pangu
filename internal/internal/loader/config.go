@@ -8,12 +8,13 @@ import (
 	"strings"
 
 	"github.com/drone/envsubst"
-	"github.com/goexl/exc"
+	"github.com/goexl/exception"
 	"github.com/goexl/gfx"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/pangu/internal/callback/getter"
 	"github.com/pangum/pangu/internal/config"
 	"github.com/pangum/pangu/internal/constant"
+	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/pelletier/go-toml"
 	"gopkg.in/yaml.v3"
@@ -49,7 +50,7 @@ func (c *Config) Load(path string, config runtime.Pointer) (err error) {
 
 func (c *Config) read(path string) (err error) {
 	if _, exist := gfx.Exists(path); !exist && !c.nullable {
-		err = exc.NewField("配置文件不存在", field.New("path", path))
+		err = exception.New().Message(message.ConfigFileNotfound).Field(field.New("path", path)).Build()
 	} else if exist {
 		c.data, err = os.ReadFile(path)
 	}

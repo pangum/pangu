@@ -3,7 +3,6 @@ module github.com/pangum/pangu
 go 1.21
 
 require (
-	github.com/goexl/exc v0.0.5
 	github.com/goexl/gfx v0.1.7
 	github.com/goexl/gox v0.3.8
 	github.com/pelletier/go-toml v1.9.5
@@ -17,9 +16,10 @@ require (
 require (
 	github.com/drone/envsubst v1.0.3
 	github.com/goexl/env v0.0.2
+	github.com/goexl/exception v0.0.1
 	github.com/goexl/log v0.0.5
-	github.com/goexl/mengpo v0.2.4
-	github.com/goexl/xiren v0.0.5
+	github.com/goexl/mengpo v0.2.5
+	github.com/goexl/xiren v0.0.6
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/zs5460/art v0.3.0
 )

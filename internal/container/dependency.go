@@ -3,9 +3,9 @@ package container
 import (
 	"reflect"
 
-	"github.com/goexl/exc"
+	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
-	"github.com/pangum/pangu/internal/message"
+	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/storezhang/dig"
@@ -102,10 +102,10 @@ func (d *Dependency) verify(constructor any) (err error) {
 
 	typ := reflect.TypeOf(constructor)
 	if reflect.Func != typ.Kind() { // 构造方法必须是方法，不能是其它类型
-		err = exc.NewField(message.ConstructorMustFunc, field.New("constructor", typ.String()))
+		err = exception.New().Message(message.ConstructorMustFunc).Field(field.New("constructor", typ.String())).Build()
 	} else if 0 == typ.NumOut() { // 构造方法必须有返回值
 		name := runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name()
-		err = exc.NewField(message.ConstructorMustReturn, field.New("constructor", name))
+		err = exception.New().Message(message.ConstructorMustReturn).Field(field.New("constructor", name)).Build()
 	}
 
 	return

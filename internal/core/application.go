@@ -10,7 +10,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/goexl/exc"
+	"github.com/goexl/exception"
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
@@ -21,7 +21,7 @@ import (
 	"github.com/pangum/pangu/internal/internal/builder"
 	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/internal/get"
-	"github.com/pangum/pangu/internal/message"
+	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/storezhang/dig"
@@ -117,7 +117,8 @@ func (a *Application) Add(components ...any) (err error) {
 		case app.Argument:
 			err = a.addArg(converted)
 		default:
-			err = exc.NewField("不支持组件类型", field.New("type", reflect.TypeOf(component).String()))
+			typ := field.New("type", reflect.TypeOf(component).String())
+			err = exception.New().Message(message.ComponentNotSupport).Field(typ).Build()
 		}
 
 		if nil != err {
@@ -341,13 +342,13 @@ func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
 
 	typ := reflect.TypeOf(bootstrap)
 	if reflect.Func != typ.Kind() { // 构造方法必须是方法不能是其它类型
-		err = exc.NewField(message.ConstructorMustFunc, field.New("bootstrap", typ.String()))
+		err = exception.New().Message(message.ConstructorMustFunc).Field(field.New("bootstrap", typ.String())).Build()
 	} else if 0 == typ.NumIn() { // 构造方法必须有依赖项
-		constructorName := runtime.FuncForPC(reflect.ValueOf(bootstrap).Pointer()).Name()
-		err = exc.NewField(message.BootstrapMustHasDependencies, field.New("bootstrap", constructorName))
+		name := runtime.FuncForPC(reflect.ValueOf(bootstrap).Pointer()).Name()
+		err = exception.New().Message(message.BootstrapMustHasDependencies).Field(field.New("bootstrap", name)).Build()
 	} else if 1 != typ.NumOut() || reflect.TypeOf((*Bootstrap)(nil)).Elem() != typ.Out(constant.IndexFirst) {
 		// 只能返回一个类型为Bootstrap返回值
-		err = exc.NewMessage(message.BootstrapMustReturnBootstrap)
+		err = exception.New().Message(message.BootstrapMustReturnBootstrap).Build()
 	}
 
 	return
