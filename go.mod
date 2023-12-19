@@ -7,7 +7,7 @@ require (
 	github.com/goexl/gox v0.3.8
 	github.com/pelletier/go-toml v1.9.5
 	github.com/storezhang/dig v0.0.1
-	github.com/urfave/cli/v2 v2.25.7
+	github.com/urfave/cli/v2 v2.26.0
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
