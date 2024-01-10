@@ -6,7 +6,7 @@ import (
 )
 
 type Command struct {
-	container.Get
+	container.Put
 
 	Serve   *command.Serve
 	Info    *command.Info
