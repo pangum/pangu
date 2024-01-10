@@ -4,4 +4,4 @@ import (
 	"github.com/storezhang/dig"
 )
 
-type Put = dig.Out
+type Put = dig.In
