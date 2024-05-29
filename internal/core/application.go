@@ -89,7 +89,9 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	defer a.finally(&err)
 
 	dependency := a.Dependency()
-	if ese := a.params.Environments.Set(); nil != ese { // 添加环境变量
+	if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
+		err = bpe
+	} else if ese := a.params.Environments.Set(); nil != ese { // 添加环境变量
 		err = ese
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
 		err = ape
@@ -97,8 +99,6 @@ func (a *Application) Run(constructor runtime.Constructor) {
 		err = cae
 	} else if ace := dependency.Get(a.addCommands).Build().Build().Inject(); nil != ace { // 增加内置的命令及参数
 		err = ace
-	} else if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
-		err = bpe
 	} else {
 		err = dependency.Get(a.boot).Build().Build().Inject()
 	}
