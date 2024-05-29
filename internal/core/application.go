@@ -24,8 +24,8 @@ import (
 	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
-	"github.com/storezhang/dig"
 	"github.com/urfave/cli/v2"
+	"go.uber.org/dig"
 )
 
 var (

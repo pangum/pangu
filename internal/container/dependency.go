@@ -8,7 +8,7 @@ import (
 	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
-	"github.com/storezhang/dig"
+	"go.uber.org/dig"
 )
 
 type Dependency struct {

@@ -1,7 +1,7 @@
 package container
 
 import (
-	"github.com/storezhang/dig"
+	"go.uber.org/dig"
 )
 
 type Get = dig.Out
