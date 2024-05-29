@@ -5,11 +5,13 @@ import (
 )
 
 type Get struct {
-	Getters []runtime.Getter
+	Injection *Injection
+	Getter    runtime.Getter
 }
 
-func NewGet(getter runtime.Getter, getters ...runtime.Getter) *Get {
+func NewGet(getter runtime.Getter) *Get {
 	return &Get{
-		Getters: append([]runtime.Getter{getter}, getters...),
+		Injection: NewInjection(),
+		Getter:    getter,
 	}
 }

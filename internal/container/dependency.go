@@ -53,7 +53,7 @@ func (d *Dependency) gets() (err error) {
 }
 
 func (d *Dependency) invoke(get *param.Get) (err error) {
-	for _, getter := range get.Getters {
+	for _, getter := range get.Getter {
 		err = d.container.Invoke(getter)
 		if nil != err {
 			break
