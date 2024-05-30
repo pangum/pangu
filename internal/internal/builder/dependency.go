@@ -33,12 +33,32 @@ func (d *Dependency) Verify() (dependency *Dependency) {
 	return
 }
 
-func (d *Dependency) Put(constructor runtime.Constructor, constructors ...runtime.Constructor) *Put {
-	return NewPut(d, constructor, constructors...)
+func (d *Dependency) Put(constructor runtime.Constructor) *Put {
+	return NewPut(d, constructor)
 }
 
-func (d *Dependency) Get(getter runtime.Getter, getters ...runtime.Getter) *Get {
-	return NewGet(d, getter, getters...)
+func (d *Dependency) Puts(required runtime.Constructor, others ...runtime.Constructor) (dependency *Dependency) {
+	d.params.Puts = append(d.params.Puts, param.NewPut(required))
+	for _, getter := range others {
+		d.params.Puts = append(d.params.Puts, param.NewPut(getter))
+	}
+	dependency = d
+
+	return
+}
+
+func (d *Dependency) Get(getter runtime.Getter) *Get {
+	return NewGet(d, getter)
+}
+
+func (d *Dependency) Gets(required runtime.Getter, others ...runtime.Getter) (dependency *Dependency) {
+	d.params.Gets = append(d.params.Gets, param.NewGet(required))
+	for _, getter := range others {
+		d.params.Gets = append(d.params.Gets, param.NewGet(getter))
+	}
+	dependency = d
+
+	return
 }
 
 func (d *Dependency) Build() *container.Dependency {

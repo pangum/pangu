@@ -5,13 +5,11 @@ import (
 )
 
 type Get struct {
-	Injection *Injection
-	Getter    runtime.Getter
+	Getter runtime.Getter
 }
 
 func NewGet(getter runtime.Getter) *Get {
 	return &Get{
-		Injection: NewInjection(),
-		Getter:    getter,
+		Getter: getter,
 	}
 }

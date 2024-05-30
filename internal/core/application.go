@@ -70,11 +70,11 @@ func create(params *param.Application) {
 	application.lifecycles = make([]app.Lifecycle, 0)
 
 	// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
-	application.Dependency().Put(
+	application.Dependency().Puts(
 		runtime.NewShell,      // 注入运行壳
 		application.putConfig, // 注入配置
 		application.putSelf,   // 注入自身
-	).Build().Get(
+	).Get(
 		application.bind, // 绑定参数和命令到内部变量或者命令上
 	).Build().Invalidate().Build().Apply()
 }

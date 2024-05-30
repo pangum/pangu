@@ -5,11 +5,13 @@ import (
 )
 
 type Put struct {
-	Constructors []runtime.Constructor
+	Constructor runtime.Constructor
+	Name        string
+	Group       string
 }
 
-func NewPut(constructor runtime.Constructor, constructors ...runtime.Constructor) *Put {
+func NewPut(constructor runtime.Constructor) *Put {
 	return &Put{
-		Constructors: append([]runtime.Constructor{constructor}, constructors...),
+		Constructor: constructor,
 	}
 }

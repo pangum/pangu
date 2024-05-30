@@ -6,19 +6,15 @@ import (
 )
 
 type Get struct {
-	*Injection
-
 	dependency *Dependency
 	params     *param.Get
 }
 
-func NewGet(dependency *Dependency, getter runtime.Getter) (get *Get) {
-	get = new(Get)
-	get.dependency = dependency
-	get.params = param.NewGet(getter)
-	get.Injection = NewInjection(get.params.Injection)
-
-	return
+func NewGet(dependency *Dependency, getter runtime.Getter) *Get {
+	return &Get{
+		dependency: dependency,
+		params:     param.NewGet(getter),
+	}
 }
 
 func (g *Get) Build() (dependency *Dependency) {

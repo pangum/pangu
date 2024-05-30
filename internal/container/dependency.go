@@ -52,15 +52,8 @@ func (d *Dependency) gets() (err error) {
 	return
 }
 
-func (d *Dependency) invoke(get *param.Get) (err error) {
-	for _, getter := range get.Getter {
-		err = d.container.Invoke(getter)
-		if nil != err {
-			break
-		}
-	}
-
-	return
+func (d *Dependency) invoke(get *param.Get) error {
+	return d.container.Invoke(get.Getter)
 }
 
 func (d *Dependency) puts() (err error) {
@@ -74,21 +67,22 @@ func (d *Dependency) puts() (err error) {
 	return
 }
 
-func (d *Dependency) put(put *param.Put) (err error) {
-	for _, constructor := range put.Constructors {
-		err = d.provide(constructor)
-		if nil != err {
-			break
-		}
+func (d *Dependency) put(put *param.Put) error {
+	options := make([]dig.ProvideOption, 0)
+	if "" != put.Name {
+		options = append(options, dig.Name(put.Name))
+	}
+	if "" != put.Group {
+		options = append(options, dig.Group(put.Group))
 	}
 
-	return
+	return d.provide(put.Constructor, options...)
 }
 
-func (d *Dependency) provide(constructor runtime.Constructor) (err error) {
+func (d *Dependency) provide(constructor runtime.Constructor, options ...dig.ProvideOption) (err error) {
 	if ve := d.verify(constructor); nil != ve {
 		err = ve
-	} else if pe := d.container.Provide(constructor); nil != pe {
+	} else if pe := d.container.Provide(constructor, options...); nil != pe {
 		err = pe
 	}
 

@@ -1,11 +1,9 @@
 package param
 
 type Dependency struct {
-	Puts       []*Put
-	Gets       []*Get
-	CommonGets *Gets
-	CommonPuts *Puts
-	Verify     bool
+	Puts   []*Put
+	Gets   []*Get
+	Verify bool
 }
 
 func NewDependency(verify bool) *Dependency {
