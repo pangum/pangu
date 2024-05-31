@@ -4,4 +4,4 @@ import (
 	"go.uber.org/dig"
 )
 
-type Get = dig.Out
+type Get = dig.In
