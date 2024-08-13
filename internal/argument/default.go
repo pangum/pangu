@@ -113,6 +113,10 @@ func (d *Default[T]) Flag() (flag app.Flag) {
 	return
 }
 
-func (d *Default[T]) runAction(context *cli.Context) error {
-	return gox.If(nil != d.action, d.action(runtime.NewContext(context), *d.target))
+func (d *Default[T]) runAction(context *cli.Context) (err error) {
+	if nil != d.action {
+		err = d.action(runtime.NewContext(context), *d.target)
+	}
+
+	return
 }
