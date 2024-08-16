@@ -1,10 +1,10 @@
 module github.com/pangum/pangu
 
-go 1.21
+go 1.23
 
 require (
 	github.com/goexl/gfx v0.1.7
-	github.com/goexl/gox v0.5.5
+	github.com/goexl/gox v0.6.2
 	github.com/pelletier/go-toml v1.9.5
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0

@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 
-	"github.com/goexl/gox"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/runtime"
 )
@@ -19,8 +18,6 @@ type Default struct {
 	description string
 	category    string
 	hidden      bool
-
-	_ gox.CannotCopy
 }
 
 func New(name string) *Builder {
