@@ -16,7 +16,7 @@ import (
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/runtime"
-	"github.com/pelletier/go-toml"
+	"github.com/pelletier/go-toml/v2"
 	"gopkg.in/yaml.v3"
 )
 

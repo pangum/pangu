@@ -4,8 +4,8 @@ go 1.23
 
 require (
 	github.com/goexl/gfx v0.1.7
-	github.com/goexl/gox v0.6.2
-	github.com/pelletier/go-toml v1.9.5
+	github.com/goexl/gox v0.6.3
+	github.com/pelletier/go-toml/v2 v2.2.3
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0
 	golang.org/x/sys v0.24.0 // indirect
@@ -37,7 +37,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/rs/xid v1.5.0 // indirect
+	github.com/rs/xid v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
