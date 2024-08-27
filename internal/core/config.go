@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/goexl/gox"
 	"github.com/pangum/pangu/internal/internal/builder"
 	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/param"
@@ -13,6 +14,8 @@ type Config struct {
 	original *param.Config
 	params   *param.Config
 	override bool
+
+	_ gox.Pointerized
 }
 
 func NewConfig(setup *config.Setup, params *param.Config) (config *Config) {
