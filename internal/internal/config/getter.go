@@ -3,6 +3,8 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"reflect"
+	"strings"
 
 	"github.com/goexl/exception"
 	"github.com/goexl/gfx"
@@ -61,6 +63,40 @@ func (g *Getter) load(path string, config runtime.Pointer) (err error) {
 	}
 
 	return
+}
+
+func (g *Getter) handleFields(object reflect.Value, prefix string, callback func(fieldName string) interface{}) {
+	typ := object.Type()
+	for index := 0; index < object.NumField(); index++ {
+		field := object.Field(index)
+		fieldName := typ.Field(index).Name
+
+		// 获取字段的 JSON 标签，如果存在则使用标签作为字段名
+		jsonTag := typ.Field(index).Tag.Get("json")
+		if jsonTag != "" {
+			jsonTags := strings.Split(jsonTag, ",")
+			if len(jsonTags) > 0 {
+				fieldName = jsonTags[0]
+			}
+		}
+
+		// 构建带有下划线的字段名
+		fieldNameWithPrefix := fieldName
+		if prefix != "" {
+			fieldNameWithPrefix = prefix + "_" + fieldName
+		}
+
+		// 如果字段为结构体，则递归处理
+		if field.Kind() == reflect.Struct {
+			g.handleFields(field, fieldNameWithPrefix, callback)
+		} else {
+			// 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
+			if reflect.DeepEqual(field.Interface(), reflect.Zero(field.Type()).Interface()) {
+				newValue := callback(fieldNameWithPrefix)
+				field.Set(reflect.ValueOf(newValue))
+			}
+		}
+	}
 }
 
 func (g *Getter) filepath() (path string, err error) {
