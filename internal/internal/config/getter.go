@@ -1,9 +1,13 @@
 package config
 
 import (
+	"os"
 	"path/filepath"
 
+	"github.com/goexl/exception"
 	"github.com/goexl/gfx"
+	"github.com/goexl/mengpo"
+	"github.com/goexl/xiren"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/param"
@@ -25,12 +29,35 @@ func newConfig(params *param.Config) *Getter {
 func (g *Getter) Get(target runtime.Pointer) (err error) {
 	if path, fpe := g.filepath(); nil != fpe {
 		err = fpe
-	} else if fe := g.params.Fill(path, target); nil != fe { // 加载数据
+	} else if fe := g.Fill(path, target); nil != fe { // 加载数据
 		err = fe
 	} else if nil != g.params.Watcher { // 配置文件监控
 		// TODO err = g.Watch(target, g.params.Watcher)
 	} else {
 		g.path = path
+	}
+
+	return
+}
+
+func (g *Getter) Fill(path string, config runtime.Pointer) (err error) {
+	if le := g.load(path, config); nil != le { // 从路径中加载数据
+		err = le
+	} else if g.params.Default { // 处理默认值
+		// !此处逻辑不能往前，原因是如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成空值
+		err = mengpo.New().Tag(g.params.Tag.Default).Build().Set(config)
+	} else if g.params.Validate { // 数据验证
+		err = xiren.Struct(config)
+	}
+
+	return
+}
+
+func (g *Getter) load(path string, config runtime.Pointer) (err error) {
+	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && g.params.Nullable { // 允许不使用配置文件
+		// 空实现，纯占位
+	} else if le := g.params.Load(path, config); nil != le { // 从路径中加载数据
+		err = le
 	}
 
 	return
@@ -53,6 +80,8 @@ func (g *Getter) filepath() (path string, err error) {
 
 	if final, exists := gfx.Exists(g.path, gfxOptions...); exists {
 		path = final
+	} else if !g.params.Nullable && !exists {
+		err = exception.New().Message("配置文件不存在").Build()
 	} else { // 如果找不到配置文件，则所用默认的配置文件
 		path = g.path
 	}
