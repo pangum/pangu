@@ -84,49 +84,46 @@ func (g *Getter) processEnvironmentConfig(object reflect.Value, names []string, 
 			g.processEnvironmentConfig(field, names, set)
 		} else if reflect.Ptr == kind { // 如果是指针，初始化
 			field.Set(reflect.New(field.Type().Elem()))
-			// g.processEnvironmentConfig(field, names, set)
-		} else { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
-			if reflect.DeepEqual(field.Interface(), reflect.Zero(field.Type()).Interface()) {
-				set(names, field)
-			}
+		} else if reflect.DeepEqual(field.Interface(), reflect.Zero(field.Type()).Interface()) { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
+			set(names, field)
 		}
 	}
 }
 
-func (g *Getter) getEnvironmentConfig(names []string, field reflect.Value) (value any) {
+func (g *Getter) getEnvironmentConfig(names []string, field reflect.Value) {
 	switch field.Kind() {
 	case reflect.Bool:
-		value = g.setEnvironmentConfigValue(names, field, g.bool)
+		g.setEnvironmentConfigValue(names, field, g.bool)
 	case reflect.Int:
-		value = g.setEnvironmentConfigValue(names, field, g.int)
+		g.setEnvironmentConfigValue(names, field, g.int)
 	case reflect.Int8:
-		value = g.setEnvironmentConfigValue(names, field, g.int8)
+		g.setEnvironmentConfigValue(names, field, g.int8)
 	case reflect.Int16:
-		value = g.setEnvironmentConfigValue(names, field, g.int16)
+		g.setEnvironmentConfigValue(names, field, g.int16)
 	case reflect.Int32:
-		value = g.setEnvironmentConfigValue(names, field, g.int32)
+		g.setEnvironmentConfigValue(names, field, g.int32)
 	case reflect.Int64:
-		value = g.setEnvironmentConfigValue(names, field, g.int64)
+		g.setEnvironmentConfigValue(names, field, g.int64)
 	case reflect.Uint:
-		value = g.setEnvironmentConfigValue(names, field, g.uint)
+		g.setEnvironmentConfigValue(names, field, g.uint)
 	case reflect.Uint8:
-		value = g.setEnvironmentConfigValue(names, field, g.uint8)
+		g.setEnvironmentConfigValue(names, field, g.uint8)
 	case reflect.Uint16:
-		value = g.setEnvironmentConfigValue(names, field, g.uint16)
+		g.setEnvironmentConfigValue(names, field, g.uint16)
 	case reflect.Uint32:
-		value = g.setEnvironmentConfigValue(names, field, g.uint32)
+		g.setEnvironmentConfigValue(names, field, g.uint32)
 	case reflect.Uint64:
-		value = g.setEnvironmentConfigValue(names, field, g.uint64)
+		g.setEnvironmentConfigValue(names, field, g.uint64)
 	case reflect.Uintptr:
-		value = g.setEnvironmentConfigValue(names, field, g.uintPtr)
+		g.setEnvironmentConfigValue(names, field, g.uintPtr)
 	case reflect.Float32:
-		value = g.setEnvironmentConfigValue(names, field, g.float32)
+		g.setEnvironmentConfigValue(names, field, g.float32)
 	case reflect.Float64:
-		value = g.setEnvironmentConfigValue(names, field, g.float64)
+		g.setEnvironmentConfigValue(names, field, g.float64)
 	case reflect.String:
-		value = g.setEnvironmentConfigValue(names, field, g.string)
+		g.setEnvironmentConfigValue(names, field, g.string)
 	default:
-		value = g.setEnvironmentConfigValue(names, field, g.string)
+		g.setEnvironmentConfigValue(names, field, g.string)
 	}
 
 	return
