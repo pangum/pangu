@@ -81,10 +81,10 @@ func (g *Getter) processEnvironmentConfig(object reflect.Value, names []string, 
 
 		kind := field.Kind()
 		if reflect.Struct == kind { // 如果字段为结构体，则递归处理
-			g.processEnvironmentConfig(field, names, set)
+			g.processEnvironmentConfig(field, g.clone(names), set)
 		} else if reflect.Ptr == kind { // 如果是指针，初始化
 			field.Set(reflect.New(field.Type().Elem()))
-		} else if reflect.DeepEqual(field.Interface(), reflect.Zero(field.Type()).Interface()) { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
+		} else if g.zero(field) { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
 			set(names, field)
 		}
 	}
@@ -183,6 +183,17 @@ func (g *Getter) setEnvironmentConfigValue(names []string, field reflect.Value, 
 	} else if ce := convert(environment, field); nil != ce {
 		// TODO 记录日志
 	}
+
+	return
+}
+
+func (g *Getter) zero(field reflect.Value) bool {
+	return reflect.DeepEqual(reflect.Zero(field.Type()).Interface(), field.Interface())
+}
+
+func (g *Getter) clone(from []string) (to []string) {
+	to = make([]string, len(from))
+	copy(to, from)
 
 	return
 }
