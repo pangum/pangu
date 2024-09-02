@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -62,7 +61,7 @@ func (g *Getter) Fill(path string, config runtime.Pointer) (err error) {
 
 func (g *Getter) load(path string, config runtime.Pointer) (err error) {
 	// 从环境变量中加载配置
-	defer g.processEnvironmentConfig(reflect.ValueOf(config).Elem(), []string{}, g.getEnvironmentConfig)
+	defer g.processEnvironmentConfig(reflect.ValueOf(config).Elem(), gox.NewSlice[string](), g.getEnvironmentConfig)
 
 	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && g.params.Nullable { // 允许不使用配置文件
 		// 空实现，纯占位
@@ -73,7 +72,7 @@ func (g *Getter) load(path string, config runtime.Pointer) (err error) {
 	return
 }
 
-func (g *Getter) processEnvironmentConfig(object reflect.Value, names []string, set callback.SetValue) {
+func (g *Getter) processEnvironmentConfig(object reflect.Value, names gox.Slice[string], set callback.SetValue) {
 	typ := object.Type()
 	for index := 0; index < object.NumField(); index++ {
 		field := object.Field(index)
@@ -86,13 +85,13 @@ func (g *Getter) processEnvironmentConfig(object reflect.Value, names []string, 
 		} else if reflect.Ptr == kind { // 如果是指针，初始化
 			field.Set(reflect.New(field.Type().Elem()))
 		} else if g.zero(field) { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
-			copies := g.clone(names)
+			copies := names.Clone() // !复制一份字段名列表，防止干扰其它结构体字段
 			set(append(copies, name), field)
 		}
 	}
 }
 
-func (g *Getter) getEnvironmentConfig(names []string, field reflect.Value) {
+func (g *Getter) getEnvironmentConfig(names gox.Slice[string], field reflect.Value) {
 	switch field.Kind() {
 	case reflect.Bool:
 		g.setEnvironmentConfigValue(names, field, g.bool)
@@ -127,8 +126,6 @@ func (g *Getter) getEnvironmentConfig(names []string, field reflect.Value) {
 	default:
 		g.setEnvironmentConfigValue(names, field, g.string)
 	}
-
-	return
 }
 
 func (g *Getter) filepath() (path string, err error) {
@@ -148,7 +145,7 @@ func (g *Getter) filepath() (path string, err error) {
 
 	if final, exists := gfx.Exists(g.path, gfxOptions...); exists {
 		path = final
-	} else if !g.params.Nullable && !exists {
+	} else if !g.params.Nullable {
 		err = exception.New().Message("配置文件不存在").Build()
 	} else { // 如果找不到配置文件，则所用默认的配置文件
 		path = g.path
@@ -173,22 +170,19 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 	shadow.Flags = append(shadow.Flags, config)
 }
 
-func (g *Getter) setEnvironmentConfigValue(names []string, field reflect.Value, convert callback.Convert) (value any) {
+func (g *Getter) setEnvironmentConfigValue(names gox.Slice[string], field reflect.Value, convert callback.Convert) {
 	// 将所有名称转换为大写，符合环境变量的定义
-	keys := make([]string, len(names)) // 复制一份，不影响原来的字段名
+	keys := make([]string, names.Length()) // 复制一份，不影响原来的字段名
 	for index, name := range names {
 		keys[index] = strings.ToUpper(name)
 	}
 
 	key := strings.Join(keys, constant.Underline)
-	fmt.Println(key)
 	if environment, ok := os.LookupEnv(key); !ok {
 		// TODO 记录日志
 	} else if ce := convert(environment, field); nil != ce {
 		// TODO 记录日志
 	}
-
-	return
 }
 
 func (g *Getter) zero(field reflect.Value) bool {

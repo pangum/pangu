@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/goexl/gfx v0.1.7
-	github.com/goexl/gox v0.6.4
+	github.com/goexl/gox v0.6.7
 	github.com/pelletier/go-toml/v2 v2.2.3
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0
