@@ -11,7 +11,7 @@ type Setup struct {
 
 func NewSetup(params *param.Config) *Setup {
 	return &Setup{
-		getter: newConfig(params),
+		getter: newGetter(params),
 	}
 }
 

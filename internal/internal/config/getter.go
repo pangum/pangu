@@ -26,7 +26,7 @@ type Getter struct {
 	params *param.Config
 }
 
-func newConfig(params *param.Config) *Getter {
+func newGetter(params *param.Config) *Getter {
 	return &Getter{
 		params: params,
 	}
@@ -61,7 +61,7 @@ func (g *Getter) Fill(path string, config runtime.Pointer) (err error) {
 
 func (g *Getter) load(path string, config runtime.Pointer) (err error) {
 	// 从环境变量中加载配置
-	defer g.processEnvironmentConfig(reflect.ValueOf(config).Elem(), gox.NewSlice[string](), g.getEnvironmentConfig)
+	defer g.processEnvironmentConfig(reflect.ValueOf(config).Elem(), gox.NewSlice[string](), g.setEnvironmentConfig)
 
 	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && g.params.Nullable { // 允许不使用配置文件
 		// 空实现，纯占位
@@ -84,14 +84,14 @@ func (g *Getter) processEnvironmentConfig(object reflect.Value, names gox.Slice[
 			g.processEnvironmentConfig(field, names, set)
 		} else if reflect.Ptr == kind { // 如果是指针，初始化
 			field.Set(reflect.New(field.Type().Elem()))
-		} else if g.zero(field) { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
+		} else { // 不管是否被设置，都尝试从环境变量中设置变量值
 			copies := names.Clone() // !复制一份字段名列表，防止干扰其它结构体字段
 			set(append(copies, name), field)
 		}
 	}
 }
 
-func (g *Getter) getEnvironmentConfig(names gox.Slice[string], field reflect.Value) {
+func (g *Getter) setEnvironmentConfig(names gox.Slice[string], field reflect.Value) {
 	switch field.Kind() {
 	case reflect.Bool:
 		g.setEnvironmentConfigValue(names, field, g.bool)
@@ -183,10 +183,6 @@ func (g *Getter) setEnvironmentConfigValue(names gox.Slice[string], field reflec
 	} else if ce := convert(environment, field); nil != ce {
 		// TODO 记录日志
 	}
-}
-
-func (g *Getter) zero(field reflect.Value) bool {
-	return reflect.DeepEqual(reflect.Zero(field.Type()).Interface(), field.Interface())
 }
 
 func (g *Getter) clone(from []string) (to []string) {
