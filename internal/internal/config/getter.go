@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -77,15 +78,16 @@ func (g *Getter) processEnvironmentConfig(object reflect.Value, names []string, 
 	for index := 0; index < object.NumField(); index++ {
 		field := object.Field(index)
 		name := typ.Field(index).Name
-		names = append(names, name)
-
 		kind := field.Kind()
+
 		if reflect.Struct == kind { // 如果字段为结构体，则递归处理
-			g.processEnvironmentConfig(field, g.clone(names), set)
+			names = append(names, name)
+			g.processEnvironmentConfig(field, names, set)
 		} else if reflect.Ptr == kind { // 如果是指针，初始化
 			field.Set(reflect.New(field.Type().Elem()))
 		} else if g.zero(field) { // 如果字段为零值，则通过回调函数获取新值并设置回原来的字段
-			set(names, field)
+			copies := g.clone(names)
+			set(append(copies, name), field)
 		}
 	}
 }
@@ -173,11 +175,13 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 
 func (g *Getter) setEnvironmentConfigValue(names []string, field reflect.Value, convert callback.Convert) (value any) {
 	// 将所有名称转换为大写，符合环境变量的定义
+	keys := make([]string, len(names)) // 复制一份，不影响原来的字段名
 	for index, name := range names {
-		names[index] = strings.ToUpper(name)
+		keys[index] = strings.ToUpper(name)
 	}
 
-	key := strings.Join(names, constant.Underline)
+	key := strings.Join(keys, constant.Underline)
+	fmt.Println(key)
 	if environment, ok := os.LookupEnv(key); !ok {
 		// TODO 记录日志
 	} else if ce := convert(environment, field); nil != ce {
@@ -345,7 +349,7 @@ func (g *Getter) uintPtr(from string, field reflect.Value) (err error) {
 }
 
 func (g *Getter) string(from string, field reflect.Value) (err error) {
-	field.Set(reflect.ValueOf(from))
+	field.Set(reflect.ValueOf(from).Convert(field.Type()))
 
 	return
 }
