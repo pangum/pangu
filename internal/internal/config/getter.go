@@ -11,6 +11,8 @@ import (
 	"github.com/goexl/exception"
 	"github.com/goexl/gfx"
 	"github.com/goexl/gox"
+	"github.com/goexl/gox/field"
+	"github.com/goexl/log"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
 	"github.com/pangum/pangu/internal"
@@ -24,11 +26,13 @@ import (
 type Getter struct {
 	path   string
 	params *param.Config
+	logger log.Logger
 }
 
-func newGetter(params *param.Config) *Getter {
+func newGetter(params *param.Config, logger log.Logger) *Getter {
 	return &Getter{
 		params: params,
+		logger: logger,
 	}
 }
 
@@ -72,10 +76,10 @@ func (g *Getter) load(path string, config runtime.Pointer) (err error) {
 	return
 }
 
-func (g *Getter) processEnvironmentConfig(object reflect.Value, names gox.Slice[string], set callback.SetValue) {
-	typ := object.Type()
-	for index := 0; index < object.NumField(); index++ {
-		field := object.Field(index)
+func (g *Getter) processEnvironmentConfig(config reflect.Value, names gox.Slice[string], set callback.SetValue) {
+	typ := config.Type()
+	for index := 0; index < config.NumField(); index++ {
+		field := config.Field(index)
 		name := typ.Field(index).Name
 		kind := field.Kind()
 
@@ -91,40 +95,40 @@ func (g *Getter) processEnvironmentConfig(object reflect.Value, names gox.Slice[
 	}
 }
 
-func (g *Getter) setEnvironmentConfig(names gox.Slice[string], field reflect.Value) {
-	switch field.Kind() {
+func (g *Getter) setEnvironmentConfig(names gox.Slice[string], target reflect.Value) {
+	switch target.Kind() {
 	case reflect.Bool:
-		g.setEnvironmentConfigValue(names, field, g.bool)
+		g.setEnvironmentConfigValue(names, target, g.bool)
 	case reflect.Int:
-		g.setEnvironmentConfigValue(names, field, g.int)
+		g.setEnvironmentConfigValue(names, target, g.int)
 	case reflect.Int8:
-		g.setEnvironmentConfigValue(names, field, g.int8)
+		g.setEnvironmentConfigValue(names, target, g.int8)
 	case reflect.Int16:
-		g.setEnvironmentConfigValue(names, field, g.int16)
+		g.setEnvironmentConfigValue(names, target, g.int16)
 	case reflect.Int32:
-		g.setEnvironmentConfigValue(names, field, g.int32)
+		g.setEnvironmentConfigValue(names, target, g.int32)
 	case reflect.Int64:
-		g.setEnvironmentConfigValue(names, field, g.int64)
+		g.setEnvironmentConfigValue(names, target, g.int64)
 	case reflect.Uint:
-		g.setEnvironmentConfigValue(names, field, g.uint)
+		g.setEnvironmentConfigValue(names, target, g.uint)
 	case reflect.Uint8:
-		g.setEnvironmentConfigValue(names, field, g.uint8)
+		g.setEnvironmentConfigValue(names, target, g.uint8)
 	case reflect.Uint16:
-		g.setEnvironmentConfigValue(names, field, g.uint16)
+		g.setEnvironmentConfigValue(names, target, g.uint16)
 	case reflect.Uint32:
-		g.setEnvironmentConfigValue(names, field, g.uint32)
+		g.setEnvironmentConfigValue(names, target, g.uint32)
 	case reflect.Uint64:
-		g.setEnvironmentConfigValue(names, field, g.uint64)
+		g.setEnvironmentConfigValue(names, target, g.uint64)
 	case reflect.Uintptr:
-		g.setEnvironmentConfigValue(names, field, g.uintPtr)
+		g.setEnvironmentConfigValue(names, target, g.uintPtr)
 	case reflect.Float32:
-		g.setEnvironmentConfigValue(names, field, g.float32)
+		g.setEnvironmentConfigValue(names, target, g.float32)
 	case reflect.Float64:
-		g.setEnvironmentConfigValue(names, field, g.float64)
+		g.setEnvironmentConfigValue(names, target, g.float64)
 	case reflect.String:
-		g.setEnvironmentConfigValue(names, field, g.string)
+		g.setEnvironmentConfigValue(names, target, g.string)
 	default:
-		g.setEnvironmentConfigValue(names, field, g.string)
+		g.setEnvironmentConfigValue(names, target, g.string)
 	}
 }
 
@@ -170,7 +174,7 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 	shadow.Flags = append(shadow.Flags, config)
 }
 
-func (g *Getter) setEnvironmentConfigValue(names gox.Slice[string], field reflect.Value, convert callback.Convert) {
+func (g *Getter) setEnvironmentConfigValue(names gox.Slice[string], target reflect.Value, convert callback.Convert) {
 	// 将所有名称转换为大写，符合环境变量的定义
 	keys := make([]string, names.Length()) // 复制一份，不影响原来的字段名
 	for index, name := range names {
@@ -178,23 +182,22 @@ func (g *Getter) setEnvironmentConfigValue(names gox.Slice[string], field reflec
 	}
 
 	key := strings.Join(keys, constant.Underline)
+	fields := gox.Fields[any]{
+		field.New("field", strings.Join(names, constant.Dot)),
+		field.New("environment", key),
+	}
 	if environment, ok := os.LookupEnv(key); !ok {
-		// TODO 记录日志
-	} else if ce := convert(environment, field); nil != ce {
-		// TODO 记录日志
+		g.logger.Debug("未在环境变量中发现配置", fields...)
+	} else if ce := convert(environment, target); nil != ce {
+		g.logger.Debug("从环境变量中设置配置值出错", fields.Add(field.Error(ce))...)
+	} else {
+		g.logger.Debug("环境变量中设置配置值", fields...)
 	}
 }
 
-func (g *Getter) clone(from []string) (to []string) {
-	to = make([]string, len(from))
-	copy(to, from)
-
-	return
-}
-
-func (g *Getter) bool(from string, field reflect.Value) (err error) {
+func (g *Getter) bool(from string, target reflect.Value) (err error) {
 	if value, pbe := strconv.ParseBool(from); nil == pbe {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pbe
 	}
@@ -202,9 +205,9 @@ func (g *Getter) bool(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) float32(from string, field reflect.Value) (err error) {
+func (g *Getter) float32(from string, target reflect.Value) (err error) {
 	if value, pfe := strconv.ParseFloat(from, 32); nil == pfe {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pfe
 	}
@@ -212,9 +215,9 @@ func (g *Getter) float32(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) float64(from string, field reflect.Value) (err error) {
+func (g *Getter) float64(from string, target reflect.Value) (err error) {
 	if value, pfe := strconv.ParseFloat(from, 64); nil == pfe {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pfe
 	}
@@ -222,9 +225,9 @@ func (g *Getter) float64(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) int(from string, field reflect.Value) (err error) {
+func (g *Getter) int(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, strconv.IntSize); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -232,9 +235,9 @@ func (g *Getter) int(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) int8(from string, field reflect.Value) (err error) {
+func (g *Getter) int8(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, 8); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -242,9 +245,9 @@ func (g *Getter) int8(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) int16(from string, field reflect.Value) (err error) {
+func (g *Getter) int16(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, 16); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -252,9 +255,9 @@ func (g *Getter) int16(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) int32(from string, field reflect.Value) (err error) {
+func (g *Getter) int32(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, 32); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -262,9 +265,9 @@ func (g *Getter) int32(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) int64(from string, field reflect.Value) (err error) {
+func (g *Getter) int64(from string, target reflect.Value) (err error) {
 	var value any
-	switch field.Interface().(type) {
+	switch target.Interface().(type) {
 	case time.Duration:
 		value, err = time.ParseDuration(from)
 	case gox.Bytes:
@@ -273,14 +276,14 @@ func (g *Getter) int64(from string, field reflect.Value) (err error) {
 		value, err = strconv.ParseInt(from, 0, 64)
 	}
 	if nil != err {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	}
 
 	return
 }
-func (g *Getter) uint(from string, field reflect.Value) (err error) {
+func (g *Getter) uint(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, strconv.IntSize); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -288,9 +291,9 @@ func (g *Getter) uint(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) uint8(from string, field reflect.Value) (err error) {
+func (g *Getter) uint8(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 8); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -298,9 +301,9 @@ func (g *Getter) uint8(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) uint16(from string, field reflect.Value) (err error) {
+func (g *Getter) uint16(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 16); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -308,9 +311,9 @@ func (g *Getter) uint16(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) uint32(from string, field reflect.Value) (err error) {
+func (g *Getter) uint32(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 32); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -318,9 +321,9 @@ func (g *Getter) uint32(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) uint64(from string, field reflect.Value) (err error) {
+func (g *Getter) uint64(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 64); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -328,9 +331,9 @@ func (g *Getter) uint64(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) uintPtr(from string, field reflect.Value) (err error) {
+func (g *Getter) uintPtr(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, strconv.IntSize); nil == pie {
-		field.Set(reflect.ValueOf(value))
+		target.Set(reflect.ValueOf(value))
 	} else {
 		err = pie
 	}
@@ -338,8 +341,8 @@ func (g *Getter) uintPtr(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (g *Getter) string(from string, field reflect.Value) (err error) {
-	field.Set(reflect.ValueOf(from).Convert(field.Type()))
+func (g *Getter) string(from string, target reflect.Value) (err error) {
+	target.Set(reflect.ValueOf(from).Convert(target.Type()))
 
 	return
 }

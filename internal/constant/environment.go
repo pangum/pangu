@@ -11,4 +11,6 @@ const (
 	EnvironmentCompiled  = "COMPILED"
 	EnvironmentRevision  = "REVISION"
 	EnvironmentBranch    = "BRANCH"
+
+	EnvironmentLoggingLevel = "LOGGING_LEVEL"
 )

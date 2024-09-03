@@ -35,7 +35,7 @@ type Default[T Type] struct {
 	// 动作
 	action Action[T]
 
-	_ gox.CannotCopy
+	_ gox.Pointerized
 }
 
 func NewDefault[T Type](name string, target *T) *Default[T] {

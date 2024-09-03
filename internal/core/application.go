@@ -65,7 +65,8 @@ func create(params *param.Application) {
 	application.params = params
 	application.container = dig.New()
 	application.shadow = runtime.NewShadow()
-	application.config = config.NewSetup(params.Config)
+	application.logger = application.getInternalLogger()
+	application.config = config.NewSetup(params.Config, application.logger)
 	application.stoppers = make([]app.Stopper, 0)
 	application.lifecycles = make([]app.Lifecycle, 0)
 
@@ -320,7 +321,6 @@ func (a *Application) putSelf() *Application {
 func (a *Application) putLogger() (err error) {
 	dependency := a.Dependency()
 	if gle := dependency.Get(a.getLogger).Build().Build().Inject(); nil != gle {
-		a.logger = log.New().Apply()
 		err = dependency.Put(a.supplyLogger).Build().Build().Inject()
 	}
 
@@ -329,6 +329,15 @@ func (a *Application) putLogger() (err error) {
 
 func (a *Application) getLogger(logger log.Logger) {
 	a.logger = logger
+}
+
+func (a *Application) getInternalLogger() (logger log.Logger) {
+	logger = log.New().Apply()
+	if level, ok := os.LookupEnv(constant.EnvironmentLoggingLevel); ok {
+		logger.Enable(log.ParseLevel(level))
+	}
+
+	return
 }
 
 func (a *Application) supplyLogger() log.Logger {

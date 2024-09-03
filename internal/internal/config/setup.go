@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 )
@@ -9,9 +10,9 @@ type Setup struct {
 	getter *Getter
 }
 
-func NewSetup(params *param.Config) *Setup {
+func NewSetup(params *param.Config, logger log.Logger) *Setup {
 	return &Setup{
-		getter: newGetter(params),
+		getter: newGetter(params, logger),
 	}
 }
 
