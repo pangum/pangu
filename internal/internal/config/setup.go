@@ -10,7 +10,7 @@ type Setup struct {
 	getter *Getter
 }
 
-func NewSetup(params *param.Config, logger log.Logger) *Setup {
+func NewSetup(params *param.Config, logger *log.Logger) *Setup {
 	return &Setup{
 		getter: newGetter(params, logger),
 	}

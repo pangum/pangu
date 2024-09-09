@@ -66,7 +66,7 @@ func create(params *param.Application) {
 	application.container = dig.New()
 	application.shadow = runtime.NewShadow()
 	application.logger = application.getInternalLogger()
-	application.config = config.NewSetup(params.Config, application.logger)
+	application.config = config.NewSetup(params.Config, &application.logger)
 	application.stoppers = make([]app.Stopper, 0)
 	application.lifecycles = make([]app.Lifecycle, 0)
 
