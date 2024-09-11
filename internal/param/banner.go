@@ -17,7 +17,6 @@ import (
 type Banner struct {
 	Data any
 	Type banner.Type
-	Set  bool
 }
 
 func newBanner() *Banner {

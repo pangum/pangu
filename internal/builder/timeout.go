@@ -11,12 +11,11 @@ type Timeout struct {
 	application *Application
 }
 
-func NewTimeout(application *Application) (timeout *Timeout) {
-	timeout = new(Timeout)
-	timeout.params = application.params.Timeout
-	timeout.application = application
-
-	return
+func newTimeout(application *Application) *Timeout {
+	return &Timeout{
+		params:      application.params.Timeout,
+		application: application,
+	}
 }
 
 func (t *Timeout) Boot(duration time.Duration) (timeout *Timeout) {
@@ -34,7 +33,6 @@ func (t *Timeout) Quit(duration time.Duration) (timeout *Timeout) {
 }
 
 func (t *Timeout) Build() (application *Application) {
-	t.params.Set = true
 	t.application.params.Timeout = t.params
 	application = t.application
 

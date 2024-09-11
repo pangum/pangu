@@ -39,7 +39,6 @@ func (c *Code) Panic(panic int) (code *Code) {
 }
 
 func (c *Code) Build() (application *Application) {
-	c.params.Set = true
 	c.application.params.Code = c.params
 	application = c.application
 

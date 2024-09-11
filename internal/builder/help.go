@@ -9,7 +9,7 @@ type Help struct {
 	application *Application
 }
 
-func NewHelp(application *Application) (help *Help) {
+func newHelp(application *Application) (help *Help) {
 	help = new(Help)
 	help.params = application.params.Help
 	help.application = application
@@ -39,7 +39,6 @@ func (h *Help) Subcommand(tooltip string) (help *Help) {
 }
 
 func (h *Help) Build() (application *Application) {
-	h.params.Set = true
 	h.application.params.Help = h.params
 	application = h.application
 

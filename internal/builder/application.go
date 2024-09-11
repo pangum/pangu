@@ -8,14 +8,36 @@ import (
 	"github.com/pangum/pangu/internal/param"
 )
 
+var shadow *Application
+
 type Application struct {
 	params *param.Application
+
+	config  *Config
+	timeout *Timeout
+	banner  *Banner
+	help    *Help
 }
 
-func NewApplication() *Application {
-	return &Application{
-		params: param.NewApplication(),
-	}
+// NewApplication !基于单例实现，保证每次只生成一个可配置项
+func NewApplication() (application *Application) {
+	once.Do(newApplication)
+	application = shadow
+
+	return
+}
+
+func newApplication() {
+	shadow = new(Application)
+	shadow.params = param.NewApplication()
+
+	// !预创建，保证单例
+	shadow.config = newConfig(shadow)
+	shadow.timeout = newTimeout(shadow)
+	shadow.banner = newBanner(shadow)
+	shadow.help = newHelp(shadow)
+
+	return
 }
 
 func (a *Application) Verify() *Application {
@@ -61,19 +83,19 @@ func (a *Application) Name(name string) *Application {
 }
 
 func (a *Application) Timeout() *Timeout {
-	return NewTimeout(a)
+	return a.timeout
 }
 
 func (a *Application) Banner() *Banner {
-	return NewBanner(a)
+	return a.banner
 }
 
 func (a *Application) Config() *Config {
-	return NewConfig(a)
+	return a.config
 }
 
 func (a *Application) Help() *Help {
-	return NewHelp(a)
+	return a.help
 }
 
 func (a *Application) Get() *core.Application {
@@ -82,7 +104,6 @@ func (a *Application) Get() *core.Application {
 
 func (a *Application) set(set function.Set) (application *Application) {
 	set()
-	a.params.Set = true
 	application = a
 
 	return

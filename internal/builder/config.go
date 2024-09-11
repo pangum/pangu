@@ -13,26 +13,12 @@ type Config struct {
 	application *Application
 }
 
-func NewConfig(application *Application) (config *Config) {
+func newConfig(application *Application) (config *Config) {
 	params := application.params.Config
 	config = new(Config)
 	config.Config = builder.NewConfig(params)
 	config.params = params
 	config.application = application
-
-	return
-}
-
-func (c *Config) Path(path string) (config *Config) {
-	c.params.Paths = append(c.params.Paths, path)
-	config = c
-
-	return
-}
-
-func (c *Config) Extension(extension string) (config *Config) {
-	c.params.Extensions = append(c.params.Extensions, extension)
-	config = c
 
 	return
 }
@@ -73,7 +59,6 @@ func (c *Config) Environment(key string, value string) (config *Config) {
 }
 
 func (c *Config) Build() (application *Application) {
-	c.params.Set = true
 	application.params.Config = c.params
 	application = c.application
 

@@ -1,14 +1,15 @@
 package config
 
 import (
+	"context"
 	"os"
-	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/drone/envsubst"
 	"github.com/goexl/exception"
 	"github.com/goexl/gfx"
 	"github.com/goexl/gox"
@@ -16,6 +17,7 @@ import (
 	"github.com/goexl/log"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
+	"github.com/pangum/config"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/config/internal/callback"
@@ -42,44 +44,71 @@ func newGetter(params *param.Config, logger *log.Logger) *Getter {
 }
 
 func (g *Getter) Get(target runtime.Pointer) (err error) {
-	if path, fpe := g.filepath(); nil != fpe {
+	if path, fpe := g.filepath(); nil != fpe { // 获取最终的配置文件路径
 		err = fpe
 	} else if fe := g.Fill(path, target); nil != fe { // 加载数据
 		err = fe
-	} else if nil != g.params.Watcher { // 配置文件监控
-		// TODO err = g.Watch(target, g.params.Watcher)
-	} else {
+	} else { // 保存已经使用过的配置文件路径
 		g.path = path
 	}
 
 	return
 }
 
-func (g *Getter) Fill(path string, config runtime.Pointer) (err error) {
-	if le := g.load(path, config); nil != le { // 从路径中加载数据
+func (g *Getter) Fill(path string, target runtime.Pointer) (err error) {
+	if le := g.load(path, target); nil != le { // 从路径中加载数据
 		err = le
 	}
 
 	if nil == err && g.params.Default { // 处理默认值
 		// !此处逻辑不能往前，原因是如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成空值
-		err = mengpo.New().Tag(g.params.Tag.Default).Build().Set(config)
+		err = mengpo.New().Tag(g.params.Tag.Default).Build().Set(target)
 	}
 
 	// 从环境变量中加载配置
-	g.processEnvironmentConfig(reflect.ValueOf(config).Elem(), gox.NewSlice[string](), g.setEnvironmentConfig)
+	g.processEnvironmentConfig(reflect.ValueOf(target).Elem(), gox.NewSlice[string](), g.setEnvironmentConfig)
 
 	if nil == err && g.params.Validate { // 数据验证
-		err = xiren.Struct(config)
+		err = xiren.Struct(target)
 	}
 
 	return
 }
 
-func (g *Getter) load(path string, config runtime.Pointer) (err error) {
+func (g *Getter) load(path string, target runtime.Pointer) (err error) {
 	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && g.params.Nullable { // 允许不使用配置文件
 		// 空实现，纯占位
-	} else if le := g.params.Load(path, config); nil != le { // 从路径中加载数据
+	} else if le := g.loadFromContext(path, target); nil != le { // 从路径中加载数据
 		err = le
+	}
+
+	return
+}
+
+func (g *Getter) loadFromContext(path string, target runtime.Pointer) (err error) {
+	localContext := context.Background()
+	if bytes, rfe := os.ReadFile(path); nil != rfe {
+		err = rfe
+	} else if evaled, ee := envsubst.Eval(string(bytes), g.params.EnvironmentGetter); nil != ee {
+		err = ee
+	} else {
+		localContext = context.WithValue(localContext, config.ContextFilepath, path)
+		localContext = context.WithValue(localContext, config.ContextBytes, []byte(evaled))
+	}
+	if nil != err {
+		return
+	}
+
+	networkContext := context.Background()
+	for _, loader := range g.params.Loaders {
+		ctx := localContext
+		if !loader.Local() { // 默认为本地上下文，如果确实为网络加载器，切换为网络上下文
+			ctx = networkContext
+		}
+		err = loader.Load(ctx, target)
+		if nil != err {
+			break
+		}
 	}
 
 	return
@@ -146,21 +175,26 @@ func (g *Getter) setEnvironmentConfig(names gox.Slice[string], target reflect.Va
 }
 
 func (g *Getter) filepath() (path string, err error) {
-	gfxOptions := gfx.NewExistsOptions(
-		gfx.Paths(g.params.Paths...),
-		gfx.Extensions(g.params.Extensions...),
-	)
-	// 如果配置了应用名称，可以使用应用名称的配置文件
-	if constant.EnvironmentNotSet != internal.Name {
-		gfxOptions = append(gfxOptions, gfx.Paths(
-			internal.Name,
-			filepath.Join(constant.ConfigDir, internal.Name),
-			filepath.Join(constant.ConfigConfDir, internal.Name),
-			filepath.Join(constant.ConfigConfigurationDir, internal.Name),
-		))
+	if "" != g.path {
+		path = g.path
+	} else {
+		path, err = g.detectFilepath()
 	}
 
-	if final, exists := gfx.Exists(g.path, gfxOptions...); exists {
+	return
+}
+
+func (g *Getter) detectFilepath() (path string, err error) {
+	exists := gfx.Exists().Filename(constant.ApplicationName)
+	if constant.EnvironmentNotSet != internal.Name { // 如果配置了应用名称，可以使用应用名称的配置文件
+		exists.Filename(internal.Name)
+	}
+	// 配置所有可能的配置目录
+	exists.Directory("config")
+	exists.Directory("conf")
+	exists.Directory("configuration")
+
+	if final, checked := exists.Build().Check(); checked {
 		path = final
 	} else if !g.params.Nullable {
 		err = exception.New().Message("配置文件不存在").Build()
@@ -179,7 +213,6 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 		constant.ConfigAliasConf,
 		constant.ConfigAliasConfiguration,
 	}
-	config.Value = constant.ConfigDefaultFilepath
 	config.Usage = "指定配置文件路径"
 	config.Destination = &g.path
 

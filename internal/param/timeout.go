@@ -9,7 +9,6 @@ type Timeout struct {
 	Boot time.Duration
 	// 退出
 	Quit time.Duration
-	Set  bool
 }
 
 func NewTimeout() *Timeout {

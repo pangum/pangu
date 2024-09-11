@@ -10,7 +10,7 @@ type Banner struct {
 	application *Application
 }
 
-func NewBanner(application *Application) (banner *Banner) {
+func newBanner(application *Application) (banner *Banner) {
 	banner = new(Banner)
 	banner.params = application.params.Banner
 	banner.application = application
@@ -35,7 +35,6 @@ func (b *Banner) Binary(binary []byte) (ban *Banner) {
 }
 
 func (b *Banner) Build() (application *Application) {
-	b.params.Set = true
 	b.application.params.Banner = b.params
 	application = b.application
 

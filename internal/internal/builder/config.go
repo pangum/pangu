@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"github.com/pangum/config"
 	"github.com/pangum/pangu/internal/internal/app"
 	"github.com/pangum/pangu/internal/param"
 )
@@ -29,20 +30,6 @@ func (c *Config) Required() (config *Config) {
 	return
 }
 
-func (c *Config) Path(path string) (config *Config) {
-	c.param.Paths = append(c.param.Paths, path)
-	config = c
-
-	return
-}
-
-func (c *Config) Extension(extension string) (config *Config) {
-	c.param.Extensions = append(c.param.Extensions, extension)
-	config = c
-
-	return
-}
-
 func (c *Config) Default() (config *Config) {
 	c.param.Default = true
 	config = c
@@ -57,8 +44,9 @@ func (c *Config) Environment(key string, value string) (config *Config) {
 	return
 }
 
-func (c *Config) StringEnvironment(environment string) (config *Config) {
-	c.param.Environments = append(c.param.Environments, app.ParseEnvironment(environment))
+func (c *Config) Loader(loader config.Loader, loaders ...config.Loader) (config *Config) {
+	c.param.Loaders = append(c.param.Loaders, loader)
+	c.param.Loaders = append(c.param.Loaders, loaders...)
 	config = c
 
 	return

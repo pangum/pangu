@@ -11,7 +11,6 @@ type Help struct {
 	Command string
 	// 子命令帮助信息模板
 	Subcommand string
-	Set        bool
 }
 
 func newHelp() *Help {

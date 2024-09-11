@@ -27,7 +27,6 @@ type Application struct {
 	Authors app.Authors
 	// 元数据
 	Metadata map[string]any
-	Set      bool
 }
 
 func NewApplication() *Application {
@@ -48,28 +47,5 @@ func NewApplication() *Application {
 			Email: constant.AuthorEmail,
 		}},
 		Metadata: make(map[string]any),
-	}
-}
-
-func (a *Application) Override(latest *Application) {
-	if latest.Config.Set {
-		a.Config = latest.Config
-	}
-	if latest.Help.Set {
-		a.Help = latest.Help
-	}
-	if latest.Banner.Set {
-		a.Banner = latest.Banner
-	}
-	if latest.Code.Set {
-		a.Code = latest.Code
-	}
-	if latest.Set {
-		a.Verify = latest.Verify
-		a.Description = latest.Description
-		a.Usage = latest.Usage
-		a.Copyright = latest.Copyright
-		a.Authors = latest.Authors
-		a.Metadata = latest.Metadata
 	}
 }

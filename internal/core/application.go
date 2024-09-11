@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"reflect"
 	"strings"
-	"sync"
 	"syscall"
 
 	"github.com/goexl/exception"
@@ -28,10 +27,7 @@ import (
 	"go.uber.org/dig"
 )
 
-var (
-	application *Application
-	once        sync.Once
-)
+var shadow *Application
 
 type Application struct {
 	config    *config.Setup
@@ -46,38 +42,33 @@ type Application struct {
 	logger     log.Logger
 }
 
-func New(param *param.Application) *Application {
-	once.Do(creator(param))
-	// 可以在每次调用时，修改部分配置
-	application.params.Override(param)
+func New(param *param.Application) (application *Application) {
+	once.Do(create(param))
+	application = shadow
 
-	return application
+	return
 }
 
-func creator(param *param.Application) func() {
+func create(params *param.Application) func() {
 	return func() {
-		create(param)
+		shadow = new(Application)
+		shadow.params = params
+		shadow.container = dig.New()
+		shadow.shadow = runtime.NewShadow()
+		shadow.logger = shadow.getInternalLogger()
+		shadow.config = config.NewSetup(params.Config, &shadow.logger)
+		shadow.stoppers = make([]app.Stopper, 0)
+		shadow.lifecycles = make([]app.Lifecycle, 0)
+
+		// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
+		shadow.Dependency().Puts(
+			runtime.NewShell, // 注入运行壳
+			shadow.putConfig, // 注入配置
+			shadow.putSelf,   // 注入自身
+		).Get(
+			shadow.bind, // 绑定参数和命令到内部变量或者命令上
+		).Build().Invalidate().Build().Apply()
 	}
-}
-
-func create(params *param.Application) {
-	application = new(Application)
-	application.params = params
-	application.container = dig.New()
-	application.shadow = runtime.NewShadow()
-	application.logger = application.getInternalLogger()
-	application.config = config.NewSetup(params.Config, &application.logger)
-	application.stoppers = make([]app.Stopper, 0)
-	application.lifecycles = make([]app.Lifecycle, 0)
-
-	// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
-	application.Dependency().Puts(
-		runtime.NewShell,      // 注入运行壳
-		application.putConfig, // 注入配置
-		application.putSelf,   // 注入自身
-	).Get(
-		application.bind, // 绑定参数和命令到内部变量或者命令上
-	).Build().Invalidate().Build().Apply()
 }
 
 func (a *Application) Dependency() *builder.Dependency {
