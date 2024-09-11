@@ -5,7 +5,7 @@ go 1.23
 require (
 	github.com/goexl/gfx v0.2.1
 	github.com/goexl/gox v0.6.8
-	github.com/pangum/config v0.0.5
+	github.com/pangum/config v0.0.6
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0
 	golang.org/x/sys v0.25.0 // indirect
@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/drone/envsubst v1.0.3
 	github.com/goexl/env v0.0.2
 	github.com/goexl/exception v0.0.1
 	github.com/goexl/log v0.0.7
@@ -24,7 +25,6 @@ require (
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
-	github.com/drone/envsubst v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.5 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect

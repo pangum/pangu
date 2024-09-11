@@ -105,7 +105,10 @@ func (g *Getter) loadFromContext(path string, target runtime.Pointer) (err error
 		if !loader.Local() { // 默认为本地上下文，如果确实为网络加载器，切换为网络上下文
 			ctx = networkContext
 		}
-		err = loader.Load(ctx, target)
+		if _, le := loader.Load(ctx, target); nil != le {
+			err = le
+		}
+
 		if nil != err {
 			break
 		}

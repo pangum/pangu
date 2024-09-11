@@ -28,21 +28,26 @@ func (*Json) Local() bool {
 	return true
 }
 
-func (j *Json) Load(ctx context.Context, target runtime.Pointer) (err error) {
+func (j *Json) Load(ctx context.Context, target runtime.Pointer) (loaded bool, err error) {
 	if path, pok := ctx.Value(config.ContextFilepath).(string); !pok {
 		err = exception.New().Message("未指定配置文件路径").Field(field.New("loader", "json")).Build()
 	} else if bytes, bok := ctx.Value(config.ContextBytes).([]byte); !bok {
 		err = exception.New().Message("配置文件无内容").Field(field.New("loader", "json")).Build()
 	} else {
-		err = j.load(&path, &bytes, target)
+		loaded, err = j.load(&path, &bytes, target)
 	}
 
 	return
 }
 
-func (j *Json) load(path *string, bytes *[]byte, target runtime.Pointer) (err error) {
+func (j *Json) load(path *string, bytes *[]byte, target runtime.Pointer) (loaded bool, err error) {
+	loadable := false
 	if ".json" == strings.ToLower(filepath.Ext(*path)) {
+		loadable = true
 		err = json.Unmarshal(*bytes, target)
+	}
+	if nil == err && loadable {
+		loaded = true
 	}
 
 	return
