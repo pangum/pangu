@@ -3,6 +3,7 @@ package param
 import (
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/app"
+	"github.com/pangum/pangu/internal/internal/loader"
 )
 
 type Application struct {
@@ -31,7 +32,10 @@ type Application struct {
 
 func NewApplication() *Application {
 	return &Application{
-		Config:  newConfig(),
+		Config: NewConfig(
+			loader.NewJson(),
+			loader.NewXml(),
+		),
 		Help:    newHelp(),
 		Banner:  newBanner(),
 		Code:    newCode(),

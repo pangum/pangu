@@ -6,48 +6,50 @@ import (
 	"github.com/pangum/pangu/internal/param"
 )
 
-type Config struct {
+type Config[T any] struct {
 	param *param.Config
+	from  *T
 }
 
-func NewConfig(param *param.Config) *Config {
-	return &Config{
+func NewConfig[T any](param *param.Config, from *T) *Config[T] {
+	return &Config[T]{
 		param: param,
+		from:  from,
 	}
 }
 
-func (c *Config) Nullable() (config *Config) {
+func (c *Config[T]) Nullable() (t *T) {
 	c.param.Nullable = true
-	config = c
+	t = c.from
 
 	return
 }
 
-func (c *Config) Required() (config *Config) {
+func (c *Config[T]) Required() (t *T) {
 	c.param.Nullable = false
-	config = c
+	t = c.from
 
 	return
 }
 
-func (c *Config) Default() (config *Config) {
+func (c *Config[T]) Default() (t *T) {
 	c.param.Default = true
-	config = c
+	t = c.from
 
 	return
 }
 
-func (c *Config) Environment(key string, value string) (config *Config) {
+func (c *Config[T]) Environment(key string, value string) (t *T) {
 	c.param.Environments = append(c.param.Environments, app.NewEnvironment(key, value))
-	config = c
+	t = c.from
 
 	return
 }
 
-func (c *Config) Loader(loader config.Loader, loaders ...config.Loader) (config *Config) {
+func (c *Config[T]) Loader(loader config.Loader, loaders ...config.Loader) (t *T) {
 	c.param.Loaders = append(c.param.Loaders, loader)
 	c.param.Loaders = append(c.param.Loaders, loaders...)
-	config = c
+	t = c.from
 
 	return
 }

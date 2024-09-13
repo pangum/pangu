@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	*builder.Config
+	*builder.Config[Config]
 
 	setup    *config.Setup
 	original *param.Config
@@ -24,7 +24,7 @@ func NewConfig(setup *config.Setup, params *param.Config) (config *Config) {
 
 	config = new(Config)
 	config.setup = setup
-	config.Config = builder.NewConfig(original)
+	config.Config = builder.NewConfig(original, config)
 	config.params = params
 
 	return

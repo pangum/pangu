@@ -11,9 +11,7 @@ import (
 var shadow *Application
 
 type Application struct {
-	params *param.Application
-
-	config  *Config
+	params  *param.Application
 	timeout *Timeout
 	banner  *Banner
 	help    *Help
@@ -32,7 +30,6 @@ func newApplication() {
 	shadow.params = param.NewApplication()
 
 	// !预创建，保证单例
-	shadow.config = newConfig(shadow)
 	shadow.timeout = newTimeout(shadow)
 	shadow.banner = newBanner(shadow)
 	shadow.help = newHelp(shadow)
@@ -91,7 +88,7 @@ func (a *Application) Banner() *Banner {
 }
 
 func (a *Application) Config() *Config {
-	return a.config
+	return newConfig(a)
 }
 
 func (a *Application) Help() *Help {
