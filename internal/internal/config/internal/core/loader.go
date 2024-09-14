@@ -8,7 +8,9 @@ import (
 	"github.com/drone/envsubst"
 	"github.com/goexl/exception"
 	"github.com/goexl/gox"
+	"github.com/goexl/log"
 	"github.com/pangum/config"
+	"github.com/pangum/pangu/internal/internal/config/internal/valuer"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 )
@@ -17,13 +19,15 @@ type Loader struct {
 	path    gox.Pointer[string]
 	params  *param.Config
 	targets []runtime.Pointer
+	logger  *log.Logger
 }
 
-func NewLoader(path gox.Pointer[string], params *param.Config) *Loader {
+func NewLoader(path gox.Pointer[string], params *param.Config, logger *log.Logger) *Loader {
 	return &Loader{
 		path:    path,
 		params:  params,
 		targets: make([]runtime.Pointer, 0),
+		logger:  logger,
 	}
 }
 
@@ -85,11 +89,15 @@ func (l *Loader) load(localContext context.Context, target runtime.Pointer, hasC
 		}
 
 		ctx := localContext
-		if !loader.Local() { // 默认为本地上下文，如果确实为网络加载器，切换为网络上下文
+		if !loader.Local() { // 默认为本地上下文，如果为网络加载器，切换为网络上下文
 			ctx = networkContext
 		}
-		if _, le := loader.Load(ctx, target); nil != le {
+
+		value := make(map[string]any)
+		if loaded, le := loader.Load(ctx, &value); nil != le {
 			err = le
+		} else if loaded && 0 != len(value) { // 确实加载了配置数据
+			err = l.fill(&value, target)
 		}
 
 		if nil != err {
@@ -99,6 +107,17 @@ func (l *Loader) load(localContext context.Context, target runtime.Pointer, hasC
 
 	if nil == err {
 		l.targets = append(l.targets, target)
+	}
+
+	return
+}
+
+func (l *Loader) fill(from *map[string]any, to runtime.Pointer) (err error) {
+	if converted, ce := gox.Flat(*from).DotStyle().Convert(); nil != ce {
+		err = ce
+	} else {
+		setter := NewSetter[any](valuer.NewMap(converted), l.logger)
+		setter.Process(to)
 	}
 
 	return

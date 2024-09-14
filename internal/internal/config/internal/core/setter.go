@@ -1,38 +1,38 @@
 package core
 
 import (
-	"os"
 	"reflect"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal/constant"
+	"github.com/pangum/pangu/internal/internal/config/internal"
 	"github.com/pangum/pangu/internal/internal/config/internal/callback"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
-type Setter struct {
+type Setter[F any] struct {
+	valuer internal.Valuer[F]
 	logger *log.Logger
 }
 
-func NewSetter(logger *log.Logger) *Setter {
-	return &Setter{
+func NewSetter[F any](valuer internal.Valuer[F], logger *log.Logger) *Setter[F] {
+	return &Setter[F]{
+		valuer: valuer,
 		logger: logger,
 	}
 }
 
-func (s *Setter) Process(target runtime.Pointer) {
-	s.process(reflect.ValueOf(target).Elem(), gox.NewSlice[string](), s.setValue)
+func (s *Setter[F]) Process(config runtime.Pointer) {
+	s.process(reflect.ValueOf(config).Elem(), gox.NewSlice[string](), s.set)
 }
 
-func (s *Setter) process(target reflect.Value, names gox.Slice[string], set callback.SetValue) {
-	typ := target.Type()
-	for index := 0; index < target.NumField(); index++ {
-		target := target.Field(index)
+func (s *Setter[F]) process(config reflect.Value, names gox.Slice[string], set callback.SetValue) {
+	typ := config.Type()
+	for index := 0; index < config.NumField(); index++ {
+		target := config.Field(index)
 		name := typ.Field(index).Name
 		kind := target.Kind()
 
@@ -52,212 +52,58 @@ func (s *Setter) process(target reflect.Value, names gox.Slice[string], set call
 	}
 }
 
-func (s *Setter) setValue(names gox.Slice[string], target reflect.Value) {
+func (s *Setter[F]) set(names gox.Slice[string], target reflect.Value) {
+	keys := s.valuer.Key(names.Clone())
+	for _, key := range keys {
+		fields := gox.Fields[any]{
+			field.New("field", strings.Join(names, constant.Dot)),
+			field.New("value", key),
+		}
+		if value, ok := s.valuer.Get(key); !ok {
+			(*s.logger).Debug("未发现配置", fields...)
+		} else if ce := s.setValue(value, target); nil != ce {
+			(*s.logger).Debug("设置配置值出错", fields.Add(field.Error(ce))...)
+		} else {
+			(*s.logger).Debug("设置配置值成功", fields...)
+		}
+	}
+}
+
+func (s *Setter[F]) setValue(value F, target reflect.Value) (err error) {
 	switch target.Kind() {
 	case reflect.Bool:
-		s.setEnvironmentValue(names, target, s.bool)
+		err = s.valuer.Bool(value, target)
 	case reflect.Int:
-		s.setEnvironmentValue(names, target, s.int)
+		err = s.valuer.Int(value, target)
 	case reflect.Int8:
-		s.setEnvironmentValue(names, target, s.int8)
+		err = s.valuer.Int8(value, target)
 	case reflect.Int16:
-		s.setEnvironmentValue(names, target, s.int16)
+		err = s.valuer.Int16(value, target)
 	case reflect.Int32:
-		s.setEnvironmentValue(names, target, s.int32)
+		err = s.valuer.Int32(value, target)
 	case reflect.Int64:
-		s.setEnvironmentValue(names, target, s.int64)
+		err = s.valuer.Int64(value, target)
 	case reflect.Uint:
-		s.setEnvironmentValue(names, target, s.uint)
+		err = s.valuer.Uint(value, target)
 	case reflect.Uint8:
-		s.setEnvironmentValue(names, target, s.uint8)
+		err = s.valuer.Uint8(value, target)
 	case reflect.Uint16:
-		s.setEnvironmentValue(names, target, s.uint16)
+		err = s.valuer.Uint16(value, target)
 	case reflect.Uint32:
-		s.setEnvironmentValue(names, target, s.uint32)
+		err = s.valuer.Uint32(value, target)
 	case reflect.Uint64:
-		s.setEnvironmentValue(names, target, s.uint64)
+		err = s.valuer.Uint64(value, target)
 	case reflect.Uintptr:
-		s.setEnvironmentValue(names, target, s.uintPtr)
+		err = s.valuer.Uintptr(value, target)
 	case reflect.Float32:
-		s.setEnvironmentValue(names, target, s.float32)
+		err = s.valuer.Float32(value, target)
 	case reflect.Float64:
-		s.setEnvironmentValue(names, target, s.float64)
+		err = s.valuer.Float64(value, target)
 	case reflect.String:
-		s.setEnvironmentValue(names, target, s.string)
+		err = s.valuer.String(value, target)
 	default:
-		s.setEnvironmentValue(names, target, s.string)
+		err = s.valuer.String(value, target)
 	}
-}
-
-func (s *Setter) setEnvironmentValue(names gox.Slice[string], target reflect.Value, convert callback.Convert) {
-	// 将所有名称转换为大写，符合环境变量的定义
-	keys := make([]string, names.Length()) // 复制一份，不影响原来的字段名
-	for index, name := range names {
-		keys[index] = strings.ToUpper(name)
-	}
-
-	key := strings.Join(keys, constant.Underline)
-	fields := gox.Fields[any]{
-		field.New("field", strings.Join(names, constant.Dot)),
-		field.New("environment", key),
-	}
-	if environment, ok := os.LookupEnv(key); !ok {
-		(*s.logger).Debug("未在环境变量中发现配置", fields...)
-	} else if ce := convert(environment, target); nil != ce {
-		(*s.logger).Debug("从环境变量中设置配置值出错", fields.Add(field.Error(ce))...)
-	} else {
-		(*s.logger).Debug("环境变量中设置配置值", fields...)
-	}
-}
-
-func (s *Setter) bool(from string, target reflect.Value) (err error) {
-	if value, pbe := strconv.ParseBool(from); nil == pbe {
-		target.Set(reflect.ValueOf(value))
-	} else {
-		err = pbe
-	}
-
-	return
-}
-
-func (s *Setter) float32(from string, target reflect.Value) (err error) {
-	if value, pfe := strconv.ParseFloat(from, 32); nil == pfe {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pfe
-	}
-
-	return
-}
-
-func (s *Setter) float64(from string, target reflect.Value) (err error) {
-	if value, pfe := strconv.ParseFloat(from, 64); nil == pfe {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pfe
-	}
-
-	return
-}
-
-func (s *Setter) int(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseInt(from, 0, strconv.IntSize); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) int8(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseInt(from, 0, 8); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) int16(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseInt(from, 0, 16); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) int32(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseInt(from, 0, 32); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) int64(from string, target reflect.Value) (err error) {
-	var value any
-	switch target.Interface().(type) {
-	case time.Duration:
-		value, err = time.ParseDuration(from)
-	case gox.Bytes:
-		value, err = gox.ParseBytes(from)
-	default:
-		value, err = strconv.ParseInt(from, 0, 64)
-	}
-	if nil != err {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	}
-
-	return
-}
-func (s *Setter) uint(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseUint(from, 0, strconv.IntSize); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) uint8(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseUint(from, 0, 8); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) uint16(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseUint(from, 0, 16); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) uint32(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseUint(from, 0, 32); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) uint64(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseUint(from, 0, 64); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) uintPtr(from string, target reflect.Value) (err error) {
-	if value, pie := strconv.ParseUint(from, 0, strconv.IntSize); nil == pie {
-		target.Set(reflect.ValueOf(value).Convert(target.Type()))
-	} else {
-		err = pie
-	}
-
-	return
-}
-
-func (s *Setter) string(from string, target reflect.Value) (err error) {
-	target.Set(reflect.ValueOf(from).Convert(target.Type()))
 
 	return
 }

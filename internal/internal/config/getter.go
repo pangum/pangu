@@ -12,6 +12,7 @@ import (
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/config/internal/core"
+	"github.com/pangum/pangu/internal/internal/config/internal/valuer"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
@@ -24,9 +25,9 @@ type Getter struct {
 	logger *log.Logger
 	once   *sync.Once
 
-	setter  *core.Setter
-	loader  *core.Loader
-	watcher *core.Watcher
+	environment *core.Setter[string]
+	loader      *core.Loader
+	watcher     *core.Watcher
 }
 
 func newGetter(params *param.Config, logger *log.Logger) (getter *Getter) {
@@ -37,8 +38,8 @@ func newGetter(params *param.Config, logger *log.Logger) (getter *Getter) {
 	getter.logger = logger
 	getter.once = new(sync.Once)
 
-	getter.setter = core.NewSetter(logger)
-	getter.loader = core.NewLoader(getter.path, params)
+	getter.environment = core.NewSetter[string](valuer.NewString(), logger)
+	getter.loader = core.NewLoader(getter.path, params, logger)
 	getter.watcher = core.NewWatch(getter.loader)
 
 	return
@@ -65,7 +66,7 @@ func (g *Getter) fill(target runtime.Pointer) (err error) {
 	}
 
 	// 从环境变量中加载配置
-	g.setter.Process(target)
+	g.environment.Process(target)
 
 	if nil == err && g.params.Validate { // 数据验证
 		err = xiren.Struct(target)

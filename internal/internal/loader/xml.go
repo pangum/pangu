@@ -28,7 +28,7 @@ func (*Xml) Local() bool {
 	return true
 }
 
-func (x *Xml) Load(ctx context.Context, target runtime.Pointer) (loaded bool, err error) {
+func (x *Xml) Load(ctx context.Context, target *map[string]any) (loaded bool, err error) {
 	if path, pok := ctx.Value(config.ContextFilepath).(string); !pok {
 		err = exception.New().Message("未指定配置文件路径").Field(field.New("loader", "xml")).Build()
 	} else if bytes, bok := ctx.Value(config.ContextBytes).([]byte); !bok {
@@ -40,7 +40,7 @@ func (x *Xml) Load(ctx context.Context, target runtime.Pointer) (loaded bool, er
 	return
 }
 
-func (x *Xml) load(path *string, bytes *[]byte, target runtime.Pointer) (loaded bool, err error) {
+func (x *Xml) load(path *string, bytes *[]byte, target *map[string]any) (loaded bool, err error) {
 	loadable := false
 	if ".xml" == strings.ToLower(filepath.Ext(*path)) {
 		loadable = true
