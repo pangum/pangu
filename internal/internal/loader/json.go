@@ -3,24 +3,26 @@ package loader
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"path/filepath"
 	"strings"
 
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/config"
+	"github.com/pangum/pangu/internal/internal/loader/internal"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
 var _ config.Loader = (*Json)(nil)
 
 type Json struct {
-	targets map[runtime.Pointer]bool
+	jsonc *internal.Jsonc
 }
 
 func NewJson() *Json {
 	return &Json{
-		targets: make(map[runtime.Pointer]bool),
+		jsonc: internal.NewJsonc(),
 	}
 }
 
@@ -42,13 +44,20 @@ func (j *Json) Load(ctx context.Context, target runtime.Pointer) (loaded bool, e
 
 func (j *Json) load(path *string, bytes *[]byte, target runtime.Pointer) (loaded bool, err error) {
 	loadable := false
-	if ".json" == strings.ToLower(filepath.Ext(*path)) {
+	ext := strings.ToLower(filepath.Ext(*path))
+	if ".json5" == ext {
+		to := j.jsonc.Strip(string(*bytes))
+		*bytes = []byte(to)
+	}
+
+	if ".json" == ext || ".json5" == ext {
 		loadable = true
 		err = json.Unmarshal(*bytes, target)
 	}
 	if nil == err && loadable {
 		loaded = true
 	}
+	fmt.Println(err)
 
 	return
 }
