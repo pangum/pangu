@@ -3,7 +3,6 @@ package loader
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -46,7 +45,7 @@ func (j *Json) load(path *string, bytes *[]byte, target runtime.Pointer) (loaded
 	loadable := false
 	ext := strings.ToLower(filepath.Ext(*path))
 	if ".json5" == ext {
-		to := j.jsonc.Strip(string(*bytes))
+		to := j.jsonc.Clear(string(*bytes))
 		*bytes = []byte(to)
 	}
 
@@ -57,7 +56,6 @@ func (j *Json) load(path *string, bytes *[]byte, target runtime.Pointer) (loaded
 	if nil == err && loadable {
 		loaded = true
 	}
-	fmt.Println(err)
 
 	return
 }

@@ -36,7 +36,7 @@ func NewJsonc() *Jsonc {
 	}
 }
 
-func (j *Jsonc) Strip(from string) (to string) {
+func (j *Jsonc) Clear(from string) (to string) {
 	j.reset()
 
 	j.len = len(from)
@@ -55,7 +55,7 @@ func (j *Jsonc) Strip(from string) (to string) {
 			to += j.hexadecimal(from)
 			continue
 		}
-		// 果内部字符串或外部注释，则按原样附加
+		// 如果是内部字符串或外部注释，则按原样附加
 		if j.insideString(prev, char, next, original) || j.outsideComment(char, next) {
 			to += j.compliment(prev, char, next)
 			continue
