@@ -44,12 +44,12 @@ func (j *Json) Load(ctx context.Context, target runtime.Pointer) (loaded bool, e
 func (j *Json) load(path *string, bytes *[]byte, target runtime.Pointer) (loaded bool, err error) {
 	loadable := false
 	ext := strings.ToLower(filepath.Ext(*path))
-	if ".json5" == ext {
+	if ".json5" == ext || ".jsonc" == ext {
 		to := j.jsonc.Clear(string(*bytes))
 		*bytes = []byte(to)
 	}
 
-	if ".json" == ext || ".json5" == ext {
+	if ".json" == ext || ".json5" == ext || ".jsonc" == ext {
 		loadable = true
 		err = json.Unmarshal(*bytes, target)
 	}
