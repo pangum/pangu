@@ -12,17 +12,17 @@ import (
 	"github.com/pangum/pangu/internal/internal/config/internal"
 )
 
-var _ internal.Valuer[string] = (*String)(nil)
+var _ internal.Valuer[string] = (*Environment)(nil)
 
-type String struct {
+type Environment struct {
 	// 无
 }
 
-func NewString() *String {
-	return new(String)
+func NewEnvironment() *Environment {
+	return new(Environment)
 }
 
-func (String) Key(from gox.Slice[string]) gox.Slice[string] {
+func (Environment) Key(from gox.Slice[string]) gox.Slice[string] {
 	for index, name := range from {
 		from[index] = strings.ToUpper(name)
 	}
@@ -30,11 +30,11 @@ func (String) Key(from gox.Slice[string]) gox.Slice[string] {
 	return gox.NewSlice(strings.Join(from, constant.Underline))
 }
 
-func (String) Get(key string) (string, bool) {
+func (Environment) Get(key string) (string, bool) {
 	return os.LookupEnv(key)
 }
 
-func (String) Bool(from string, field reflect.Value) (err error) {
+func (Environment) Bool(from string, field reflect.Value) (err error) {
 	if value, pbe := strconv.ParseBool(from); nil == pbe {
 		field.Set(reflect.ValueOf(value))
 	} else {
@@ -44,7 +44,7 @@ func (String) Bool(from string, field reflect.Value) (err error) {
 	return
 }
 
-func (String) Float32(from string, target reflect.Value) (err error) {
+func (Environment) Float32(from string, target reflect.Value) (err error) {
 	if value, pfe := strconv.ParseFloat(from, 32); nil == pfe {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -54,7 +54,7 @@ func (String) Float32(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Float64(from string, target reflect.Value) (err error) {
+func (Environment) Float64(from string, target reflect.Value) (err error) {
 	if value, pfe := strconv.ParseFloat(from, 64); nil == pfe {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -64,7 +64,7 @@ func (String) Float64(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Int(from string, target reflect.Value) (err error) {
+func (Environment) Int(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, strconv.IntSize); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -74,7 +74,7 @@ func (String) Int(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Int8(from string, target reflect.Value) (err error) {
+func (Environment) Int8(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, 8); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -84,7 +84,7 @@ func (String) Int8(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Int16(from string, target reflect.Value) (err error) {
+func (Environment) Int16(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, 16); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -94,7 +94,7 @@ func (String) Int16(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Int32(from string, target reflect.Value) (err error) {
+func (Environment) Int32(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseInt(from, 0, 32); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -104,7 +104,7 @@ func (String) Int32(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Int64(from string, target reflect.Value) (err error) {
+func (Environment) Int64(from string, target reflect.Value) (err error) {
 	var value any
 	switch target.Interface().(type) {
 	case time.Duration:
@@ -121,7 +121,7 @@ func (String) Int64(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Uint(from string, target reflect.Value) (err error) {
+func (Environment) Uint(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, strconv.IntSize); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -131,7 +131,7 @@ func (String) Uint(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Uint8(from string, target reflect.Value) (err error) {
+func (Environment) Uint8(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 8); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -141,7 +141,7 @@ func (String) Uint8(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Uint16(from string, target reflect.Value) (err error) {
+func (Environment) Uint16(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 16); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -151,7 +151,7 @@ func (String) Uint16(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Uint32(from string, target reflect.Value) (err error) {
+func (Environment) Uint32(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 32); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -161,7 +161,7 @@ func (String) Uint32(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Uint64(from string, target reflect.Value) (err error) {
+func (Environment) Uint64(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, 64); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -171,7 +171,7 @@ func (String) Uint64(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) Uintptr(from string, target reflect.Value) (err error) {
+func (Environment) Uintptr(from string, target reflect.Value) (err error) {
 	if value, pie := strconv.ParseUint(from, 0, strconv.IntSize); nil == pie {
 		target.Set(reflect.ValueOf(value).Convert(target.Type()))
 	} else {
@@ -181,7 +181,7 @@ func (String) Uintptr(from string, target reflect.Value) (err error) {
 	return
 }
 
-func (String) String(from string, target reflect.Value) (err error) {
+func (Environment) String(from string, target reflect.Value) (err error) {
 	target.Set(reflect.ValueOf(from).Convert(target.Type()))
 
 	return

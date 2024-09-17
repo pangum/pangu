@@ -38,7 +38,7 @@ func newGetter(params *param.Config, logger *log.Logger) (getter *Getter) {
 	getter.logger = logger
 	getter.once = new(sync.Once)
 
-	getter.environment = core.NewSetter[string](valuer.NewString(), logger)
+	getter.environment = core.NewSetter[string](valuer.NewEnvironment(), logger)
 	getter.loader = core.NewLoader(getter.path, params, logger)
 	getter.watcher = core.NewWatch(getter.loader)
 
