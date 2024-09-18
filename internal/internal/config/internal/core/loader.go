@@ -10,7 +10,7 @@ import (
 	"github.com/goexl/gox"
 	"github.com/goexl/log"
 	"github.com/pangum/config"
-	"github.com/pangum/pangu/internal/internal/config/internal/valuer"
+	"github.com/pangum/pangu/internal/internal/config/internal/core/internal"
 	"github.com/pangum/pangu/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 )
@@ -97,7 +97,7 @@ func (l *Loader) load(localContext context.Context, target runtime.Pointer, hasC
 		if loaded, le := loader.Load(ctx, &value); nil != le {
 			err = le
 		} else if loaded && 0 != len(value) { // 确实加载了配置数据
-			err = l.fill(&value, target)
+			err = internal.NewDecoder(&value).Decode(target)
 		}
 
 		if nil != err {
@@ -107,17 +107,6 @@ func (l *Loader) load(localContext context.Context, target runtime.Pointer, hasC
 
 	if nil == err {
 		l.targets = append(l.targets, target)
-	}
-
-	return
-}
-
-func (l *Loader) fill(from *map[string]any, to runtime.Pointer) (err error) {
-	if converted, ce := gox.Flat(*from).DotStyle().Convert(); nil != ce {
-		err = ce
-	} else {
-		setter := NewSetter[any](valuer.NewMap(converted), l.logger)
-		setter.Process(to)
 	}
 
 	return

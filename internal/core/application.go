@@ -271,7 +271,7 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	args := make([]string, 0, 3)
 	args = append(args, originals[0])
 	for index := 1; index < len(a.args()); index++ {
-		argument := strings.ReplaceAll(originals[index], constant.Strike, constant.Empty)
+		argument := strings.ReplaceAll(originals[index], constant.StringStrike, constant.Empty)
 		if a.isConfigArgument(argument) { // 只接收和配置相关的参数
 			args = append(args, originals[index], originals[index+1])
 		}

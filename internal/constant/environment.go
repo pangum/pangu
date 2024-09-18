@@ -1,7 +1,6 @@
 package constant
 
 const (
-	EnvironmentSeparator = "="
 	EnvironmentFormatter = "PANGU_%s"
 	EnvironmentNotSet    = "未设置"
 	EnvironmentName      = "NAME"
