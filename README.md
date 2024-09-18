@@ -1,4 +1,4 @@
-# 盘古 Golang应用程序框架
+# `盘古` Golang应用程序框架
 [![编译状态](https://github.ruijc.com:20443/api/badges/pangum/pangu/status.svg)](https://github.ruijc.com:20443/pangum/pangu)
 [![Golang质量](https://goreportcard.com/badge/github.com/pangum/pangu)](https://goreportcard.com/report/github.com/pangum/pangu)
 ![版本](https://img.shields.io/github/go-mod/go-version/pangum/pangu)
@@ -13,11 +13,20 @@
 
 - 快速开发
 - 内置配置文件加载
-  - `Yaml`
-  - `Toml`
-  - `Json`
+  - `Json`/`Jsonc`/`Json5`
   - `XML`
+  - 其它
+    - `YAML`，通过引入`github.com/pangum/yaml`支持
+    - `TOML`，通过引入`github.com/pangum/toml`支持
+    - 携程`Apollo`，通过引入`github.com/pangum/apollo`支持
+    - 阿里`Nacos`，通过引入`github.com/pangum/nacos`支持
   - 很方便定制自己的配置文件加载器
+  - 零配置，可完全通过`环境变量`完成配置
+  - 支持配置文件覆盖
+  - 支持个性化配置文件编写，对于任何一个配置字段，可以有如下形式（比如配置项是`logggingLevel`）
+    - `原始配置项`即`loggingLevel`
+    - `下划线形式`即`logging_level`
+    - `中划线形式`即`logging-level`
 - 内置强大的数据验证
   - 内置强大的且非常多的数据验证器
   - 很方便的定制自己的数据验证器

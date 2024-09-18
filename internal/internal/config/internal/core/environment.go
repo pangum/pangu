@@ -35,7 +35,7 @@ func (e *Environment) fill(data *map[string]any, environment string) {
 		return
 	}
 
-	keys := gox.String(values[0]).Split().Named().Build().Apply()
+	keys := gox.String(values[0]).Split().Naming().Build().Apply()
 	length := len(keys)
 	current := *data
 	for index := 0; index < length; index++ {

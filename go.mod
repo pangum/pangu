@@ -20,7 +20,7 @@ require (
 	github.com/goexl/log v0.0.7
 	github.com/goexl/mengpo v0.2.6
 	github.com/goexl/structer v0.1.8
-	github.com/goexl/xiren v0.0.6
+	github.com/goexl/xiren v0.0.7
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/zs5460/art v0.3.0
 )

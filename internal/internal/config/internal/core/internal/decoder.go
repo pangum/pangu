@@ -34,7 +34,7 @@ func (d *Decoder) mapper(key string, field string) (mapped bool) {
 
 func (d *Decoder) variants(key string, field string) (mapped bool) {
 	from := gox.String(field).Switch()
-	checked := strings.ToLower(key)
+	checked := strings.ToLower(key) // 全部转换成小写，避免复杂的判断逻辑
 	if strings.ToLower(from.Camel().Build().Case()) == checked {
 		mapped = true
 	} else if strings.ToLower(from.Underscore().Build().Case()) == checked {
