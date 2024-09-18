@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/goexl/gfx v0.2.1
-	github.com/goexl/gox v1.8.6
+	github.com/goexl/gox v1.8.7
 	github.com/pangum/config v0.0.8
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0
@@ -45,5 +45,3 @@ require (
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/net v0.29.0 // indirect
 )
-
-replace github.com/goexl/gox => ../../goexl/gox
