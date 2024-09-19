@@ -415,5 +415,5 @@ func (a *Application) after(ctx context.Context) (err error) {
 }
 
 func (a *Application) isConfigArgument(argument string) bool {
-	return constant.ConfigName == argument || constant.ConfigAliasC == argument || constant.ConfigAliasConf == argument
+	return constant.ConfigName == argument || constant.ConfigC == argument || constant.ConfigConf == argument
 }

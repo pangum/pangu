@@ -16,15 +16,15 @@ import (
 )
 
 type Loader struct {
-	path    gox.Pointer[string]
+	paths   *gox.Slice[string]
 	params  *param.Config
 	targets []runtime.Pointer
 	logger  *log.Logger
 }
 
-func NewLoader(path gox.Pointer[string], params *param.Config, logger *log.Logger) *Loader {
+func NewLoader(paths *gox.Slice[string], params *param.Config, logger *log.Logger) *Loader {
 	return &Loader{
-		path:    path,
+		paths:   paths,
 		params:  params,
 		targets: make([]runtime.Pointer, 0),
 		logger:  logger,
@@ -32,10 +32,18 @@ func NewLoader(path gox.Pointer[string], params *param.Config, logger *log.Logge
 }
 
 func (l *Loader) Load(target runtime.Pointer) (err error) {
-	if ctx, has, lce := l.loadLocalContext(); nil != lce {
+	for _, path := range *l.paths {
+		err = l.load(path, target)
+	}
+
+	return
+}
+
+func (l *Loader) load(path string, target runtime.Pointer) (err error) {
+	if ctx, has, lce := l.loadLocalContext(path); nil != lce {
 		err = lce
 	} else {
-		err = l.load(ctx, target, has)
+		err = l.fill(ctx, target, has)
 	}
 
 	return
@@ -56,15 +64,7 @@ func (l *Loader) Wrote() {
 	}
 }
 
-func (l *Loader) loadLocalContext() (ctx context.Context, has bool, err error) {
-	path := ""
-	if nil != l.path && "" != *l.path {
-		path = *l.path
-	}
-	if "" == path {
-		return
-	}
-
+func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated bool, err error) {
 	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && !l.params.Nullable { // 没有配置文件
 		err = exception.New().Message("缺少配置文件").Build()
 	} else if bytes, rfe := os.ReadFile(path); nil != rfe {
@@ -75,16 +75,16 @@ func (l *Loader) loadLocalContext() (ctx context.Context, has bool, err error) {
 		ctx = context.Background()
 		ctx = context.WithValue(ctx, config.ContextFilepath, path)
 		ctx = context.WithValue(ctx, config.ContextBytes, []byte(eval))
-		has = 0 != len(bytes)
+		populated = 0 != len(bytes)
 	}
 
 	return
 }
 
-func (l *Loader) load(localContext context.Context, target runtime.Pointer, hasContent bool) (err error) {
+func (l *Loader) fill(localContext context.Context, target runtime.Pointer, populated bool) (err error) {
 	networkContext := context.Background()
 	for _, loader := range l.params.Loaders {
-		if loader.Local() && !hasContent {
+		if loader.Local() && !populated {
 			continue
 		}
 

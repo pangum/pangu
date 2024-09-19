@@ -9,6 +9,7 @@ import (
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/config"
+	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
@@ -28,6 +29,12 @@ func (*Xml) Local() bool {
 	return true
 }
 
+func (*Xml) Extensions() []string {
+	return []string{
+		constant.ExtensionXml,
+	}
+}
+
 func (x *Xml) Load(ctx context.Context, target *map[string]any) (loaded bool, err error) {
 	if path, pok := ctx.Value(config.ContextFilepath).(string); !pok {
 		err = exception.New().Message("未指定配置文件路径").Field(field.New("loader", "xml")).Build()
@@ -42,7 +49,7 @@ func (x *Xml) Load(ctx context.Context, target *map[string]any) (loaded bool, er
 
 func (x *Xml) load(path *string, bytes *[]byte, target *map[string]any) (loaded bool, err error) {
 	loadable := false
-	if ".xml" == strings.ToLower(filepath.Ext(*path)) {
+	if constant.ExtensionXml == strings.ToLower(filepath.Ext(*path)) {
 		loadable = true
 		err = xml.Unmarshal(*bytes, target)
 	}

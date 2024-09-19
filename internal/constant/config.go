@@ -1,8 +1,9 @@
 package constant
 
 const (
-	ConfigName               = "config"
-	ConfigAliasC             = "c"
-	ConfigAliasConf          = "conf"
-	ConfigAliasConfiguration = "configuration"
+	ConfigName          = "config"
+	ConfigDefault       = "."
+	ConfigC             = "c"
+	ConfigConf          = "conf"
+	ConfigConfiguration = "configuration"
 )

@@ -1,7 +1,6 @@
 package constant
 
 const (
-	ApplicationName        = "application"
 	ApplicationStacktrace  = 10
 	ApplicationSkip        = 1
 	ApplicationCodeSuccess = 0

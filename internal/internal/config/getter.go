@@ -9,7 +9,6 @@ import (
 	"github.com/goexl/log"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
-	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/config/internal/core"
 	"github.com/pangum/pangu/internal/param"
@@ -18,7 +17,8 @@ import (
 )
 
 type Getter struct {
-	path   gox.Pointer[string]
+	path   string
+	paths  *gox.Slice[string]
 	params *param.Config
 
 	logger *log.Logger
@@ -31,22 +31,22 @@ type Getter struct {
 
 func newGetter(params *param.Config, logger *log.Logger) (getter *Getter) {
 	getter = new(Getter)
-	getter.path = gox.NewPointer("")
+	getter.paths = gox.NewPointer(gox.NewSlice[string](getter.path))
 	getter.params = params
 
 	getter.logger = logger
 	getter.once = new(sync.Once)
 
 	getter.environment = core.NewEnvironment()
-	getter.loader = core.NewLoader(getter.path, params, logger)
+	getter.loader = core.NewLoader(getter.paths, params, logger)
 	getter.watcher = core.NewWatch(getter.loader)
 
 	return
 }
 
 func (g *Getter) Get(target runtime.Pointer) (err error) {
-	if fpe := g.filepath(); nil != fpe { // 获取最终的配置文件路径
-		err = fpe
+	if dfe := g.detectFilepath(); nil != dfe { // 探测所有的配置文件路径
+		err = dfe
 	} else if fe := g.fill(target); nil != fe { // 加载数据
 		err = fe
 	}
@@ -76,26 +76,29 @@ func (g *Getter) fill(target runtime.Pointer) (err error) {
 	return
 }
 
-func (g *Getter) filepath() (err error) {
-	if nil == g.path || "" == *g.path {
-		err = g.detectFilepath()
-	}
-
-	return
-}
-
 func (g *Getter) detectFilepath() (err error) {
-	exists := gfx.Exists().Filename(constant.ApplicationName)
-	if constant.EnvironmentNotSet != internal.Name { // 如果配置了应用名称，可以使用应用名称的配置文件
-		exists.Filename(internal.Name)
-	}
+	list := gfx.List().Filepath(g.path)
+	list.Filename("*") // 探测所有可能的文件
 	// 配置所有可能的配置目录
-	exists.Directory("config")
-	exists.Directory("conf")
-	exists.Directory("configuration")
+	list.Directory(constant.ConfigName)
+	list.Directory(constant.ConfigConf)
+	list.Directory(constant.ConfigConfiguration)
+	list.Directory(constant.ConfigDefault)
+	// 适配类Unix系统配置目录
+	list.Directory("conf.d")
+	list.Directory("config.d")
+	list.Directory("configuration.d")
 
-	if final, checked := exists.Build().Check(); checked {
-		*g.path = final // !一定要使用指针修改原来的值，而不是传新的指针
+	// 限制扩展名
+	for _, loader := range g.params.Loaders {
+		extensions := loader.Extensions()
+		if 0 != len(extensions) {
+			list.Extension(extensions[0], extensions[1:]...)
+		}
+	}
+
+	if paths := list.Build().All(); 0 != len(paths) {
+		*g.paths = gox.NewSlice(paths...) // !一定要使用指针修改原来的值，而不是传新的指针
 	} else if !g.params.Nullable {
 		err = exception.New().Message("配置文件不存在").Build()
 	}
@@ -107,12 +110,12 @@ func (g *Getter) bind(shell *runtime.Shell, shadow *runtime.Shadow) {
 	config := new(cli.StringFlag)
 	config.Name = constant.ConfigName
 	config.Aliases = []string{
-		constant.ConfigAliasC,
-		constant.ConfigAliasConf,
-		constant.ConfigAliasConfiguration,
+		constant.ConfigC,
+		constant.ConfigConf,
+		constant.ConfigConfiguration,
 	}
-	config.Usage = "指定配置文件路径"
-	config.Destination = g.path
+	config.Usage = "指定配置文件路径或者所在的目录"
+	config.Destination = &g.path
 
 	shell.Flags = append(shell.Flags, config)
 	shadow.Flags = append(shadow.Flags, config)

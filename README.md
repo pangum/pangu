@@ -23,6 +23,13 @@
   - 很方便定制自己的配置文件加载器
   - 零配置，可完全通过`环境变量`完成配置
   - 支持配置文件覆盖
+  - 支持按`模块`划分配置文件，比如可以按如下模式划分配置文件
+    - `application.json/jsonc/xml/toml/yaml/yml`，提供应用程序本身需要的相关配置
+    - `logging.json/jsonc/xml/toml/yaml/yml`，提供日志相关配置
+    - `database.json/jsonc/xml/toml/yaml/yml`，提供数据库相关配置
+    - `grpc.json/jsonc/xml/toml/yaml/yml`，提供`gRPC`相关配置
+    - `...`其它配置文件
+    - 所有配置文件格式可以混用，比如配置可以是`json`、`jsonc`、`json5`、`yaml`、`yml`、`toml`等任意格式，只要正确的引入了相应的`加载器`
   - 支持个性化配置文件编写，对于任何一个配置字段，可以有如下形式（比如配置项是`logggingLevel`）
     - `原始配置项`即`loggingLevel`
     - `下划线形式`即`logging_level`
