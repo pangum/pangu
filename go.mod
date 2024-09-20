@@ -4,8 +4,8 @@ go 1.23
 
 require (
 	github.com/goexl/gfx v0.2.3
-	github.com/goexl/gox v1.8.7
-	github.com/pangum/config v0.0.9
+	github.com/goexl/gox v1.8.8
+	github.com/pangum/config v0.1.0
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0
 	golang.org/x/sys v0.25.0 // indirect

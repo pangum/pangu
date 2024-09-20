@@ -83,6 +83,7 @@ func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated b
 
 func (l *Loader) fill(localContext context.Context, target runtime.Pointer, populated bool) (err error) {
 	networkContext := context.Background()
+	modules := l.modules(target)
 	for _, loader := range l.params.Loaders {
 		if loader.Local() && !populated {
 			continue
@@ -94,7 +95,7 @@ func (l *Loader) fill(localContext context.Context, target runtime.Pointer, popu
 		}
 
 		value := make(map[string]any)
-		if loaded, le := loader.Load(ctx, &value); nil != le {
+		if loaded, le := loader.Load(ctx, &value, modules); nil != le {
 			err = le
 		} else if loaded && 0 != len(value) { // 确实加载了配置数据
 			err = internal.NewDecoder(&value).Decode(target)
@@ -107,6 +108,31 @@ func (l *Loader) fill(localContext context.Context, target runtime.Pointer, popu
 
 	if nil == err {
 		l.targets = append(l.targets, target)
+	}
+
+	return
+}
+
+func (l *Loader) modules(target runtime.Pointer) (modules []string) {
+	typeOfTarget := reflect.TypeOf(target)
+	if reflect.Ptr == typeOfTarget.Kind() {
+		typeOfTarget = typeOfTarget.Elem()
+	}
+	if 1 != typeOfTarget.NumField() {
+		return
+	}
+
+	names := make(map[string]*gox.Empty)
+	name := typeOfTarget.Field(0).Name
+
+	swh := gox.String(name).Switch()
+	names[swh.Strike().Build().Case()] = nil
+	names[swh.Underscore().Build().Case()] = nil
+	names[swh.Camel().Build().Case()] = nil
+
+	modules = make([]string, 0, len(names))
+	for key := range names {
+		modules = append(modules, key)
 	}
 
 	return

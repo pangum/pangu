@@ -37,7 +37,7 @@ func (*Json) Extensions() []string {
 	}
 }
 
-func (j *Json) Load(ctx context.Context, target *map[string]any) (loaded bool, err error) {
+func (j *Json) Load(ctx context.Context, target *map[string]any, _ []string) (loaded bool, err error) {
 	if path, pok := ctx.Value(config.ContextFilepath).(string); !pok {
 		err = exception.New().Message("未指定配置文件路径").Field(field.New("loader", "json")).Build()
 	} else if bytes, bok := ctx.Value(config.ContextBytes).([]byte); !bok {

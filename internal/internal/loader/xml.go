@@ -35,7 +35,7 @@ func (*Xml) Extensions() []string {
 	}
 }
 
-func (x *Xml) Load(ctx context.Context, target *map[string]any) (loaded bool, err error) {
+func (x *Xml) Load(ctx context.Context, target *map[string]any, _ []string) (loaded bool, err error) {
 	if path, pok := ctx.Value(config.ContextFilepath).(string); !pok {
 		err = exception.New().Message("未指定配置文件路径").Field(field.New("loader", "xml")).Build()
 	} else if bytes, bok := ctx.Value(config.ContextBytes).([]byte); !bok {
