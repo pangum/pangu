@@ -9,7 +9,7 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/pangum/pangu/internal/asset"
+	"github.com/pangum/pangu/internal/internal/asset"
 	"github.com/pangum/pangu/internal/internal/banner"
 	"github.com/zs5460/art"
 )

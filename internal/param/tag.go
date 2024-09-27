@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/constant"
+	"github.com/pangum/pangu/internal/internal/constant"
 )
 
 type Tag struct {

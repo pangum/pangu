@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/goexl/gox"
-	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/config/internal/core/internal"
+	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/runtime"
 )
 

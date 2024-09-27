@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/asset"
+	"github.com/pangum/pangu/internal/internal/asset"
 )
 
 type Help struct {

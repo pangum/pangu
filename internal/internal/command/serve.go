@@ -9,7 +9,7 @@ import (
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal/app"
 	"github.com/pangum/pangu/internal/command"
-	"github.com/pangum/pangu/internal/constant"
+	"github.com/pangum/pangu/internal/internal/constant"
 )
 
 var _ app.Command = (*Serve)(nil)
