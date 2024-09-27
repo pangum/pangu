@@ -4,7 +4,7 @@ import (
 	"runtime"
 
 	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/os"
+	"github.com/pangum/pangu/internal/internal/os"
 )
 
 var (
