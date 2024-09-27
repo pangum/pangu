@@ -21,7 +21,7 @@ import (
 	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/internal/get"
 	"github.com/pangum/pangu/internal/internal/message"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/dig"

@@ -11,7 +11,7 @@ import (
 	"github.com/goexl/log"
 	"github.com/pangum/config"
 	"github.com/pangum/pangu/internal/internal/config/internal/core/internal"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 )
 

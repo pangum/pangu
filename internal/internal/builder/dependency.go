@@ -2,7 +2,7 @@ package builder
 
 import (
 	"github.com/pangum/pangu/internal/container"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"go.uber.org/dig"
 )

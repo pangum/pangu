@@ -5,7 +5,7 @@ import (
 	"github.com/pangum/pangu/internal/builder/internal/function"
 	"github.com/pangum/pangu/internal/core"
 	"github.com/pangum/pangu/internal/internal/app"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 )
 
 var shadow *Application

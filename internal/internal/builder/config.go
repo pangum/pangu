@@ -3,7 +3,7 @@ package builder
 import (
 	"github.com/pangum/config"
 	"github.com/pangum/pangu/internal/internal/app"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 )
 
 type Config[T any] struct {

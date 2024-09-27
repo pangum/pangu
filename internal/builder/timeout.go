@@ -3,7 +3,7 @@ package builder
 import (
 	"time"
 
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 )
 
 type Timeout struct {

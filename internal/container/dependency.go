@@ -6,7 +6,7 @@ import (
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/pangu/internal/internal/message"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"go.uber.org/dig"
 )

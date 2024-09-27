@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/goexl/log"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 )
 

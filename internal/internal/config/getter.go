@@ -11,7 +11,7 @@ import (
 	"github.com/goexl/xiren"
 	"github.com/pangum/pangu/internal/internal/config/internal/core"
 	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/param"
+	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
