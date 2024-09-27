@@ -1,0 +1,39 @@
+package command
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/pangum/pangu/internal"
+	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/command"
+	"github.com/pangum/pangu/internal/constant"
+)
+
+var _ app.Command = (*Version)(nil)
+
+// Version 描述一个打印版本信息的命令
+type Version struct {
+	*command.Default
+}
+
+func NewVersion() *Version {
+	return &Version{
+		Default: command.New(constant.CommandVersion).Usage("打印应用程序版本").Aliases("v", "ver").Build(),
+	}
+}
+
+func (v *Version) Run(_ context.Context) (err error) {
+	builder := new(strings.Builder)
+	builder.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
+	builder.WriteString(fmt.Sprintf("Version: %s\n", internal.Version))
+	builder.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
+
+	fmt.Print(builder.String())
+	// 刷新缓存，保证以上信息是一起被输出
+	err = os.Stdout.Sync()
+
+	return
+}

@@ -35,12 +35,12 @@ func (c *Context) Err() error {
 	return c.context.Err()
 }
 
-func (c *Context) String(name string) string {
-	return c.context.String(name)
+func (c *Context) String(key string) string {
+	return c.context.String(key)
 }
 
-func (c *Context) Set(name string, value string) error {
-	return c.context.Set(name, value)
+func (c *Context) Set(key string, value string) error {
+	return c.context.Set(key, value)
 }
 
 func (c *Context) Arguments() app.Arguments {

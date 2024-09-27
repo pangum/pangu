@@ -15,9 +15,9 @@ import (
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
-	"github.com/pangum/pangu/internal/command"
 	"github.com/pangum/pangu/internal/constant"
 	"github.com/pangum/pangu/internal/internal/builder"
+	"github.com/pangum/pangu/internal/internal/command"
 	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/internal/get"
 	"github.com/pangum/pangu/internal/internal/message"
@@ -170,7 +170,7 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 	// 优雅退出
 	go a.graceful(&err)
 
-	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Boot)
+	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Startup)
 	defer cancel()
 
 	dependency := a.Dependency()
@@ -237,8 +237,8 @@ func (a *Application) addCommands(get get.Command) (err error) {
 		err = se
 	} else if ie := a.addCommand(get.Info); nil != ie {
 		err = ie
-	} else {
-		err = a.addCommand(get.Version)
+	} else if ve := a.addCommand(get.Version); nil != ve {
+		err = ve
 	}
 
 	return
@@ -250,6 +250,8 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 		err = ve
 	} else if ple := a.putLogger(); nil != ple {
 		err = ple
+	} else if ppe := dependency.Put(command.NewServe).Build().Build().Inject(); nil != ppe { // 注入服务命令
+		err = ppe
 	} else if pse := dependency.Put(command.NewServe).Build().Build().Inject(); nil != pse { // 注入服务命令
 		err = pse
 	} else if pie := dependency.Put(command.NewInfo).Build().Build().Inject(); nil != pie { // 注入信息命令
@@ -333,6 +335,10 @@ func (a *Application) getInternalLogger() (logger log.Logger) {
 
 func (a *Application) supplyLogger() log.Logger {
 	return a.logger
+}
+
+func (a *Application) supplyParams() *param.Application {
+	return a.params
 }
 
 func (a *Application) verify(bootstrap runtime.Constructor) (err error) {

@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/goexl/gfx v0.2.3
-	github.com/goexl/gox v1.8.8
+	github.com/goexl/gox v1.8.9
 	github.com/pangum/config v0.1.0
 	github.com/urfave/cli/v2 v2.27.4
 	go.uber.org/dig v1.18.0
@@ -20,7 +20,7 @@ require (
 	github.com/goexl/log v0.0.7
 	github.com/goexl/mengpo v0.2.6
 	github.com/goexl/structer v0.1.8
-	github.com/goexl/xiren v0.0.7
+	github.com/goexl/xiren v0.0.8
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/zs5460/art v0.3.0
 )

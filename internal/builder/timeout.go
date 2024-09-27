@@ -19,7 +19,7 @@ func newTimeout(application *Application) *Timeout {
 }
 
 func (t *Timeout) Boot(duration time.Duration) (timeout *Timeout) {
-	t.params.Boot = duration
+	t.params.Startup = duration
 	timeout = t
 
 	return
