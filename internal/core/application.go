@@ -250,8 +250,6 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 		err = ve
 	} else if ple := a.putLogger(); nil != ple {
 		err = ple
-	} else if ppe := dependency.Put(command.NewServe).Build().Build().Inject(); nil != ppe { // 注入服务命令
-		err = ppe
 	} else if pse := dependency.Put(command.NewServe).Build().Build().Inject(); nil != pse { // 注入服务命令
 		err = pse
 	} else if pie := dependency.Put(command.NewInfo).Build().Build().Inject(); nil != pie { // 注入信息命令
