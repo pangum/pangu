@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/pangum/pangu/internal/app"
-	"github.com/pangum/pangu/internal/runtime"
 )
 
 var _ = New
@@ -23,7 +22,8 @@ type Default struct {
 func New(name string) *Builder {
 	return &Builder{
 		base: &Default{
-			name: name,
+			name:    name,
+			aliases: make([]string, 0),
 		},
 	}
 }
@@ -40,7 +40,7 @@ func (d *Default) Usage() string {
 	return d.usage
 }
 
-func (d *Default) Run(_ *runtime.Context) (err error) {
+func (d *Default) Run(_ context.Context) (err error) {
 	return
 }
 

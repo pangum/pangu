@@ -8,26 +8,30 @@ func (b *Builder) Build() *Default {
 	return b.base
 }
 
-func (b *Builder) Aliases(aliases ...string) *Builder {
-	b.base.aliases = aliases
+func (b *Builder) Aliases(aliases ...string) (builder *Builder) {
+	b.base.aliases = append(b.base.aliases, aliases...)
+	builder = b
 
-	return b
+	return
 }
 
-func (b *Builder) Usage(usage string) *Builder {
+func (b *Builder) Usage(usage string) (builder *Builder) {
 	b.base.usage = usage
+	builder = b
 
-	return b
+	return
 }
 
-func (b *Builder) Category(category string) *Builder {
+func (b *Builder) Category(category string) (builder *Builder) {
 	b.base.category = category
+	builder = b
 
-	return b
+	return
 }
 
-func (b *Builder) Hidden() *Builder {
+func (b *Builder) Hidden() (builder *Builder) {
 	b.base.hidden = true
+	builder = b
 
-	return b
+	return
 }

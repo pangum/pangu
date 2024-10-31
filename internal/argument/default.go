@@ -42,6 +42,7 @@ func NewDefault[T Type](name string, target *T) *Default[T] {
 	return &Default[T]{
 		name:         name,
 		target:       target,
+		aliases:      make([]string, 0),
 		environments: make([]string, 0),
 	}
 }

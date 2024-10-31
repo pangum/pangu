@@ -31,7 +31,7 @@ func (b *Builder[T]) Addable() (builder *Builder[T]) {
 }
 
 func (b *Builder[T]) Aliases(aliases ...string) (builder *Builder[T]) {
-	b.argument.aliases = aliases
+	b.argument.aliases = append(b.argument.aliases, aliases...)
 	builder = b
 
 	return
