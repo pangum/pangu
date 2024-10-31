@@ -15,11 +15,11 @@ import (
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/core/internal/get"
 	"github.com/pangum/pangu/internal/internal/builder"
 	"github.com/pangum/pangu/internal/internal/command"
 	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/internal/get"
 	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
@@ -94,8 +94,6 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	} else {
 		err = dependency.Get(a.boot).Build().Build().Inject()
 	}
-
-	return
 }
 
 // Add 添加各种组件到系统中
@@ -311,15 +309,15 @@ func (a *Application) putSelf() *Application {
 
 func (a *Application) putLogger() (err error) {
 	dependency := a.Dependency()
-	if gle := dependency.Get(a.getLogger).Build().Build().Inject(); nil != gle {
+	if gle := dependency.Get(a.getLogger).Build().Build().Inject(); nil == a.logger || nil != gle {
 		err = dependency.Put(a.supplyLogger).Build().Build().Inject()
 	}
 
 	return
 }
 
-func (a *Application) getLogger(logger log.Logger) {
-	a.logger = logger
+func (a *Application) getLogger(logger get.Logger) {
+	a.logger = logger.Logger
 }
 
 func (a *Application) getInternalLogger() (logger log.Logger) {
@@ -333,10 +331,6 @@ func (a *Application) getInternalLogger() (logger log.Logger) {
 
 func (a *Application) supplyLogger() log.Logger {
 	return a.logger
-}
-
-func (a *Application) supplyParams() *param.Application {
-	return a.params
 }
 
 func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
@@ -366,7 +360,7 @@ func (a *Application) action(command app.Command) func(ctx *cli.Context) error {
 
 func (a *Application) graceful(err *error) {
 	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 	current := <-signals
 	a.logger.Info("收到系统信号", field.New("signal", current))
 
@@ -378,8 +372,6 @@ func (a *Application) graceful(err *error) {
 			break
 		}
 	}
-
-	return
 }
 
 func (a *Application) setLogger(shell *runtime.Shell) {

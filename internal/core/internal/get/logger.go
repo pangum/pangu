@@ -1,0 +1,12 @@
+package get
+
+import (
+	"github.com/goexl/log"
+	"go.uber.org/dig"
+)
+
+type Logger struct {
+	dig.In
+
+	Logger log.Logger `optional:"true"`
+}
