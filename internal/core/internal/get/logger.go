@@ -8,5 +8,5 @@ import (
 type Logger struct {
 	dig.In
 
-	Logger log.Logger `optional:"true"`
+	Optional log.Logger `optional:"true"`
 }

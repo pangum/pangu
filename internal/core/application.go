@@ -317,7 +317,7 @@ func (a *Application) putLogger() (err error) {
 }
 
 func (a *Application) getLogger(logger get.Logger) {
-	a.logger = logger.Logger
+	a.logger = logger.Optional
 }
 
 func (a *Application) getInternalLogger() (logger log.Logger) {
