@@ -9,9 +9,9 @@ type Bootstrap struct {
 }
 
 func NewBootstrap() *Bootstrap {
-	return &Bootstrap{}
+	return new(Bootstrap)
 }
 
-func (b *Bootstrap) Startup(_ *pangu.App) (err error) {
+func (b *Bootstrap) Startup(_ *pangu.Application) (err error) {
 	return
 }

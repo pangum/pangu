@@ -309,7 +309,7 @@ func (a *Application) putSelf() *Application {
 
 func (a *Application) putLogger() (err error) {
 	dependency := a.Dependency()
-	if gle := dependency.Get(a.getLogger).Build().Build().Inject(); nil == a.logger || nil != gle {
+	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); nil != a.logger || nil != ge { // !当出错或者没有设置时
 		err = dependency.Put(a.supplyLogger).Build().Build().Inject()
 	}
 
