@@ -1,12 +1,16 @@
 package argument
 
+import (
+	"github.com/pangum/pangu/internal/internal/constraint"
+)
+
 var _ = New[int]
 
-type Builder[T Type] struct {
+type Builder[T constraint.Argument] struct {
 	argument *Default[T]
 }
 
-func New[T Type](name string, target *T) *Builder[T] {
+func New[T constraint.Argument](name string, target *T) *Builder[T] {
 	return &Builder[T]{
 		argument: NewDefault(name, target),
 	}

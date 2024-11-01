@@ -15,9 +15,9 @@ func (d *Default[T]) uint() (flag *cli.UintFlag) {
 	flag.EnvVars = d.environments
 	flag.Value = d.Default().(uint)
 
-	_target := d.Target().(*uint)
-	if nil != _target {
-		flag.Destination = _target
+	target := d.Target().(*uint)
+	if nil != target {
+		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, _ uint) error {
 		return d.runAction(ctx)

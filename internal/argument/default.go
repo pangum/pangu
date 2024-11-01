@@ -5,13 +5,14 @@ import (
 
 	"github.com/goexl/gox"
 	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/internal/constraint"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 
 var _ app.Argument = (*Default[int])(nil)
 
-type Default[T Type] struct {
+type Default[T constraint.Argument] struct {
 	// 名称
 	name string
 	// 默认值
@@ -38,7 +39,7 @@ type Default[T Type] struct {
 	_ gox.Pointerized
 }
 
-func NewDefault[T Type](name string, target *T) *Default[T] {
+func NewDefault[T constraint.Argument](name string, target *T) *Default[T] {
 	return &Default[T]{
 		name:         name,
 		target:       target,
