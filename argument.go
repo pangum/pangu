@@ -1,4 +1,4 @@
-package runtime
+package pangu
 
 import (
 	"github.com/pangum/pangu/internal/argument"
