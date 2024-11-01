@@ -2,7 +2,7 @@ package get
 
 import (
 	"github.com/pangum/pangu/internal/container"
-	"github.com/pangum/pangu/internal/internal/command"
+	"github.com/pangum/pangu/internal/core/internal/command"
 )
 
 type Command struct {

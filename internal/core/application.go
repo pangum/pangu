@@ -15,9 +15,9 @@ import (
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/core/internal/command"
 	"github.com/pangum/pangu/internal/core/internal/get"
 	"github.com/pangum/pangu/internal/internal/builder"
-	"github.com/pangum/pangu/internal/internal/command"
 	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/internal/message"
@@ -55,7 +55,7 @@ func create(params *param.Application) func() {
 		shadow.params = params
 		shadow.container = dig.New()
 		shadow.shadow = runtime.NewShadow()
-		shadow.logger = shadow.getInternalLogger()
+		shadow.logger = shadow.getDefaultLogger()
 		shadow.config = config.NewSetup(params.Config, &shadow.logger)
 		shadow.stoppers = make([]app.Stopper, 0)
 		shadow.lifecycles = make([]app.Lifecycle, 0)
@@ -317,10 +317,12 @@ func (a *Application) putLogger() (err error) {
 }
 
 func (a *Application) getLogger(logger get.Logger) {
-	a.logger = logger.Optional
+	if nil != logger.Optional { // !只有在确实有外部日志器的情况下才允许覆盖
+		a.logger = logger.Optional
+	}
 }
 
-func (a *Application) getInternalLogger() (logger log.Logger) {
+func (a *Application) getDefaultLogger() (logger log.Logger) {
 	logger = log.New().Apply()
 	if level, ok := os.LookupEnv(constant.EnvironmentLoggingLevel); ok {
 		logger.Enable(log.ParseLevel(level))
