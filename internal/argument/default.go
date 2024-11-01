@@ -5,7 +5,7 @@ import (
 
 	"github.com/goexl/gox"
 	"github.com/pangum/pangu/internal/app"
-	"github.com/pangum/pangu/internal/internal/constraint"
+	"github.com/pangum/pangu/internal/constraint"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )

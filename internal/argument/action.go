@@ -1,7 +1,7 @@
 package argument
 
 import (
-	"github.com/pangum/pangu/internal/internal/constraint"
+	"github.com/pangum/pangu/internal/constraint"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
