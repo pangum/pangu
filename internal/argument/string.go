@@ -15,9 +15,9 @@ func (d *Default[T]) string() (flag *cli.StringFlag) {
 	flag.EnvVars = d.environments
 	flag.Value = d.Default().(string)
 
-	_target := d.Target().(*string)
-	if nil != _target {
-		flag.Destination = _target
+	target := d.Target().(*string)
+	if nil != target {
+		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, values string) error {
 		return d.runAction(ctx)
