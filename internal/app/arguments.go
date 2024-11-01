@@ -7,11 +7,11 @@ import (
 // Arguments 参数列表
 type Arguments []Argument
 
-func (a Arguments) Add(args ...Argument) (arguments Arguments) {
-	arguments = make([]Argument, len(a)+len(args))
+func (a Arguments) Add(required Argument, optionals ...Argument) (arguments Arguments) {
+	arguments = make([]Argument, len(a)+len(optionals))
 	index := 0
-	for _, arg := range args {
-		arguments[index] = arg
+	for _, argument := range append(Arguments{required}, optionals...) {
+		arguments[index] = argument
 		index++
 	}
 	for _, arg := range a {
@@ -22,8 +22,8 @@ func (a Arguments) Add(args ...Argument) (arguments Arguments) {
 	return
 }
 
-func (a Arguments) Append(args ...Argument) Arguments {
-	return append(a, args...)
+func (a Arguments) Append(required Argument, optionals ...Argument) Arguments {
+	return append(a, append(Arguments{required}, optionals...)...)
 }
 
 func (a Arguments) Flags() (flags []cli.Flag) {

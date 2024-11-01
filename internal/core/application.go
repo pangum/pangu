@@ -309,8 +309,8 @@ func (a *Application) putSelf() *Application {
 
 func (a *Application) putLogger() (err error) {
 	dependency := a.Dependency()
-	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); nil != a.logger || nil != ge { // !当出错或者没有设置时
-		err = dependency.Put(a.supplyLogger).Build().Build().Inject()
+	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); nil != a.logger || nil != ge {
+		err = dependency.Put(a.supplyLogger).Build().Build().Inject() // !当出错或未成功设置时，重置日志器
 	}
 
 	return
