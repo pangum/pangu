@@ -58,7 +58,12 @@ func (d *Dependency) invoke(get *param.Get) error {
 
 func (d *Dependency) puts() (err error) {
 	for _, put := range d.params.Puts {
-		err = d.put(put)
+		if ve := d.verify(put.Constructor); nil != ve {
+			err = ve
+		} else if pe := d.put(put); nil != pe {
+			err = pe
+		}
+
 		if nil != err {
 			break
 		}
@@ -67,26 +72,29 @@ func (d *Dependency) puts() (err error) {
 	return
 }
 
-func (d *Dependency) put(put *param.Put) error {
-	options := make([]dig.ProvideOption, 0)
-	if "" != put.Name {
-		options = append(options, dig.Name(put.Name))
-	}
-	if "" != put.Group {
-		options = append(options, dig.Group(put.Group))
-	}
-
-	return d.provide(put.Constructor, options...)
-}
-
-func (d *Dependency) provide(constructor runtime.Constructor, options ...dig.ProvideOption) (err error) {
-	if ve := d.verify(constructor); nil != ve {
-		err = ve
-	} else if pe := d.container.Provide(constructor, options...); nil != pe {
-		err = pe
+func (d *Dependency) put(put *param.Put) (err error) {
+	for _, name := range put.Names {
+		for _, group := range put.Groups {
+			err = d.provide(put.Constructor, name, group)
+		}
+		if nil != err {
+			break
+		}
 	}
 
 	return
+}
+
+func (d *Dependency) provide(constructor any, name string, group string) error {
+	options := make([]dig.ProvideOption, 0)
+	if "" != name {
+		options = append(options, dig.Name(name))
+	}
+	if "" != group {
+		options = append(options, dig.Group(group))
+	}
+
+	return d.container.Provide(constructor, options...)
 }
 
 func (d *Dependency) verify(constructor any) (err error) {

@@ -10,22 +10,22 @@ type Put struct {
 	params     *param.Put
 }
 
-func NewPut(dependency *Dependency, constructor runtime.Constructor) (put *Put) {
+func NewPut(dependency *Dependency, constructor runtime.Constructor) *Put {
 	return &Put{
 		dependency: dependency,
 		params:     param.NewPut(constructor),
 	}
 }
 
-func (p *Put) Name(name string) (put *Put) {
-	p.params.Name = name
+func (p *Put) Name(name string, names ...string) (put *Put) {
+	p.params.Names = append([]string{name}, names...)
 	put = p
 
 	return
 }
 
-func (p *Put) Group(group string) (put *Put) {
-	p.params.Group = group
+func (p *Put) Group(group string, groups ...string) (put *Put) {
+	p.params.Groups = append([]string{group}, groups...)
 	put = p
 
 	return

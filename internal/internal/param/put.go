@@ -6,12 +6,14 @@ import (
 
 type Put struct {
 	Constructor runtime.Constructor
-	Name        string
-	Group       string
+	Names       []string
+	Groups      []string
 }
 
 func NewPut(constructor runtime.Constructor) *Put {
 	return &Put{
 		Constructor: constructor,
+		Names:       make([]string, 0),
+		Groups:      make([]string, 0),
 	}
 }

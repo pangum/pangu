@@ -1,9 +1,9 @@
 package constant
 
 const (
-	HeaderName     = "Name"
+	HeaderName     = "Names"
 	HeaderValue    = "Value"
-	ColumnName     = "Name"
+	ColumnName     = "Names"
 	ColumnVersion  = "Version"
 	ColumnBuild    = "Build"
 	ColumnComplied = "Complied"
