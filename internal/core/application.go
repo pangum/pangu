@@ -270,8 +270,10 @@ func (a *Application) bind(shell *runtime.Shell) (err error) {
 	args = append(args, originals[0])
 	for index := 1; index < len(a.args()); index++ {
 		argument := strings.ReplaceAll(originals[index], constant.StringStrike, constant.Empty)
-		if a.isConfigArgument(argument) { // 只接收和配置相关的参数
+		if a.isConfigSpaceArgument(argument) { // 接收空格形式的参数
 			args = append(args, originals[index], originals[index+1])
+		} else if a.isConfigEqualArgument(argument) { // 接收等号形式的参数
+			args = append(args, originals[index])
 		}
 	}
 	if 3 >= len(args) { // ! 检查是否是只有配置相关参数，没有任何其它命令，加入一个不存在的命令调用，防止没有传任何命令时系统给出用法提示
@@ -412,6 +414,12 @@ func (a *Application) after(ctx context.Context) (err error) {
 	return
 }
 
-func (a *Application) isConfigArgument(argument string) bool {
+func (a *Application) isConfigSpaceArgument(argument string) bool {
 	return constant.ConfigName == argument || constant.ConfigC == argument || constant.ConfigConf == argument
+}
+
+func (a *Application) isConfigEqualArgument(argument string) bool {
+	return strings.HasPrefix(argument, fmt.Sprintf("%s=", constant.ConfigName)) ||
+		strings.HasPrefix(argument, fmt.Sprintf("%s=", constant.ConfigC)) ||
+		strings.HasPrefix(argument, fmt.Sprintf("%s=", constant.ConfigConf))
 }
