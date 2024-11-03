@@ -1,6 +1,7 @@
 package param
 
 import (
+	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/runtime"
 )
 
@@ -13,7 +14,7 @@ type Put struct {
 func NewPut(constructor runtime.Constructor) *Put {
 	return &Put{
 		Constructor: constructor,
-		Names:       make([]string, 0),
-		Groups:      make([]string, 0),
+		Names:       []string{constant.DependencyNone},
+		Groups:      []string{constant.DependencyNone},
 	}
 }

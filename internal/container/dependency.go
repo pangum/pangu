@@ -5,6 +5,7 @@ import (
 
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
+	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/internal/message"
 	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
@@ -87,10 +88,10 @@ func (d *Dependency) put(put *param.Put) (err error) {
 
 func (d *Dependency) provide(constructor any, name string, group string) error {
 	options := make([]dig.ProvideOption, 0)
-	if "" != name {
+	if constant.DependencyNone != name {
 		options = append(options, dig.Name(name))
 	}
-	if "" != group {
+	if constant.DependencyNone != group {
 		options = append(options, dig.Group(group))
 	}
 

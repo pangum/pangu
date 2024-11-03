@@ -18,14 +18,14 @@ func NewPut(dependency *Dependency, constructor runtime.Constructor) *Put {
 }
 
 func (p *Put) Name(name string, names ...string) (put *Put) {
-	p.params.Names = append([]string{name}, names...)
+	p.params.Names = append(p.params.Names, append([]string{name}, names...)...)
 	put = p
 
 	return
 }
 
 func (p *Put) Group(group string, groups ...string) (put *Put) {
-	p.params.Groups = append([]string{group}, groups...)
+	p.params.Groups = append(p.params.Groups, append([]string{group}, groups...)...)
 	put = p
 
 	return
