@@ -21,6 +21,7 @@ import (
 	"github.com/pangum/pangu/internal/internal/config"
 	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/internal/message"
+	"github.com/pangum/pangu/internal/internal/optional"
 	"github.com/pangum/pangu/internal/internal/param"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
@@ -39,7 +40,9 @@ type Application struct {
 	// 存储所有可被停止的命令或者服务
 	stoppers   []app.Stopper
 	lifecycles []app.Lifecycle
-	logger     log.Logger
+
+	logger   log.Logger
+	optional *optional.External
 }
 
 func New(param *param.Application) (application *Application) {
@@ -58,7 +61,9 @@ func create(params *param.Application) func() {
 		shadow.logger = shadow.getDefaultLogger()
 		shadow.config = config.NewSetup(params.Config, &shadow.logger)
 		shadow.stoppers = make([]app.Stopper, 0)
+
 		shadow.lifecycles = make([]app.Lifecycle, 0)
+		shadow.optional = optional.NewExternal()
 
 		// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
 		shadow.Dependency().Puts(
@@ -311,7 +316,7 @@ func (a *Application) putSelf() *Application {
 
 func (a *Application) putLogger() (err error) {
 	dependency := a.Dependency()
-	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); nil != a.logger || nil != ge {
+	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); !a.optional.Logger || nil != ge {
 		err = dependency.Put(a.supplyLogger).Build().Build().Inject() // !当出错或未成功设置时，重置日志器
 	}
 
@@ -321,6 +326,7 @@ func (a *Application) putLogger() (err error) {
 func (a *Application) getLogger(logger get.Logger) {
 	if nil != logger.Optional { // !只有在确实有外部日志器的情况下才允许覆盖
 		a.logger = logger.Optional
+		a.optional.Logger = true
 	}
 }
 
