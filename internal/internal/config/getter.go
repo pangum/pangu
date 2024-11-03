@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/goexl/exception"
@@ -9,6 +10,7 @@ import (
 	"github.com/goexl/log"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
+	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/internal/config/internal/core"
 	"github.com/pangum/pangu/internal/internal/constant"
 	"github.com/pangum/pangu/internal/internal/param"
@@ -85,9 +87,13 @@ func (g *Getter) detectFilepath() (err error) {
 	list.Directory(constant.ConfigConfiguration)
 	list.Directory(constant.ConfigDefault)
 	// 适配类Unix系统配置目录
+	if constant.EnvironmentNotSet != internal.GetName() {
+		list.Directory(fmt.Sprintf("/etc/%s", internal.GetName()))
+	}
 	list.Directory("conf.d")
 	list.Directory("config.d")
 	list.Directory("configuration.d")
+	list.Directory("etc")
 
 	// 限制扩展名
 	for _, loader := range g.params.Loaders {
