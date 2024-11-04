@@ -7,6 +7,7 @@ import (
 	"github.com/goexl/exception"
 	"github.com/goexl/gfx"
 	"github.com/goexl/gox"
+	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
@@ -105,6 +106,7 @@ func (g *Getter) detectFilepath() (err error) {
 
 	if paths := list.Build().All(); 0 != len(paths) {
 		*g.paths = gox.NewSlice(paths...) // !一定要使用指针修改原来的值，而不是传新的指针
+		(*g.logger).Debug("使用配置文件进行配置加载", field.New("paths", *g.paths))
 	} else if !g.params.Nullable {
 		err = exception.New().Message("配置文件不存在").Build()
 	}
