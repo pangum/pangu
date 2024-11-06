@@ -63,19 +63,10 @@ func (l *Loader) Wrote() {
 		}
 	}
 }
-
 func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated bool, err error) {
-	if info, se := os.Stat(path); nil != se && os.IsNotExist(se) && !l.params.Nullable { // 没有配置文件
+	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && !l.params.Nullable { // 没有配置文件
 		err = exception.New().Message("缺少配置文件").Build()
-	} else if !info.IsDir() { // 只读取文件，不能读取目录
-		ctx, populated, err = l.fillLocalContext(path)
-	}
-
-	return
-}
-
-func (l *Loader) fillLocalContext(path string) (ctx context.Context, populated bool, err error) {
-	if bytes, rfe := os.ReadFile(path); nil != rfe {
+	} else if bytes, rfe := os.ReadFile(path); nil != rfe {
 		err = rfe
 	} else if eval, ee := envsubst.Eval(string(bytes), l.params.EnvironmentGetter); nil != ee {
 		err = ee

@@ -81,7 +81,8 @@ func (g *Getter) fill(target runtime.Pointer) (err error) {
 
 func (g *Getter) detectFilepath() (err error) {
 	list := gfx.List().Filepath(g.path)
-	list.Filename("*") // 探测所有可能的文件
+	list.Limit().File().Build() // 限制只探测文件
+	list.Filename("*")          // 探测所有可能的文件
 	// 配置所有可能的配置目录
 	list.Directory(constant.ConfigName)
 	list.Directory(constant.ConfigConf)
