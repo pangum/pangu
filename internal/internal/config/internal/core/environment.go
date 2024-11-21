@@ -43,8 +43,8 @@ func (e *Environment) fill(data *map[string]any, environment string) {
 		if value, cached := current[field]; length-1 > index && !cached { // 如果是第一处遇到键，初始化并切换处理对象
 			current[field] = make(map[string]any)
 			current = current[field].(map[string]any) // !切换当前处理对象
-		} else if length-1 > index && cached { // 如果之前初始化，切换处理对象
-			current = value.(map[string]any) // !切换当前处理对象
+		} else if converted, ok := value.(map[string]any); ok && length-1 > index && cached { // 如果之前初始化，切换处理对象
+			current = converted // !切换当前处理对象
 		} else if length-1 == index { // 处理最后一位键值
 			current[field] = values[1]
 		}
