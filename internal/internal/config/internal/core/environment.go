@@ -11,7 +11,7 @@ import (
 )
 
 type Environment struct {
-	// 无字段
+	// 将环境变量转换成带层级的映射
 }
 
 func NewEnvironment() *Environment {
