@@ -7,18 +7,18 @@ import (
 
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/application"
 	"github.com/pangum/pangu/internal/command"
 	"github.com/pangum/pangu/internal/internal/constant"
 )
 
-var _ app.Command = (*Serve)(nil)
+var _ application.Command = (*Serve)(nil)
 
 // Serve 描述一个提供服务的命令
 type Serve struct {
 	*command.Default
 
-	serves  []app.Serve
+	serves  []application.Serve
 	logger  log.Logger
 	exiting bool
 }
@@ -27,13 +27,13 @@ func NewServe(logger log.Logger) *Serve {
 	return &Serve{
 		Default: command.New(constant.CommandServe).Usage("启动服务").Aliases("s").Build(),
 
-		serves:  make([]app.Serve, 0, 1),
+		serves:  make([]application.Serve, 0, 1),
 		logger:  logger,
 		exiting: false,
 	}
 }
 
-func (s *Serve) Add(serves ...app.Serve) {
+func (s *Serve) Add(serves ...application.Serve) {
 	s.serves = append(s.serves, serves...)
 }
 
@@ -94,7 +94,7 @@ func (s *Serve) start(ctx context.Context, count int) (err error) {
 	return
 }
 
-func (s *Serve) startServe(ctx context.Context, serve app.Serve, wg *sync.WaitGroup, err *error) {
+func (s *Serve) startServe(ctx context.Context, serve application.Serve, wg *sync.WaitGroup, err *error) {
 	defer wg.Done()
 
 	s.logger.Info("启动服务成功", field.New[string]("name", serve.Name()))
@@ -110,7 +110,7 @@ func (s *Serve) startServe(ctx context.Context, serve app.Serve, wg *sync.WaitGr
 	}
 }
 
-func (s *Serve) stopServe(ctx context.Context, serve app.Serve, wg *sync.WaitGroup, err *error) {
+func (s *Serve) stopServe(ctx context.Context, serve application.Serve, wg *sync.WaitGroup, err *error) {
 	defer wg.Done()
 	if se := serve.Stop(ctx); nil != se {
 		*err = se

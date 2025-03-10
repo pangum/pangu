@@ -1,8 +1,8 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/application"
 )
 
 // Commands 命令列表
-type Commands = app.Commands
+type Commands = application.Commands

@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"github.com/pangum/pangu/internal"
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/application"
 	"github.com/pangum/pangu/internal/command"
 	"github.com/pangum/pangu/internal/internal/constant"
 )
 
-var _ app.Command = (*Version)(nil)
+var _ application.Command = (*Version)(nil)
 
 // Version 描述一个打印版本信息的命令
 type Version struct {

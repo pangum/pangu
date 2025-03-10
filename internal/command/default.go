@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/application"
 )
 
 var _ = New
@@ -44,11 +44,11 @@ func (d *Default) Run(_ context.Context) (err error) {
 	return
 }
 
-func (d *Default) Arguments() (args app.Arguments) {
+func (d *Default) Arguments() (args application.Arguments) {
 	return
 }
 
-func (d *Default) Subcommands() (commands app.Commands) {
+func (d *Default) Subcommands() (commands application.Commands) {
 	return
 }
 

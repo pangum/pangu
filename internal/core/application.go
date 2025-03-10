@@ -14,7 +14,7 @@ import (
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
 	"github.com/pangum/pangu/internal"
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/application"
 	"github.com/pangum/pangu/internal/core/internal/command"
 	"github.com/pangum/pangu/internal/core/internal/get"
 	"github.com/pangum/pangu/internal/internal/builder"
@@ -38,8 +38,8 @@ type Application struct {
 	// 正常的启动器只提供一个Run方法来处理传数的参数，而此方法一旦执行，就意味着内部的命令也开始执行，而此时依赖关系还没有准备好
 	shadow *runtime.Shadow
 	// 存储所有可被停止的命令或者服务
-	stoppers   []app.Stopper
-	lifecycles []app.Lifecycle
+	stoppers   []application.Stopper
+	lifecycles []application.Lifecycle
 
 	logger   log.Logger
 	optional *optional.External
@@ -60,9 +60,9 @@ func create(params *param.Application) func() {
 		shadow.shadow = runtime.NewShadow()
 		shadow.logger = shadow.getDefaultLogger()
 		shadow.config = config.NewSetup(params.Config, &shadow.logger)
-		shadow.stoppers = make([]app.Stopper, 0)
+		shadow.stoppers = make([]application.Stopper, 0)
 
-		shadow.lifecycles = make([]app.Lifecycle, 0)
+		shadow.lifecycles = make([]application.Lifecycle, 0)
 		shadow.optional = optional.NewExternal()
 
 		// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
@@ -105,11 +105,11 @@ func (a *Application) Run(constructor runtime.Constructor) {
 func (a *Application) Add(components ...any) (err error) {
 	for _, component := range components {
 		switch converted := component.(type) {
-		case app.Serve:
+		case application.Serve:
 			err = a.addServe(converted)
-		case app.Command:
+		case application.Command:
 			err = a.addCommand(converted)
-		case app.Argument:
+		case application.Argument:
 			err = a.addArg(converted)
 		default:
 			typ := field.New("type", reflect.TypeOf(component).String())
@@ -138,14 +138,14 @@ func (a *Application) finally(err *error) {
 	}
 }
 
-func (a *Application) addServe(serve app.Serve) error {
+func (a *Application) addServe(serve application.Serve) error {
 	return a.Dependency().Get(func(command *command.Serve) {
 		command.Add(serve)
 		a.stoppers = append(a.stoppers, serve)
 	}).Build().Build().Inject()
 }
 
-func (a *Application) addCommand(command app.Command) error {
+func (a *Application) addCommand(command application.Command) error {
 	return a.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Commands = append(shell.Commands, &cli.Command{
 			Name:        command.Name(),
@@ -163,7 +163,7 @@ func (a *Application) addCommand(command app.Command) error {
 	}).Build().Build().Inject()
 }
 
-func (a *Application) addArg(argument app.Argument) error {
+func (a *Application) addArg(argument application.Argument) error {
 	return a.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Flags = append(shell.Flags, argument.Flag())
 	}).Build().Build().Inject()
@@ -362,7 +362,7 @@ func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
 	return
 }
 
-func (a *Application) action(command app.Command) func(ctx *cli.Context) error {
+func (a *Application) action(command application.Command) func(ctx *cli.Context) error {
 	return func(ctx *cli.Context) error {
 		return command.Run(runtime.NewContext(ctx))
 	}

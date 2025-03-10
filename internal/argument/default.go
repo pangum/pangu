@@ -4,13 +4,13 @@ import (
 	"time"
 
 	"github.com/goexl/gox"
-	"github.com/pangum/pangu/internal/app"
+	"github.com/pangum/pangu/internal/application"
 	"github.com/pangum/pangu/internal/constraint"
 	"github.com/pangum/pangu/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 
-var _ app.Argument = (*Default[int])(nil)
+var _ application.Argument = (*Default[int])(nil)
 
 type Default[T constraint.Argument] struct {
 	// 名称
@@ -80,7 +80,7 @@ func (d *Default[T]) Hidden() bool {
 	return d.hidden
 }
 
-func (d *Default[T]) Flag() (flag app.Flag) {
+func (d *Default[T]) Flag() (flag application.Flag) {
 	switch d.Target().(type) {
 	case *int:
 		flag = d.int()

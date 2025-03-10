@@ -1,4 +1,4 @@
-package app
+package application
 
 import (
 	"github.com/urfave/cli/v2"
@@ -14,8 +14,8 @@ func (a Arguments) Add(required Argument, optionals ...Argument) (arguments Argu
 		arguments[index] = argument
 		index++
 	}
-	for _, arg := range a {
-		arguments[index] = arg
+	for _, argument := range a {
+		arguments[index] = argument
 		index++
 	}
 
@@ -24,6 +24,10 @@ func (a Arguments) Add(required Argument, optionals ...Argument) (arguments Argu
 
 func (a Arguments) Append(required Argument, optionals ...Argument) Arguments {
 	return append(a, append(Arguments{required}, optionals...)...)
+}
+
+func (a Arguments) Appends(arguments ...Argument) Arguments {
+	return append(a, arguments...)
 }
 
 func (a Arguments) Flags() (flags []cli.Flag) {

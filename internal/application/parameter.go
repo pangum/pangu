@@ -1,4 +1,4 @@
-package app
+package application
 
 type Parameter interface {
 	// Aliases 别名，可以是短名称也可以是长名称，比如一个叫version的命令，别名可以是[v,version]

@@ -1,4 +1,4 @@
-package app
+package application
 
 // Argument 参数
 type Argument interface {
