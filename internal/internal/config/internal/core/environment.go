@@ -39,7 +39,10 @@ func (e *Environment) fill(data *map[string]any, environment string) {
 	length := len(keys)
 	current := *data
 	for index := 0; index < length; index++ {
-		field := keys[index]
+		// Windows操作系统不区分大小写
+		// 类Unix操作系统（含Linux、MacOS等）严格区分大小写
+		// 为方便处理，实现为不区分大小写
+		field := strings.ToLower(keys[index])
 		if value, cached := current[field]; length-1 > index && !cached { // 如果是第一处遇到键，初始化并切换处理对象
 			current[field] = make(map[string]any)
 			current = current[field].(map[string]any) // !切换当前处理对象

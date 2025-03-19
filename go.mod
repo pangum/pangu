@@ -2,7 +2,6 @@ module github.com/pangum/pangu
 
 go 1.24
 
-
 require (
 	github.com/goexl/gfx v0.2.5
 	github.com/goexl/gox v1.9.2
@@ -18,7 +17,7 @@ require (
 	github.com/fsnotify/fsnotify v1.8.0
 	github.com/goexl/env v0.0.2
 	github.com/goexl/exception v0.0.3
-	github.com/goexl/log v0.0.7
+	github.com/goexl/log v0.0.9
 	github.com/goexl/mengpo v0.2.6
 	github.com/goexl/structer v0.1.9
 	github.com/goexl/xiren v0.0.8
@@ -41,7 +40,7 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/net v0.37.0 // indirect
