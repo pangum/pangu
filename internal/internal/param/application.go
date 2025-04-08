@@ -1,8 +1,8 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/internal/app"
 	"github.com/pangum/pangu/internal/internal/constant"
+	"github.com/pangum/pangu/internal/internal/core"
 	"github.com/pangum/pangu/internal/internal/loader"
 )
 
@@ -25,7 +25,7 @@ type Application struct {
 	// 版权
 	Copyright string
 	// 作者
-	Authors app.Authors
+	Authors core.Authors
 	// 元数据
 	Metadata map[string]any
 }
@@ -46,7 +46,7 @@ func NewApplication() *Application {
 		Usage:       "一个使用github.com/pangum/pangu构建的应用程序",
 
 		Copyright: constant.Copyright,
-		Authors: app.Authors{{
+		Authors: core.Authors{{
 			Name:  constant.AuthorName,
 			Email: constant.AuthorEmail,
 		}},

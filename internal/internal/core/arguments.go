@@ -1,4 +1,4 @@
-package app
+package core
 
 import (
 	"github.com/urfave/cli/v2"

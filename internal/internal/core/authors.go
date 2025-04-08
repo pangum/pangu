@@ -1,4 +1,4 @@
-package app
+package core
 
 import (
 	"github.com/urfave/cli/v2"
@@ -6,9 +6,9 @@ import (
 
 type Authors []*Author
 
-func (as *Authors) Cli() (authors []*cli.Author) {
-	authors = make([]*cli.Author, 0, len(*as))
-	for _, a := range *as {
+func (a *Authors) Cli() (authors []*cli.Author) {
+	authors = make([]*cli.Author, 0, len(*a))
+	for _, a := range *a {
 		author := new(cli.Author)
 		author.Name = a.Name
 		author.Email = a.Email

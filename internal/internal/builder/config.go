@@ -2,7 +2,7 @@ package builder
 
 import (
 	"github.com/pangum/config"
-	"github.com/pangum/pangu/internal/internal/app"
+	"github.com/pangum/pangu/internal/internal/core"
 	"github.com/pangum/pangu/internal/internal/param"
 )
 
@@ -40,7 +40,7 @@ func (c *Config[T]) Default() (t *T) {
 }
 
 func (c *Config[T]) Environment(key string, value string) (t *T) {
-	c.param.Environments = append(c.param.Environments, app.NewEnvironment(key, value))
+	c.param.Environments = append(c.param.Environments, core.NewEnvironment(key, value))
 	t = c.from
 
 	return
