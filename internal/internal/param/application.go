@@ -7,10 +7,15 @@ import (
 )
 
 type Application struct {
-	Config  *Config
-	Help    *Help
-	Banner  *Banner
-	Code    *Code
+	// 配置
+	Config *Config
+	// 帮助
+	Help *Help
+	// 徽标
+	Banner *Banner
+	// 状态码
+	Code *Code
+	// 超时
 	Timeout *Timeout
 
 	// 合法性验证，包括
