@@ -40,6 +40,14 @@ func (c *Config[T]) Default() (t *T) {
 	return
 }
 
+func (c *Config[T]) Filepath(required string, optionals ...string) (t *T) {
+	c.param.Paths = append(c.param.Paths, required)
+	c.param.Paths = append(c.param.Paths, optionals...)
+	t = c.from
+
+	return
+}
+
 func (c *Config[T]) Environment(key string, value string) (t *T) {
 	c.param.Environments = append(c.param.Environments, kernel.NewEnvironment(key, value))
 	t = c.from
