@@ -68,7 +68,7 @@ func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated b
 		err = exception.New().Message("缺少配置文件").Build()
 	} else if bytes, rfe := l.read(path); nil != rfe {
 		err = rfe
-	} else if eval, ee := envsubst.Eval(string(bytes), l.params.EnvironmentGetter); nil != ee {
+	} else if eval, ee := envsubst.Eval(string(bytes), l.params.Getter); nil != ee {
 		err = ee
 	} else {
 		ctx = context.Background()

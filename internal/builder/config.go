@@ -5,6 +5,8 @@ import (
 	"github.com/pangum/pangu/internal/internal/param"
 )
 
+// Config 配置构建器，编写非运行时的配置项
+// 插件配置加载时也可以覆盖配置项
 type Config struct {
 	*builder.Config[Config]
 
