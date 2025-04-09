@@ -8,7 +8,7 @@ type Bootstrap struct {
 	pangu.Lifecycle
 }
 
-func NewBootstrap() *Bootstrap {
+func NewBootstrap() pangu.Bootstrap {
 	return new(Bootstrap)
 }
 

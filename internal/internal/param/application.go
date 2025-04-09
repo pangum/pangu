@@ -2,16 +2,16 @@ package param
 
 import (
 	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/internal/core"
+	"github.com/pangum/pangu/internal/internal/kernel"
 	"github.com/pangum/pangu/internal/internal/loader"
 )
 
 type Application struct {
-	*Config
-	*Help
-	*Banner
-	*Code
-	*Timeout
+	Config  *Config
+	Help    *Help
+	Banner  *Banner
+	Code    *Code
+	Timeout *Timeout
 
 	// 合法性验证，包括
 	// 启动器构造方法合法性验证
@@ -25,7 +25,7 @@ type Application struct {
 	// 版权
 	Copyright string
 	// 作者
-	Authors core.Authors
+	Authors kernel.Authors
 	// 元数据
 	Metadata map[string]any
 }
@@ -46,7 +46,7 @@ func NewApplication() *Application {
 		Usage:       "一个使用github.com/pangum/pangu构建的应用程序",
 
 		Copyright: constant.Copyright,
-		Authors: core.Authors{{
+		Authors: kernel.Authors{{
 			Name:  constant.AuthorName,
 			Email: constant.AuthorEmail,
 		}},

@@ -4,7 +4,7 @@ import (
 	"github.com/pangum/pangu/internal"
 	"github.com/pangum/pangu/internal/builder/internal/function"
 	"github.com/pangum/pangu/internal/core"
-	"github.com/pangum/pangu/internal/internal/core"
+	"github.com/pangum/pangu/internal/internal/kernel"
 	"github.com/pangum/pangu/internal/internal/param"
 )
 
@@ -45,7 +45,7 @@ func (a *Application) Verify() *Application {
 
 func (a *Application) Author(name string, email string) *Application {
 	return a.set(func() {
-		a.params.Authors = append(a.params.Authors, core.NewAuthor(name, email))
+		a.params.Authors = append(a.params.Authors, kernel.NewAuthor(name, email))
 	})
 }
 

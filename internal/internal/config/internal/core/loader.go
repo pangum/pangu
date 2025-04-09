@@ -66,7 +66,7 @@ func (l *Loader) Wrote() {
 func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated bool, err error) {
 	if _, se := os.Stat(path); nil != se && os.IsNotExist(se) && !l.params.Nullable { // 没有配置文件
 		err = exception.New().Message("缺少配置文件").Build()
-	} else if bytes, rfe := os.ReadFile(path); nil != rfe {
+	} else if bytes, rfe := l.read(path); nil != rfe {
 		err = rfe
 	} else if eval, ee := envsubst.Eval(string(bytes), l.params.EnvironmentGetter); nil != ee {
 		err = ee
@@ -75,6 +75,14 @@ func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated b
 		ctx = context.WithValue(ctx, config.ContextFilepath, path)
 		ctx = context.WithValue(ctx, config.ContextBytes, []byte(eval))
 		populated = 0 != len(bytes)
+	}
+
+	return
+}
+
+func (l *Loader) read(path string) (bytes []byte, err error) {
+	if "" != path && !l.params.Nullable {
+		bytes, err = os.ReadFile(path)
 	}
 
 	return

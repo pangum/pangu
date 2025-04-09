@@ -86,9 +86,7 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	defer a.finally(&err)
 
 	dependency := a.Dependency()
-	if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
-		err = bpe
-	} else if ese := a.params.Environments.Set(); nil != ese { // 添加环境变量
+	if ese := a.params.Config.Environments.Set(); nil != ese { // 添加环境变量
 		err = ese
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
 		err = ape
@@ -127,14 +125,14 @@ func (a *Application) Add(components ...any) (err error) {
 func (a *Application) finally(err *error) {
 	if finally := recover(); nil != finally {
 		fmt.Println(gox.Stack(constant.ApplicationStacktrace, constant.ApplicationSkip))
-		os.Exit(a.params.Panic)
+		os.Exit(a.params.Code.Panic)
 	}
 
 	if nil == *err {
-		os.Exit(a.params.Success)
+		os.Exit(a.params.Code.Success)
 	} else {
 		fmt.Println((*err).Error())
-		os.Exit(a.params.Failed)
+		os.Exit(a.params.Code.Failed)
 	}
 }
 
@@ -179,6 +177,10 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 	dependency := a.Dependency()
 	if sle := dependency.Get(a.setLogger).Build().Build().Inject(); nil != sle { // 为执行壳设置日志器
 		err = sle
+	} else if lce := dependency.Get(a.loadConfig).Build().Build().Inject(); nil != lce { // 加载内置配置
+		err = lce
+	} else if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
+		err = bpe
 	} else if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
 	} else if bbe := bootstrap.Before(canceled); nil != bbe { // 执行生命周期方法
@@ -205,9 +207,9 @@ func (a *Application) args() []string {
 }
 
 func (a *Application) createApp() (err error) {
-	cli.AppHelpTemplate = a.params.App
-	cli.CommandHelpTemplate = a.params.Command
-	cli.SubcommandHelpTemplate = a.params.Subcommand
+	cli.AppHelpTemplate = a.params.Help.App
+	cli.CommandHelpTemplate = a.params.Help.Command
+	cli.SubcommandHelpTemplate = a.params.Help.Subcommand
 	cli.VersionPrinter = a.versionPrinter
 
 	// 定制版本标志
@@ -386,6 +388,14 @@ func (a *Application) graceful(err *error) {
 
 func (a *Application) setLogger(shell *runtime.Shell) {
 	shell.Logger(a.logger)
+}
+
+func (a *Application) loadConfig(config *Config) error {
+	return config.Build().Get(&struct { // 匿名结构体，不增加定义，只使用一次
+		Pangu *param.Application
+	}{
+		Pangu: a.params,
+	})
 }
 
 func (a *Application) before(ctx context.Context) (err error) {

@@ -43,6 +43,8 @@ func (b *Banner) Print() (err error) {
 		content, err = b.asciiFromBytes(b.Data.([]byte))
 	case banner.TypeFile:
 		content, err = b.asciiFromReader(b.Data.(*os.File))
+	default:
+		panic("unhandled default case")
 	}
 	if nil != err {
 		return
