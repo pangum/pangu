@@ -179,7 +179,7 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 		err = sle
 	} else if lce := dependency.Get(a.loadConfig).Build().Build().Inject(); nil != lce { // 加载内置配置
 		err = lce
-	} else if bpe := a.params.Banner.Print(); nil != bpe { // 输出标志信息
+	} else if bpe := a.params.Banner.Print(); nil != bpe { // 打印标志信息
 		err = bpe
 	} else if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
