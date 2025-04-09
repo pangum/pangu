@@ -16,11 +16,13 @@ type Config struct {
 	Nullable bool
 	// 是否可刷新配置
 	Refreshable bool
+	// 配置文件列表
+	Paths []string
 
 	// 标签
 	Tag *Tag
 	// 环境变量获取器
-	Getter callback.Environment
+	Getters []callback.Getter
 	// 环境亦是
 	Environments kernel.Environments
 
@@ -34,9 +36,12 @@ func NewConfig(loaders ...config.Loader) *Config {
 		Validate:    true,
 		Nullable:    true,
 		Refreshable: true,
+		Paths:       make([]string, 0), // 默认没有配置文件
 
-		Tag:          NewTag(),
-		Getter:       env.Get,
+		Tag: NewTag(),
+		Getters: []callback.Getter{
+			env.Get,
+		},
 		Environments: make(kernel.Environments, 0),
 
 		Loaders:  loaders,

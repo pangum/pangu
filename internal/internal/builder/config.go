@@ -2,6 +2,7 @@ package builder
 
 import (
 	"github.com/pangum/config"
+	"github.com/pangum/pangu/internal/callback"
 	"github.com/pangum/pangu/internal/internal/kernel"
 	"github.com/pangum/pangu/internal/internal/param"
 )
@@ -49,6 +50,14 @@ func (c *Config[T]) Environment(key string, value string) (t *T) {
 func (c *Config[T]) Loader(loader config.Loader, loaders ...config.Loader) (t *T) {
 	c.param.Loaders = append(c.param.Loaders, loader)
 	c.param.Loaders = append(c.param.Loaders, loaders...)
+	t = c.from
+
+	return
+}
+
+func (c *Config[T]) Getter(getter callback.Getter, getters ...callback.Getter) (t *T) {
+	c.param.Getters = append(c.param.Getters, getter)
+	c.param.Getters = append(c.param.Getters, getters...)
 	t = c.from
 
 	return

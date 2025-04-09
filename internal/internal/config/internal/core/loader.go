@@ -68,7 +68,7 @@ func (l *Loader) loadLocalContext(path string) (ctx context.Context, populated b
 		err = exception.New().Message("缺少配置文件").Build()
 	} else if bytes, rfe := l.read(path); nil != rfe {
 		err = rfe
-	} else if eval, ee := envsubst.Eval(string(bytes), l.params.Getter); nil != ee {
+	} else if eval, ee := envsubst.Eval(string(bytes), l.combine); nil != ee {
 		err = ee
 	} else {
 		ctx = context.Background()
@@ -140,6 +140,14 @@ func (l *Loader) modules(target runtime.Pointer) (modules []string) {
 	modules = make([]string, 0, len(names))
 	for key := range names {
 		modules = append(modules, key)
+	}
+
+	return
+}
+
+func (l *Loader) combine(key string) (value string) {
+	for _, getter := range l.params.Getters {
+		value = getter(key)
 	}
 
 	return

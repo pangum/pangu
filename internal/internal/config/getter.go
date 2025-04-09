@@ -48,7 +48,7 @@ func newGetter(params *param.Config, logger *log.Logger) (getter *Getter) {
 }
 
 func (g *Getter) Get(target runtime.Pointer) (err error) {
-	if dfe := g.detectFilepath(); nil != dfe { // 探测所有的配置文件路径
+	if dfe := g.detectPath(); nil != dfe { // 探测所有的配置文件路径
 		err = dfe
 	} else if fe := g.fill(target); nil != fe { // 加载数据
 		err = fe
@@ -79,10 +79,10 @@ func (g *Getter) fill(target runtime.Pointer) (err error) {
 	return
 }
 
-func (g *Getter) detectFilepath() (err error) {
-	list := gfx.List().Filepath(g.path)
-	list.Limit().File().Build() // 限制只探测文件
-	list.Filename("*")          // 探测所有可能的文件
+func (g *Getter) detectPath() (err error) {
+	list := gfx.List().Filepath(g.path, g.params.Paths...) // 加入默认从命令行和配置项而来的配置文件
+	list.Limit().File().Build()                            // 限制只探测文件
+	list.Filename("*")                                     // 探测所有可能的文件
 	// 配置所有可能的配置目录
 	list.Directory(constant.ConfigName)
 	list.Directory(constant.ConfigConf)
