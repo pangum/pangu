@@ -2,9 +2,11 @@ package param
 
 import (
 	"github.com/goexl/env"
+	"github.com/goexl/gox"
 	"github.com/pangum/config"
 	"github.com/pangum/pangu/internal/callback"
 	"github.com/pangum/pangu/internal/internal/kernel"
+	"github.com/pangum/pangu/internal/internal/param/internal/getter"
 )
 
 type Config struct {
@@ -22,7 +24,7 @@ type Config struct {
 	// 标签
 	Tag *Tag
 	// 环境变量获取器
-	Getters []callback.Getter
+	Getters map[callback.Getter]*gox.Empty
 	// 环境亦是
 	Environments kernel.Environments
 
@@ -39,12 +41,20 @@ func NewConfig(loaders ...config.Loader) *Config {
 		Paths:       make([]string, 0), // 默认没有配置文件
 
 		Tag: NewTag(),
-		Getters: []callback.Getter{
-			env.Get,
+		Getters: map[callback.Getter]*gox.Empty{
+			getter.NewDefault(env.Get): new(gox.Empty),
 		},
 		Environments: make(kernel.Environments, 0),
 
 		Loaders:  loaders,
 		Changers: make([]config.Changer, 0),
 	}
+}
+
+func (c *Config) Get(key string) (value string) {
+	for _getter := range c.Getters {
+		value = _getter.Get(key)
+	}
+
+	return
 }

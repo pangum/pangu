@@ -64,7 +64,7 @@ func (g *Getter) fill(target runtime.Pointer) (err error) {
 
 	if nil == err && g.params.Default { // 处理默认值
 		// !此处逻辑不能往前，原因是如果对象里面包含指针，那么只能在包含指针的结构体被解析后才能去设置默认值，不然指针将被会设置成空值
-		err = mengpo.New().Tag(g.params.Tag.Default).Build().Set(target)
+		err = mengpo.New().Tag(g.params.Tag.Default).Getter(g.params).Build().Set(target)
 	}
 
 	// 从环境变量中加载配置

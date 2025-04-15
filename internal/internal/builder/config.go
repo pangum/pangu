@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"github.com/goexl/gox"
 	"github.com/pangum/config"
 	"github.com/pangum/pangu/internal/callback"
 	"github.com/pangum/pangu/internal/internal/kernel"
@@ -64,8 +65,10 @@ func (c *Config[T]) Loader(loader config.Loader, loaders ...config.Loader) (t *T
 }
 
 func (c *Config[T]) Getter(getter callback.Getter, getters ...callback.Getter) (t *T) {
-	c.param.Getters = append(c.param.Getters, getter)
-	c.param.Getters = append(c.param.Getters, getters...)
+	c.param.Getters[getter] = new(gox.Empty)
+	for _, _getter := range getters {
+		c.param.Getters[_getter] = new(gox.Empty)
+	}
 	t = c.from
 
 	return

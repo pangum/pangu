@@ -1,3 +1,5 @@
 package callback
 
-type Getter func(key string) string
+type Getter interface {
+	Get(key string) string
+}

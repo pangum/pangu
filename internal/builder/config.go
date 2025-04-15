@@ -66,6 +66,9 @@ func (c *Config) Build() (application *Application) {
 	if 0 != len(c.params.Loaders) {
 		application.params.Config.Loaders = append(application.params.Config.Loaders, c.params.Loaders...)
 	}
+	for getter := range c.params.Getters {
+		application.params.Config.Getters[getter] = c.params.Getters[getter]
+	}
 
 	return
 }
