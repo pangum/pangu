@@ -2,7 +2,7 @@ package core
 
 import (
 	"github.com/fsnotify/fsnotify"
-	"github.com/pangum/pangu/internal/internal/config/internal"
+	"github.com/pangum/core/internal/internal/config/internal"
 )
 
 type Watcher struct {

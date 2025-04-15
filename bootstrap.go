@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/core"
+	"github.com/pangum/core/internal/core"
 )
 
 // Bootstrap 启动接口

@@ -1,11 +1,11 @@
 package builder
 
 import (
-	"github.com/pangum/pangu/internal"
-	"github.com/pangum/pangu/internal/builder/internal/function"
-	"github.com/pangum/pangu/internal/core"
-	"github.com/pangum/pangu/internal/internal/kernel"
-	"github.com/pangum/pangu/internal/internal/param"
+	"github.com/pangum/core/internal"
+	"github.com/pangum/core/internal/builder/internal/function"
+	"github.com/pangum/core/internal/core"
+	"github.com/pangum/core/internal/internal/kernel"
+	"github.com/pangum/core/internal/internal/param"
 )
 
 var shadow *Application

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/goexl/gox"
-	"github.com/pangum/pangu/internal/internal/kernel"
+	"github.com/pangum/core/internal/internal/kernel"
 	"github.com/urfave/cli/v2"
 )
 

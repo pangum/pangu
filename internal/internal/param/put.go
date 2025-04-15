@@ -1,8 +1,8 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/runtime"
 )
 
 type Put struct {

@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/runtime"
 )
 
 type Get struct {

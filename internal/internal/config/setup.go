@@ -2,8 +2,8 @@ package config
 
 import (
 	"github.com/goexl/log"
-	"github.com/pangum/pangu/internal/internal/param"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/internal/param"
+	"github.com/pangum/core/internal/runtime"
 )
 
 type Setup struct {

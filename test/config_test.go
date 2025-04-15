@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/pangum/pangu"
+	"github.com/pangum/core"
 )
 
 func TestConfigPrefix(t *testing.T) {

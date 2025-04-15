@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/goexl/gox"
-	"github.com/pangum/pangu/internal/internal/constant"
+	"github.com/pangum/core/internal/internal/constant"
 )
 
 func GetEnvironment(key string, current string, defaults string) string {

@@ -3,7 +3,7 @@ package runtime
 import (
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
-	"github.com/pangum/pangu/internal"
+	"github.com/pangum/core/internal"
 	"github.com/urfave/cli/v2"
 )
 

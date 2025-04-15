@@ -3,9 +3,9 @@ package builder
 import (
 	"github.com/goexl/gox"
 	"github.com/pangum/config"
-	"github.com/pangum/pangu/internal/internal/callback"
-	"github.com/pangum/pangu/internal/internal/kernel"
-	"github.com/pangum/pangu/internal/internal/param"
+	"github.com/pangum/core/internal/internal/callback"
+	"github.com/pangum/core/internal/internal/kernel"
+	"github.com/pangum/core/internal/internal/param"
 )
 
 type Config[T any] struct {

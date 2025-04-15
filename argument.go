@@ -1,8 +1,8 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/argument"
-	"github.com/pangum/pangu/internal/constraint"
+	"github.com/pangum/core/internal/argument"
+	"github.com/pangum/core/internal/constraint"
 )
 
 // Argument 参数

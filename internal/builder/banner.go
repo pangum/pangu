@@ -1,8 +1,8 @@
 package builder
 
 import (
-	"github.com/pangum/pangu/internal/internal/banner"
-	"github.com/pangum/pangu/internal/internal/param"
+	"github.com/pangum/core/internal/internal/banner"
+	"github.com/pangum/core/internal/internal/param"
 )
 
 type Banner struct {

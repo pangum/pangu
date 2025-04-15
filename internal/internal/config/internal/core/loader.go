@@ -10,9 +10,9 @@ import (
 	"github.com/goexl/gox"
 	"github.com/goexl/log"
 	"github.com/pangum/config"
-	"github.com/pangum/pangu/internal/internal/config/internal/core/internal"
-	"github.com/pangum/pangu/internal/internal/param"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/internal/config/internal/core/internal"
+	"github.com/pangum/core/internal/internal/param"
+	"github.com/pangum/core/internal/runtime"
 )
 
 type Loader struct {

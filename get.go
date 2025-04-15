@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/container"
+	"github.com/pangum/core/internal/container"
 )
 
 // Get 用于向框架获取一系列依赖

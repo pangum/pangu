@@ -1,8 +1,8 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/builder"
-	"github.com/pangum/pangu/internal/core"
+	"github.com/pangum/core/internal/builder"
+	"github.com/pangum/core/internal/core"
 )
 
 var _ = New

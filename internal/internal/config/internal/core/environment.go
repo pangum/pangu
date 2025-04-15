@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/goexl/gox"
-	"github.com/pangum/pangu/internal/internal/config/internal/core/internal"
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/internal/config/internal/core/internal"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/runtime"
 )
 
 type Environment struct {

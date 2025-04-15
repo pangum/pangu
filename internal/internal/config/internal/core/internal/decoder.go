@@ -5,7 +5,7 @@ import (
 
 	"github.com/goexl/gox"
 	"github.com/goexl/structer"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/runtime"
 )
 
 type Decoder struct {

@@ -6,10 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pangum/pangu/internal"
-	"github.com/pangum/pangu/internal/application"
-	"github.com/pangum/pangu/internal/command"
-	"github.com/pangum/pangu/internal/internal/constant"
+	"github.com/pangum/core/internal"
+	"github.com/pangum/core/internal/application"
+	"github.com/pangum/core/internal/command"
+	"github.com/pangum/core/internal/internal/constant"
 )
 
 var _ application.Command = (*Version)(nil)

@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/pangum/pangu"
+	"github.com/pangum/core"
 )
 
 type Bootstrap struct {

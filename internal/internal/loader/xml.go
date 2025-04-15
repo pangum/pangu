@@ -9,8 +9,8 @@ import (
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
 	"github.com/pangum/config"
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/runtime"
 )
 
 var _ config.Loader = (*Xml)(nil)

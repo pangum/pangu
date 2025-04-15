@@ -1,9 +1,9 @@
 package param
 
 import (
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/internal/kernel"
-	"github.com/pangum/pangu/internal/internal/loader"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/internal/kernel"
+	"github.com/pangum/core/internal/internal/loader"
 )
 
 type Application struct {

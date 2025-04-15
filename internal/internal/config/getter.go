@@ -11,11 +11,11 @@ import (
 	"github.com/goexl/log"
 	"github.com/goexl/mengpo"
 	"github.com/goexl/xiren"
-	"github.com/pangum/pangu/internal"
-	"github.com/pangum/pangu/internal/internal/config/internal/core"
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/internal/param"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal"
+	"github.com/pangum/core/internal/internal/config/internal/core"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/internal/param"
+	"github.com/pangum/core/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 

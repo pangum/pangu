@@ -1,7 +1,7 @@
 package pangu
 
 import (
-	"github.com/pangum/pangu/internal/command"
+	"github.com/pangum/core/internal/command"
 )
 
 // Command 命令

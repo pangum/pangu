@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pangum/pangu/internal/internal/loader/internal/internal/constant"
+	"github.com/pangum/core/internal/internal/loader/internal/internal/constant"
 )
 
 type Jsonc struct {

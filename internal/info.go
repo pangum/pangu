@@ -3,8 +3,8 @@ package internal
 import (
 	"runtime"
 
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/internal/os"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/internal/os"
 )
 
 var (

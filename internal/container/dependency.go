@@ -5,10 +5,10 @@ import (
 
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
-	"github.com/pangum/pangu/internal/internal/constant"
-	"github.com/pangum/pangu/internal/internal/message"
-	"github.com/pangum/pangu/internal/internal/param"
-	"github.com/pangum/pangu/internal/runtime"
+	"github.com/pangum/core/internal/internal/constant"
+	"github.com/pangum/core/internal/internal/message"
+	"github.com/pangum/core/internal/internal/param"
+	"github.com/pangum/core/internal/runtime"
 	"go.uber.org/dig"
 )
 

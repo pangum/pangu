@@ -2,9 +2,9 @@ package core
 
 import (
 	"github.com/goexl/gox"
-	"github.com/pangum/pangu/internal/internal/builder"
-	"github.com/pangum/pangu/internal/internal/config"
-	"github.com/pangum/pangu/internal/internal/param"
+	"github.com/pangum/core/internal/internal/builder"
+	"github.com/pangum/core/internal/internal/config"
+	"github.com/pangum/core/internal/internal/param"
 )
 
 type Config struct {
