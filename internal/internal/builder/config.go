@@ -3,7 +3,7 @@ package builder
 import (
 	"github.com/goexl/gox"
 	"github.com/pangum/config"
-	"github.com/pangum/pangu/internal/callback"
+	"github.com/pangum/pangu/internal/internal/callback"
 	"github.com/pangum/pangu/internal/internal/kernel"
 	"github.com/pangum/pangu/internal/internal/param"
 )
