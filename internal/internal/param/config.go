@@ -54,6 +54,9 @@ func NewConfig(loaders ...config.Loader) *Config {
 func (c *Config) Get(key string) (value string) {
 	for _getter := range c.Getters {
 		value = _getter.Get(key)
+		if "" != value { // 及时回退
+			break
+		}
 	}
 
 	return
