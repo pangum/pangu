@@ -1,4 +1,4 @@
-package pangu
+package core
 
 import (
 	"github.com/pangum/core/internal/application"

@@ -1,4 +1,4 @@
-package pangu
+package core
 
 import (
 	"context"

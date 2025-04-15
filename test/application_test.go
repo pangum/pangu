@@ -7,5 +7,5 @@ import (
 )
 
 func TestApplication(t *testing.T) {
-	pangu.New().Name("test").Banner().Ascii("Test").Build().Get().Run(NewBootstrap)
+	core.New().Name("test").Banner().Ascii("Test").Build().Get().Run(NewBootstrap)
 }
