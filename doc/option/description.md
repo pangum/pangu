@@ -1,5 +1,0 @@
-# 描述
-
-可以配置应用程序显示帮助信息的描述信息
-
-<<< @/../example/option/description.go
