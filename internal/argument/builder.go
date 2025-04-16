@@ -1,7 +1,7 @@
 package argument
 
 import (
-	"github.com/pangum/core/internal/constraint"
+	"github.com/heluon/boot/internal/constraint"
 )
 
 var _ = New[int]

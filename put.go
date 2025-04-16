@@ -1,7 +1,7 @@
-package core
+package boot
 
 import (
-	"github.com/pangum/core/internal/container"
+	"github.com/heluon/boot/internal/container"
 )
 
 // Put 用于向框架注入一系列依赖

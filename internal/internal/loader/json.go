@@ -8,9 +8,9 @@ import (
 
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
-	"github.com/pangum/config"
-	"github.com/pangum/core/internal/internal/constant"
-	"github.com/pangum/core/internal/internal/loader/internal"
+	"github.com/heluon/boot/internal/internal/constant"
+	"github.com/heluon/boot/internal/internal/loader/internal"
+
 )
 
 var _ config.Loader = (*Json)(nil)

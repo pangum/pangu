@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/goexl/gox"
-	"github.com/pangum/core/internal/application"
-	"github.com/pangum/core/internal/constraint"
-	"github.com/pangum/core/internal/runtime"
+	"github.com/heluon/boot/internal/application"
+	"github.com/heluon/boot/internal/constraint"
+	"github.com/heluon/boot/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 

@@ -13,19 +13,18 @@ import (
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
-	"github.com/pangum/core/internal"
-	"github.com/pangum/core/internal/application"
-	"github.com/pangum/core/internal/core/internal/command"
-	"github.com/pangum/core/internal/core/internal/get"
-	"github.com/pangum/core/internal/internal/builder"
-	"github.com/pangum/core/internal/internal/config"
-	"github.com/pangum/core/internal/internal/constant"
-	"github.com/pangum/core/internal/internal/message"
-	"github.com/pangum/core/internal/internal/optional"
-	"github.com/pangum/core/internal/internal/param"
-	"github.com/pangum/core/internal/runtime"
+	"github.com/heluon/boot/internal"
+	"github.com/heluon/boot/internal/application"
+	"github.com/heluon/boot/internal/core/internal/command"
+	"github.com/heluon/boot/internal/core/internal/get"
+	"github.com/heluon/boot/internal/internal/config"
+	"github.com/heluon/boot/internal/internal/constant"
+	"github.com/heluon/boot/internal/internal/message"
+	"github.com/heluon/boot/internal/internal/optional"
+	"github.com/heluon/boot/internal/internal/param"
+	"github.com/heluon/boot/internal/runtime"
+	"github.com/heluon/di"
 	"github.com/urfave/cli/v2"
-	"go.uber.org/dig"
 )
 
 var shadow *Application
@@ -33,7 +32,7 @@ var shadow *Application
 type Application struct {
 	config    *config.Setup
 	params    *param.Application
-	container *dig.Container
+	container *di.Container
 	// 影子启动器，用来处理额外的命令或者参数，因为正常的启动器无法完成此操作，原因是
 	// 正常的启动器只提供一个Run方法来处理传数的参数，而此方法一旦执行，就意味着内部的命令也开始执行，而此时依赖关系还没有准备好
 	shadow *runtime.Shadow
@@ -56,7 +55,7 @@ func create(params *param.Application) func() {
 	return func() {
 		shadow = new(Application)
 		shadow.params = params
-		shadow.container = dig.New()
+		shadow.container = di.New().Validate().Get()
 		shadow.shadow = runtime.NewShadow()
 		shadow.logger = shadow.getDefaultLogger()
 		shadow.config = config.NewSetup(params.Config, &shadow.logger)
@@ -66,7 +65,7 @@ func create(params *param.Application) func() {
 		shadow.optional = optional.NewExternal()
 
 		// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
-		shadow.Dependency().Puts(
+		shadow.container.Dependency().Puts(
 			runtime.NewShell, // 注入运行壳
 			shadow.putConfig, // 注入配置
 			shadow.putSelf,   // 注入自身
@@ -76,16 +75,12 @@ func create(params *param.Application) func() {
 	}
 }
 
-func (a *Application) Dependency() *builder.Dependency {
-	return builder.NewDependency(a.container, a.params)
-}
-
 // Run 启动应用程序
 func (a *Application) Run(constructor runtime.Constructor) {
 	var err error
 	defer a.finally(&err)
 
-	dependency := a.Dependency()
+	dependency := a.container.Dependency()
 	if ese := a.params.Config.Environments.Set(); nil != ese { // 添加环境变量
 		err = ese
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
@@ -137,14 +132,14 @@ func (a *Application) finally(err *error) {
 }
 
 func (a *Application) addServe(serve application.Serve) error {
-	return a.Dependency().Get(func(command *command.Serve) {
+	return a.container.Dependency().Get(func(command *command.Serve) {
 		command.Add(serve)
 		a.stoppers = append(a.stoppers, serve)
 	}).Build().Build().Inject()
 }
 
 func (a *Application) addCommand(command application.Command) error {
-	return a.Dependency().Get(func(shell *runtime.Shell) {
+	return a.container.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Commands = append(shell.Commands, &cli.Command{
 			Name:        command.Name(),
 			Aliases:     command.Aliases(),
@@ -162,7 +157,7 @@ func (a *Application) addCommand(command application.Command) error {
 }
 
 func (a *Application) addArg(argument application.Argument) error {
-	return a.Dependency().Get(func(shell *runtime.Shell) {
+	return a.container.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Flags = append(shell.Flags, argument.Flag())
 	}).Build().Build().Inject()
 }
@@ -174,7 +169,7 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Startup)
 	defer cancel()
 
-	dependency := a.Dependency()
+	dependency := a.container.Dependency()
 	if sle := dependency.Get(a.setLogger).Build().Build().Inject(); nil != sle { // 为执行壳设置日志器
 		err = sle
 	} else if lce := dependency.Get(a.loadConfig).Build().Build().Inject(); nil != lce { // 加载内置配置
@@ -232,7 +227,7 @@ func (a *Application) createApp() (err error) {
 	cli.HelpFlag = help
 
 	// 配置应用
-	err = a.Dependency().Get(a.setupApp).Build().Build().Inject()
+	err = a.container.Dependency().Get(a.setupApp).Build().Build().Inject()
 
 	return
 }
@@ -250,7 +245,7 @@ func (a *Application) addCommands(get get.Command) (err error) {
 }
 
 func (a *Application) addDependency(constructor runtime.Constructor) (err error) {
-	dependency := a.Dependency().Invalidate()
+	dependency := a.container.Dependency().Invalidate()
 	if ve := a.verify(constructor); nil != ve {
 		err = ve
 	} else if ple := a.putLogger(); nil != ple {
@@ -303,7 +298,7 @@ func (a *Application) setupApp(shell *runtime.Shell) {
 }
 
 func (a *Application) versionPrinter(ctx *cli.Context) {
-	_ = a.Dependency().Get(func(info *command.Info) error {
+	_ = a.container.Dependency().Get(func(info *command.Info) error {
 		return info.Run(runtime.NewContext(ctx))
 	}).Build().Build().Inject()
 }
@@ -317,7 +312,7 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (err error) {
-	dependency := a.Dependency()
+	dependency := a.container.Dependency()
 	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); !a.optional.Logger || nil != ge {
 		err = dependency.Put(a.supplyLogger).Build().Build().Inject() // !当出错或未成功设置时，重置日志器
 	}
@@ -346,7 +341,7 @@ func (a *Application) supplyLogger() log.Logger {
 }
 
 func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
-	if a.params.Verify {
+	if a.params.Validate {
 		return
 	}
 

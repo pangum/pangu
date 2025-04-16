@@ -1,8 +1,8 @@
 package get
 
 import (
-	"github.com/pangum/core/internal/container"
-	"github.com/pangum/core/internal/core/internal/command"
+	"github.com/heluon/boot/internal/container"
+	"github.com/heluon/boot/internal/core/internal/command"
 )
 
 type Command struct {

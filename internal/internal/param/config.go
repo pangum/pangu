@@ -3,10 +3,10 @@ package param
 import (
 	"github.com/goexl/env"
 	"github.com/goexl/gox"
+	"github.com/heluon/boot/internal/internal/callback"
+	"github.com/heluon/boot/internal/internal/kernel"
+	"github.com/heluon/boot/internal/internal/param/internal/getter"
 	"github.com/pangum/config"
-	"github.com/pangum/core/internal/internal/callback"
-	"github.com/pangum/core/internal/internal/kernel"
-	"github.com/pangum/core/internal/internal/param/internal/getter"
 )
 
 type Config struct {

@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/pangum/core/internal/runtime"
+	"github.com/heluon/boot/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
 

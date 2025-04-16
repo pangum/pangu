@@ -1,9 +1,9 @@
 package param
 
 import (
-	"github.com/pangum/core/internal/internal/constant"
-	"github.com/pangum/core/internal/internal/kernel"
-	"github.com/pangum/core/internal/internal/loader"
+	"github.com/heluon/boot/internal/internal/constant"
+	"github.com/heluon/boot/internal/internal/kernel"
+	"github.com/heluon/boot/internal/internal/loader"
 )
 
 type Application struct {
@@ -21,7 +21,7 @@ type Application struct {
 	// 合法性验证，包括
 	// 启动器构造方法合法性验证
 	// 构造方法合法性验证
-	Verify bool
+	Validate bool
 	// 应用描述
 	Description string
 	// 使用方式
@@ -46,7 +46,7 @@ func NewApplication() *Application {
 		Code:    newCode(),
 		Timeout: NewTimeout(),
 
-		Verify:      true,
+		Validate:    true,
 		Description: "一个使用github.com/pangum/pangu构建的应用程序，可以使用应用程序提供的命令来使用本程序",
 		Usage:       "一个使用github.com/pangum/pangu构建的应用程序",
 

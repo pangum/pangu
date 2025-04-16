@@ -7,9 +7,9 @@ import (
 
 	"github.com/goexl/gox/field"
 	"github.com/goexl/log"
-	"github.com/pangum/core/internal/application"
-	"github.com/pangum/core/internal/command"
-	"github.com/pangum/core/internal/internal/constant"
+	"github.com/heluon/boot/internal/application"
+	"github.com/heluon/boot/internal/command"
+	"github.com/heluon/boot/internal/internal/constant"
 )
 
 var _ application.Command = (*Serve)(nil)

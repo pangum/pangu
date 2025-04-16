@@ -1,7 +1,7 @@
 package builder
 
 import (
-	"github.com/pangum/core/internal/internal/param"
+	"github.com/heluon/boot/internal/internal/param"
 )
 
 type Help struct {

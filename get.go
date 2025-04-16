@@ -1,7 +1,7 @@
-package core
+package boot
 
 import (
-	"github.com/pangum/core/internal/container"
+	"github.com/heluon/boot/internal/container"
 )
 
 // Get 用于向框架获取一系列依赖

@@ -1,4 +1,4 @@
-module github.com/pangum/core
+module github.com/heluon/boot
 
 go 1.24
 

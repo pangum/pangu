@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 
-	"github.com/pangum/core/internal/application"
+	"github.com/heluon/boot/internal/application"
 )
 
 var _ = New

@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/pangum/core/internal/internal/asset"
+	"github.com/heluon/boot/internal/internal/asset"
 )
 
 type Help struct {

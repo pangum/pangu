@@ -9,8 +9,8 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/pangum/core/internal/internal/asset"
-	"github.com/pangum/core/internal/internal/banner"
+	"github.com/heluon/boot/internal/internal/asset"
+	"github.com/heluon/boot/internal/internal/banner"
 	"github.com/zs5460/art"
 )
 

@@ -1,11 +1,11 @@
 package builder
 
 import (
-	"github.com/pangum/core/internal"
-	"github.com/pangum/core/internal/builder/internal/function"
-	"github.com/pangum/core/internal/core"
-	"github.com/pangum/core/internal/internal/kernel"
-	"github.com/pangum/core/internal/internal/param"
+	"github.com/heluon/boot/internal"
+	"github.com/heluon/boot/internal/builder/internal/function"
+	"github.com/heluon/boot/internal/core"
+	"github.com/heluon/boot/internal/internal/kernel"
+	"github.com/heluon/boot/internal/internal/param"
 )
 
 var shadow *Application
@@ -37,9 +37,15 @@ func newApplication() {
 	return
 }
 
-func (a *Application) Verify() *Application {
+func (a *Application) Validate() *Application {
 	return a.set(func() {
-		a.params.Verify = true
+		a.params.Validate = true
+	})
+}
+
+func (a *Application) Invalidate() *Application {
+	return a.set(func() {
+		a.params.Validate = false
 	})
 }
 
