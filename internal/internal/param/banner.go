@@ -21,7 +21,7 @@ type Banner struct {
 
 func newBanner() *Banner {
 	return &Banner{
-		Data: "Pangu",
+		Data: "Heluon",
 		Type: banner.TypeAscii,
 	}
 }

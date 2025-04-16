@@ -2,11 +2,11 @@ package get
 
 import (
 	"github.com/goexl/log"
-	"go.uber.org/dig"
+	"github.com/heluon/di"
 )
 
 type Logger struct {
-	dig.In
+	di.Get
 
 	Optional log.Logger `optional:"true"`
 }

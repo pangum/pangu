@@ -1,3 +1,3 @@
-package function
+package internal
 
 type Set func()
