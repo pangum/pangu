@@ -3,7 +3,7 @@ module github.com/pangum/pangu
 go 1.24
 
 require (
-	github.com/goexl/gfx v0.2.5
+	github.com/goexl/gfx v0.2.8
 	github.com/goexl/gox v1.9.2
 	github.com/pangum/config v0.1.0
 	github.com/urfave/cli/v2 v2.27.6
