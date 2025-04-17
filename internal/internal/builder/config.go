@@ -5,6 +5,7 @@ import (
 	"github.com/harluo/boot/internal/internal/callback"
 	"github.com/harluo/boot/internal/internal/kernel"
 	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/config"
 )
 
 type Config[T any] struct {

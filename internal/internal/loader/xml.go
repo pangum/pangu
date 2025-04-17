@@ -10,7 +10,7 @@ import (
 	"github.com/goexl/gox/field"
 	"github.com/harluo/boot/internal/internal/constant"
 	"github.com/harluo/boot/internal/runtime"
-	"github.com/pangum/config"
+	"github.com/harluo/config"
 )
 
 var _ config.Loader = (*Xml)(nil)

@@ -10,6 +10,7 @@ import (
 	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/internal/command"
 	"github.com/harluo/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/param"
 )
 
 var _ application.Command = (*Serve)(nil)
@@ -25,7 +26,14 @@ type Serve struct {
 
 func NewServe(logger log.Logger) *Serve {
 	return &Serve{
-		Default: command.New(constant.CommandServe).Usage("启动服务").Aliases("s").Build(),
+		Default: command.NewDefault(&param.Command{
+			Name:  constant.CommandServe,
+			Usage: `启动服务`,
+			Aliases: []string{
+				`s`,
+				`srv`,
+			},
+		}),
 
 		serves:  make([]application.Serve, 0, 1),
 		logger:  logger,

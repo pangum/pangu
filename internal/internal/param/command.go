@@ -8,3 +8,9 @@ type Command struct {
 	Category    string
 	Hidden      bool
 }
+
+func NewCommand(name string) *Command {
+	return &Command{
+		Name: name,
+	}
+}

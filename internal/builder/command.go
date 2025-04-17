@@ -2,6 +2,7 @@ package builder
 
 import (
 	"github.com/harluo/boot/internal/builder/internal/function"
+	"github.com/harluo/boot/internal/internal/command"
 	"github.com/harluo/boot/internal/internal/param"
 )
 
@@ -9,8 +10,14 @@ type Command struct {
 	params *param.Command
 }
 
-func (c *Command) Build() *param.Command {
-	return c.params
+func NewCommand(name string) *Command {
+	return &Command{
+		params: param.NewCommand(name),
+	}
+}
+
+func (c *Command) Build() *command.Default {
+	return command.NewDefault(c.params)
 }
 
 func (c *Command) Aliases(required string, optionals ...string) *Command {

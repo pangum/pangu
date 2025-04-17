@@ -7,15 +7,13 @@ import (
 	"github.com/harluo/boot/internal/internal/param"
 )
 
-var _ = New
-
 // Default 命令基础
 // 可以通过匿名继承的方式快速创建命令
 type Default struct {
 	params *param.Command
 }
 
-func New(params *param.Command) *Default {
+func NewDefault(params *param.Command) *Default {
 	return &Default{
 		params: params,
 	}

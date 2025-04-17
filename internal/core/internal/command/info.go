@@ -8,6 +8,8 @@ import (
 	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/internal/command"
 	"github.com/harluo/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/param"
+	"github.com/olekukonko/tablewriter"
 )
 
 var _ application.Command = (*Info)(nil)
@@ -19,7 +21,14 @@ type Info struct {
 
 func NewInfo() *Info {
 	return &Info{
-		Default: command.New(constant.CommandInfo).Usage(`打印应用程序信息`).Aliases(`i`, `information`).Build(),
+		Default: command.NewDefault(&param.Command{
+			Name:  constant.CommandInfo,
+			Usage: `打印应用程序信息`,
+			Aliases: []string{
+				`i`,
+				`information`,
+			},
+		}),
 	}
 }
 

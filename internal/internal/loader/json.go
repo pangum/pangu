@@ -10,6 +10,7 @@ import (
 	"github.com/goexl/gox/field"
 	"github.com/harluo/boot/internal/internal/constant"
 	"github.com/harluo/boot/internal/internal/loader/internal"
+	"github.com/harluo/config"
 )
 
 var _ config.Loader = (*Json)(nil)

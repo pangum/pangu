@@ -12,7 +12,7 @@ import (
 	"github.com/harluo/boot/internal/internal/config/internal/core/internal"
 	"github.com/harluo/boot/internal/internal/param"
 	"github.com/harluo/boot/internal/runtime"
-	"github.com/pangum/config"
+	"github.com/harluo/config"
 )
 
 type Loader struct {

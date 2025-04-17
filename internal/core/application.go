@@ -15,7 +15,6 @@ import (
 	"github.com/goexl/log"
 	"github.com/harluo/boot/internal"
 	"github.com/harluo/boot/internal/application"
-	internal2 "github.com/harluo/boot/internal/core/internal"
 	"github.com/harluo/boot/internal/core/internal/command"
 	"github.com/harluo/boot/internal/core/internal/get"
 	"github.com/harluo/boot/internal/internal/config"
@@ -46,7 +45,7 @@ type Application struct {
 }
 
 func New(param *param.Application) (application *Application) {
-	internal2.Once.Do(create(param))
+	once.Do(create(param))
 	application = shadow
 
 	return

@@ -10,6 +10,7 @@ import (
 	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/internal/command"
 	"github.com/harluo/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/param"
 )
 
 var _ application.Command = (*Version)(nil)
@@ -21,17 +22,24 @@ type Version struct {
 
 func NewVersion() *Version {
 	return &Version{
-		Default: command.New(constant.CommandVersion).Usage("打印应用程序版本").Aliases("v", "ver").Build(),
+		Default: command.NewDefault(&param.Command{
+			Name:  constant.CommandVersion,
+			Usage: `打印应用程序版本`,
+			Aliases: []string{
+				`v`,
+				`ver`,
+			},
+		}),
 	}
 }
 
 func (v *Version) Run(_ context.Context) (err error) {
-	builder := new(strings.Builder)
-	builder.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
-	builder.WriteString(fmt.Sprintf("Version: %s\n", internal.Version))
-	builder.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
+	version := new(strings.Builder)
+	version.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
+	version.WriteString(fmt.Sprintf("Version: %s\n", internal.Version))
+	version.WriteString(fmt.Sprintf("%s\n", strings.Repeat(`-`, 120)))
 
-	fmt.Print(builder.String())
+	fmt.Print(version.String())
 	// 刷新缓存，保证以上信息是一起被输出
 	err = os.Stdout.Sync()
 
