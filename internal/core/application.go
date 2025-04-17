@@ -162,7 +162,7 @@ func (a *Application) addArg(argument application.Argument) error {
 	}).Build().Build().Inject()
 }
 
-func (a *Application) boot(bootstrap Bootstrap) (err error) {
+func (a *Application) boot(starter Starter) (err error) {
 	// 优雅退出
 	go a.graceful(&err)
 
@@ -176,9 +176,9 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 		err = lce
 	} else if bpe := a.params.Banner.Print(); nil != bpe { // 打印标志信息
 		err = bpe
-	} else if bse := bootstrap.Startup(a); nil != bse { // 加载用户启动器并做好配置
+	} else if bse := starter.Startup(a); nil != bse { // 加载用户启动器并做好配置
 		err = bse
-	} else if bbe := bootstrap.Before(canceled); nil != bbe { // 执行生命周期方法
+	} else if bbe := starter.Before(canceled); nil != bbe { // 执行生命周期方法
 		err = bbe
 	} else if cbe := a.before(canceled); nil != cbe { // 执行命令生命周期方法
 		err = cbe
@@ -186,7 +186,7 @@ func (a *Application) boot(bootstrap Bootstrap) (err error) {
 		err = re
 	} else if cae := a.after(canceled); nil != cae { // 执行命令生命周期方法
 		err = cae
-	} else if bae := bootstrap.After(canceled); nil != bae { // 执行生命周期方法
+	} else if bae := starter.After(canceled); nil != bae { // 执行生命周期方法
 		err = bae
 	}
 
@@ -351,7 +351,7 @@ func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
 	} else if 0 == typ.NumIn() { // 构造方法必须有依赖项
 		name := runtime.FuncForPC(reflect.ValueOf(bootstrap).Pointer()).Name()
 		err = exception.New().Message(message.BootstrapMustHasDependencies).Field(field.New("bootstrap", name)).Build()
-	} else if 1 != typ.NumOut() || reflect.TypeOf((*Bootstrap)(nil)).Elem() != typ.Out(constant.IndexFirst) {
+	} else if 1 != typ.NumOut() || reflect.TypeOf((*Starter)(nil)).Elem() != typ.Out(constant.IndexFirst) {
 		// 只能返回一个类型为Bootstrap返回值
 		err = exception.New().Message(message.BootstrapMustReturnBootstrap).Build()
 	}
