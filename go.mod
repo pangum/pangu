@@ -1,4 +1,4 @@
-module github.com/heluon/boot
+module github.com/harluo/boot
 
 go 1.24
 
