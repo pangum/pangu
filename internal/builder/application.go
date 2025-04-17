@@ -1,11 +1,12 @@
 package builder
 
 import (
-	"github.com/heluon/boot/internal"
-	internal2 "github.com/heluon/boot/internal/builder/internal"
-	"github.com/heluon/boot/internal/core"
-	"github.com/heluon/boot/internal/internal/kernel"
-	"github.com/heluon/boot/internal/internal/param"
+	"github.com/harluo/boot/internal"
+	"github.com/harluo/boot/internal/builder/internal/function"
+	"github.com/harluo/boot/internal/builder/internal/once"
+	"github.com/harluo/boot/internal/core"
+	"github.com/harluo/boot/internal/internal/kernel"
+	"github.com/harluo/boot/internal/internal/param"
 )
 
 var shadow *Application
@@ -19,7 +20,7 @@ type Application struct {
 
 // NewApplication !基于单例实现，保证每次只生成一个可配置项
 func NewApplication() (application *Application) {
-	internal2.Once.Do(newApplication)
+	once.Application.Do(newApplication)
 	application = shadow
 
 	return
@@ -105,7 +106,7 @@ func (a *Application) Get() *core.Application {
 	return core.New(a.params)
 }
 
-func (a *Application) set(set internal2.Set) (application *Application) {
+func (a *Application) set(set function.Set) (application *Application) {
 	set()
 	application = a
 

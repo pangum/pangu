@@ -3,7 +3,7 @@ package builder
 import (
 	"time"
 
-	"github.com/heluon/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/param"
 )
 
 type Timeout struct {

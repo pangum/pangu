@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/heluon/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/constant"
 )
 
 type Tag struct {

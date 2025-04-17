@@ -3,8 +3,8 @@ package internal
 import (
 	"runtime"
 
-	"github.com/heluon/boot/internal/internal/constant"
-	"github.com/heluon/boot/internal/internal/os"
+	"github.com/harluo/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/os"
 )
 
 var (

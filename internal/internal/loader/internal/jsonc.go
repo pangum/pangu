@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/heluon/boot/internal/internal/loader/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/loader/internal/internal/constant"
 )
 
 type Jsonc struct {

@@ -1,7 +1,7 @@
 package param
 
 import (
-	"github.com/heluon/boot/internal/internal/asset"
+	"github.com/harluo/boot/internal/internal/asset"
 )
 
 type Help struct {

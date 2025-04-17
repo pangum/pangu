@@ -1,9 +1,9 @@
 package param
 
 import (
-	"github.com/heluon/boot/internal/internal/constant"
-	"github.com/heluon/boot/internal/internal/kernel"
-	"github.com/heluon/boot/internal/internal/loader"
+	"github.com/harluo/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal/internal/kernel"
+	"github.com/harluo/boot/internal/internal/loader"
 )
 
 type Application struct {
@@ -47,8 +47,8 @@ func NewApplication() *Application {
 		Timeout: NewTimeout(),
 
 		Validate:    true,
-		Description: "一个使用github.com/pangum/pangu构建的应用程序，可以使用应用程序提供的命令来使用本程序",
-		Usage:       "一个使用github.com/pangum/pangu构建的应用程序",
+		Description: "一个使用github.com/harluo/boot构建的应用程序，可以使用应用程序提供的命令来使用本程序",
+		Usage:       "一个使用github.com/harluo/boot构建的应用程序",
 
 		Copyright: constant.Copyright,
 		Authors: kernel.Authors{{

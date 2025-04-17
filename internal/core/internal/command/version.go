@@ -6,10 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/heluon/boot/internal"
-	"github.com/heluon/boot/internal/application"
-	"github.com/heluon/boot/internal/command"
-	"github.com/heluon/boot/internal/internal/constant"
+	"github.com/harluo/boot/internal"
+	"github.com/harluo/boot/internal/application"
+	"github.com/harluo/boot/internal/internal/command"
+	"github.com/harluo/boot/internal/internal/constant"
 )
 
 var _ application.Command = (*Version)(nil)

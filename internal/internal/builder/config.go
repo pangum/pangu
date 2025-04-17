@@ -2,10 +2,9 @@ package builder
 
 import (
 	"github.com/goexl/gox"
-	"github.com/heluon/boot/internal/internal/callback"
-	"github.com/heluon/boot/internal/internal/kernel"
-	"github.com/heluon/boot/internal/internal/param"
-
+	"github.com/harluo/boot/internal/internal/callback"
+	"github.com/harluo/boot/internal/internal/kernel"
+	"github.com/harluo/boot/internal/internal/param"
 )
 
 type Config[T any] struct {

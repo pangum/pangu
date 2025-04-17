@@ -2,7 +2,7 @@ package get
 
 import (
 	"github.com/goexl/log"
-	"github.com/heluon/di"
+	"github.com/harluo/di"
 )
 
 type Logger struct {

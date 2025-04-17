@@ -9,8 +9,8 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/heluon/boot/internal/internal/asset"
-	"github.com/heluon/boot/internal/internal/banner"
+	"github.com/harluo/boot/internal/internal/asset"
+	"github.com/harluo/boot/internal/internal/banner"
 	"github.com/zs5460/art"
 )
 
@@ -21,7 +21,7 @@ type Banner struct {
 
 func newBanner() *Banner {
 	return &Banner{
-		Data: "Heluon",
+		Data: "harluo",
 		Type: banner.TypeAscii,
 	}
 }

@@ -1,8 +1,8 @@
 package builder
 
 import (
-	"github.com/heluon/boot/internal/internal/builder"
-	"github.com/heluon/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/builder"
+	"github.com/harluo/boot/internal/internal/param"
 )
 
 // Config 配置构建器，编写非运行时的配置项

@@ -1,7 +1,7 @@
 package argument
 
 import (
-	"github.com/heluon/boot/internal/constraint"
+	"github.com/harluo/boot/internal/constraint"
 )
 
 var _ = New[int]
