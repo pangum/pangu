@@ -5,7 +5,7 @@ import (
 	"github.com/harluo/boot/internal/internal/callback"
 	"github.com/harluo/boot/internal/internal/kernel"
 	"github.com/harluo/boot/internal/internal/param"
-	"github.com/harluo/config"
+	kernel2 "github.com/harluo/config/internal/kernel"
 )
 
 type Config[T any] struct {
@@ -56,7 +56,7 @@ func (c *Config[T]) Environment(key string, value string) (t *T) {
 	return
 }
 
-func (c *Config[T]) Loader(loader config.Loader, loaders ...config.Loader) (t *T) {
+func (c *Config[T]) Loader(loader kernel2.Loader, loaders ...kernel2.Loader) (t *T) {
 	c.param.Loaders = append(c.param.Loaders, loader)
 	c.param.Loaders = append(c.param.Loaders, loaders...)
 	t = c.from

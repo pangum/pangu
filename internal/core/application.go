@@ -17,7 +17,6 @@ import (
 	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/core/internal/command"
 	"github.com/harluo/boot/internal/core/internal/get"
-	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/constant"
 	"github.com/harluo/boot/internal/internal/message"
 	"github.com/harluo/boot/internal/internal/optional"
@@ -30,7 +29,6 @@ import (
 var shadow *Application
 
 type Application struct {
-	config    *config.Setup
 	params    *param.Application
 	container *di.Container
 	// 影子启动器，用来处理额外的命令或者参数，因为正常的启动器无法完成此操作，原因是
@@ -58,7 +56,6 @@ func create(params *param.Application) func() {
 		shadow.container = di.New().Validate().Get()
 		shadow.shadow = runtime.NewShadow()
 		shadow.logger = shadow.getDefaultLogger()
-		shadow.config = config.NewSetup(params.Config, &shadow.logger)
 		shadow.stoppers = make([]application.Stopper, 0)
 
 		shadow.lifecycles = make([]application.Lifecycle, 0)
@@ -67,7 +64,6 @@ func create(params *param.Application) func() {
 		// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
 		shadow.container.Dependency().Puts(
 			runtime.NewShell, // 注入运行壳
-			shadow.putConfig, // 注入配置
 			shadow.putSelf,   // 注入自身
 		).Get(
 			shadow.bind, // 绑定参数和命令到内部变量或者命令上
@@ -81,9 +77,7 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	defer a.finally(&err)
 
 	dependency := a.container.Dependency()
-	if ese := a.params.Config.Environments.Set(); nil != ese { // 添加环境变量
-		err = ese
-	} else if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
+	if ape := a.addDependency(constructor); nil != ape { // 添加内置的依赖
 		err = ape
 	} else if cae := a.createApp(); nil != cae { // 创建应用
 		err = cae
@@ -103,7 +97,7 @@ func (a *Application) Add(components ...any) (err error) {
 		case application.Command:
 			err = a.addCommand(converted)
 		case application.Argument:
-			err = a.addArg(converted)
+			err = a.addArgument(converted)
 		default:
 			typ := field.New("type", reflect.TypeOf(component).String())
 			err = exception.New().Message(message.ComponentNotSupport).Field(typ).Build()
@@ -156,7 +150,7 @@ func (a *Application) addCommand(command application.Command) error {
 	}).Build().Build().Inject()
 }
 
-func (a *Application) addArg(argument application.Argument) error {
+func (a *Application) addArgument(argument application.Argument) error {
 	return a.container.Dependency().Get(func(shell *runtime.Shell) {
 		shell.Flags = append(shell.Flags, argument.Flag())
 	}).Build().Build().Inject()
@@ -172,8 +166,6 @@ func (a *Application) boot(starter Starter) (err error) {
 	dependency := a.container.Dependency()
 	if sle := dependency.Get(a.setLogger).Build().Build().Inject(); nil != sle { // 为执行壳设置日志器
 		err = sle
-	} else if lce := dependency.Get(a.loadConfig).Build().Build().Inject(); nil != lce { // 加载内置配置
-		err = lce
 	} else if bpe := a.params.Banner.Print(); nil != bpe { // 打印标志信息
 		err = bpe
 	} else if bse := starter.Startup(a); nil != bse { // 加载用户启动器并做好配置
@@ -264,8 +256,6 @@ func (a *Application) addDependency(constructor runtime.Constructor) (err error)
 }
 
 func (a *Application) bind(shell *runtime.Shell) (err error) {
-	// 接收配置文件路径参数
-	a.config.Bind(shell, a.shadow)
 	// 组装影子应用执行的参数
 	originals := a.args()
 	args := make([]string, 0, 3)
@@ -301,10 +291,6 @@ func (a *Application) versionPrinter(ctx *cli.Context) {
 	_ = a.container.Dependency().Get(func(info *command.Info) error {
 		return info.Run(runtime.NewContext(ctx))
 	}).Build().Build().Inject()
-}
-
-func (a *Application) putConfig() *Config {
-	return NewConfig(a.config, a.params.Config)
 }
 
 func (a *Application) putSelf() *Application {
@@ -383,14 +369,6 @@ func (a *Application) graceful(err *error) {
 
 func (a *Application) setLogger(shell *runtime.Shell) {
 	shell.Logger(a.logger)
-}
-
-func (a *Application) loadConfig(config *Config) error {
-	return config.Build().Get(&struct { // 匿名结构体，不增加定义，只使用一次
-		Pangu *param.Application
-	}{
-		Pangu: a.params,
-	})
 }
 
 func (a *Application) before(ctx context.Context) (err error) {

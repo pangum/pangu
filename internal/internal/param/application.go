@@ -1,14 +1,16 @@
 package param
 
 import (
+	"sync"
+
 	"github.com/harluo/boot/internal/internal/constant"
 	"github.com/harluo/boot/internal/internal/kernel"
-	"github.com/harluo/boot/internal/internal/loader"
 )
 
+var once sync.Once
+var shadow = new(Application)
+
 type Application struct {
-	// 配置
-	Config *Config
 	// 帮助
 	Help *Help
 	// 徽标
@@ -35,12 +37,17 @@ type Application struct {
 	Metadata map[string]any
 }
 
-func NewApplication() *Application {
+func NewApplication() (application *Application) {
+	once.Do(func() {
+		shadow = newApplication()
+	})
+	application = shadow
+
+	return
+}
+
+func newApplication() *Application {
 	return &Application{
-		Config: NewConfig(
-			loader.NewJson(),
-			loader.NewXml(),
-		),
 		Help:    newHelp(),
 		Banner:  newBanner(),
 		Code:    newCode(),

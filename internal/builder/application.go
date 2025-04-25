@@ -94,10 +94,6 @@ func (a *Application) Banner() *Banner {
 	return a.banner
 }
 
-func (a *Application) Config() *Config {
-	return newConfig(a)
-}
-
 func (a *Application) Help() *Help {
 	return a.help
 }
