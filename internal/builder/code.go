@@ -9,7 +9,7 @@ type Code struct {
 	application *Application
 }
 
-func NewCode(application *Application) (code *Code) {
+func newCode(application *Application) (code *Code) {
 	code = new(Code)
 	code.params = application.params.Code
 	code.application = application

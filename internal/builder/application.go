@@ -15,6 +15,7 @@ type Application struct {
 	params  *config.Application
 	timeout *Timeout
 	banner  *Banner
+	code    *Code
 	help    *Help
 }
 
@@ -34,6 +35,7 @@ func newApplication() {
 	shadow.timeout = newTimeout(shadow)
 	shadow.banner = newBanner(shadow)
 	shadow.help = newHelp(shadow)
+	shadow.code = newCode(shadow)
 
 	return
 }
@@ -92,6 +94,10 @@ func (a *Application) Timeout() *Timeout {
 
 func (a *Application) Banner() *Banner {
 	return a.banner
+}
+
+func (a *Application) Code() *Code {
+	return a.code
 }
 
 func (a *Application) Help() *Help {
