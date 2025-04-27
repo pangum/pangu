@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 
+	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/internal/kernel"
 )
 
@@ -95,6 +96,22 @@ func (t *Typer) Environments() (value []string) {
 		value = environments.Environments()
 	} else if envs, esk := t.value.(kernel.Envs); esk {
 		value = envs.Envs()
+	}
+
+	return
+}
+
+func (t *Typer) Arguments() (value []application.Argument) {
+	if environments, alk := t.value.(kernel.Arguments); alk {
+		value = environments.Arguments()
+	}
+
+	return
+}
+
+func (t *Typer) Subcommands() (value []application.Command) {
+	if environments, slk := t.value.(kernel.Subcommands); slk {
+		value = environments.Subcommands()
 	}
 
 	return

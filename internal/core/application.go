@@ -21,7 +21,6 @@ import (
 	"github.com/harluo/boot/internal/core/internal/message"
 	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/constant"
-	"github.com/harluo/boot/internal/internal/kernel"
 	"github.com/harluo/boot/internal/runtime"
 	"github.com/harluo/di"
 	"github.com/urfave/cli/v2"
@@ -123,17 +122,13 @@ func (a *Application) convertCommand(command application.Command) (appended *cli
 	appended.Description = typer.Description()
 	appended.Category = typer.Category()
 	appended.Hidden = typer.Hidden()
+	for _, subcommand := range typer.Subcommands() {
+		appended.Subcommands = append(appended.Subcommands, a.convertCommand(subcommand))
+	}
+	for _, argument := range typer.Arguments() {
+		appended.Flags = append(appended.Flags, core.NewArgument(argument).Flag())
+	}
 	appended.Action = a.action(command)
-	if converted, ok := command.(kernel.Subcommands); ok {
-		for _, subcommand := range converted.Subcommands() {
-			appended.Subcommands = append(appended.Subcommands, a.convertCommand(subcommand))
-		}
-	}
-	if converted, ok := command.(kernel.Arguments); ok {
-		for _, argument := range converted.Arguments() {
-			appended.Flags = append(appended.Flags, core.NewArgument(argument).Flag())
-		}
-	}
 
 	// 生命周期方法
 	if converted, ok := command.(application.Before); ok {
