@@ -1,4 +1,4 @@
-package kernel
+package core
 
 type Environment struct {
 	Key   string

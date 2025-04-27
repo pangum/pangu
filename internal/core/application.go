@@ -18,9 +18,10 @@ import (
 	"github.com/harluo/boot/internal/core/internal/command"
 	"github.com/harluo/boot/internal/core/internal/core"
 	"github.com/harluo/boot/internal/core/internal/get"
+	"github.com/harluo/boot/internal/core/internal/message"
 	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/constant"
-	"github.com/harluo/boot/internal/internal/message"
+	"github.com/harluo/boot/internal/internal/kernel"
 	"github.com/harluo/boot/internal/runtime"
 	"github.com/harluo/di"
 	"github.com/urfave/cli/v2"
@@ -106,18 +107,26 @@ func (a *Application) finally(err *error) {
 
 func (a *Application) addCommand(command application.Command) error {
 	return a.container.Dependency().Get(func(shell *core.Shell) {
-		shell.Commands = append(shell.Commands, &cli.Command{
-			Name:        command.Name(),
-			Aliases:     command.Aliases(),
-			Usage:       command.Usage(),
-			Description: command.Description(),
-			Subcommands: command.Subcommands().Cli(),
-			Category:    command.Category(),
-			Flags:       command.Arguments().Flags(),
-			Hidden:      command.Hidden(),
-			Action:      a.action(command),
-		})
+		appended := new(cli.Command)
+		appended.Name = command.Name()
+		appended.Action = a.action(command)
 
+		// 通过反射设置非必须参数，减少编码成本
+		typer := core.NewTyper(command)
+		appended.Aliases = typer.Aliases()
+		appended.Usage = typer.Usage()
+		appended.Description = typer.Description()
+		appended.Category = typer.Category()
+		appended.Hidden = typer.Hidden()
+		appended.Action = a.action(command)
+		if converted, ok := command.(kernel.Subcommands); ok {
+			appended.Subcommands = converted.Subcommands().Cli()
+		}
+		if converted, ok := command.(kernel.Arguments); ok {
+			appended.Flags = converted.Arguments().Flags()
+		}
+
+		// 生命周期方法
 		if converted, ok := command.(application.Before); ok {
 			a.befores = append(a.befores, converted)
 		}
@@ -133,7 +142,7 @@ func (a *Application) addCommand(command application.Command) error {
 func (a *Application) addArguments(get get.Arguments) error {
 	return a.container.Dependency().Get(func(shell *core.Shell) {
 		for _, argument := range get.Arguments {
-			shell.Flags = append(shell.Flags, argument.Flag())
+			shell.Flags = append(shell.Flags, core.NewArgument(argument).Flag())
 		}
 	}).Build().Build().Inject()
 }
@@ -201,11 +210,7 @@ func (a *Application) startup(ctx context.Context) func(Starter) error {
 }
 
 func (a *Application) run(shell *core.Shell) error {
-	return shell.Run(a.args())
-}
-
-func (a *Application) args() []string {
-	return os.Args
+	return shell.Run(os.Args)
 }
 
 func (a *Application) createShell() (err error) {
@@ -400,14 +405,4 @@ func (a *Application) afterStater(ctx context.Context, stater Starter) (err erro
 	}
 
 	return
-}
-
-func (a *Application) isConfigSpaceArgument(argument string) bool {
-	return constant.ConfigName == argument || constant.ConfigC == argument || constant.ConfigConf == argument
-}
-
-func (a *Application) isConfigEqualArgument(argument string) bool {
-	return strings.HasPrefix(argument, fmt.Sprintf("%s=", constant.ConfigName)) ||
-		strings.HasPrefix(argument, fmt.Sprintf("%s=", constant.ConfigC)) ||
-		strings.HasPrefix(argument, fmt.Sprintf("%s=", constant.ConfigConf))
 }

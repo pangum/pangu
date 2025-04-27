@@ -1,4 +1,4 @@
-package kernel
+package core
 
 type Author struct {
 	Name  string

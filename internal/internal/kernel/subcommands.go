@@ -4,6 +4,6 @@ import (
 	"github.com/harluo/boot/internal/application"
 )
 
-type Arguments interface {
-	Arguments() application.Arguments
+type Subcommands interface {
+	Subcommands() application.Commands
 }
