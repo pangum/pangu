@@ -40,9 +40,11 @@ func (t *Typer) Text() (text string) {
 	return
 }
 
-func (t *Typer) Description() (description string) {
-	if convert, ok := t.value.(kernel.Description); ok {
-		description = convert.Description()
+func (t *Typer) Description() (value string) {
+	if description, dlk := t.value.(kernel.Description); dlk {
+		value = description.Description()
+	} else if desc, dsk := t.value.(kernel.Desc); dsk {
+		value = desc.Desc()
 	}
 
 	return
@@ -88,9 +90,11 @@ func (t *Typer) Default() (defaults any) {
 	return
 }
 
-func (t *Typer) Environments() (environments []string) {
-	if convert, ok := t.value.(kernel.Environments); ok {
-		environments = convert.Environments()
+func (t *Typer) Environments() (value []string) {
+	if environments, elk := t.value.(kernel.Environments); elk {
+		value = environments.Environments()
+	} else if envs, esk := t.value.(kernel.Envs); esk {
+		value = envs.Envs()
 	}
 
 	return
