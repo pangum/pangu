@@ -3,11 +3,11 @@ package builder
 import (
 	"time"
 
-	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/config"
 )
 
 type Timeout struct {
-	params      *param.Timeout
+	params      *config.Timeout
 	application *Application
 }
 

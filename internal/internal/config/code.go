@@ -1,4 +1,4 @@
-package param
+package config
 
 import (
 	"github.com/harluo/boot/internal/internal/constant"

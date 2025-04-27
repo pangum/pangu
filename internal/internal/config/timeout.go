@@ -1,4 +1,4 @@
-package param
+package config
 
 import (
 	"time"

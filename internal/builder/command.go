@@ -3,16 +3,16 @@ package builder
 import (
 	"github.com/harluo/boot/internal/builder/internal/function"
 	"github.com/harluo/boot/internal/internal/command"
-	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/config"
 )
 
 type Command struct {
-	params *param.Command
+	params *config.Command
 }
 
 func NewCommand(name string) *Command {
 	return &Command{
-		params: param.NewCommand(name),
+		params: config.NewCommand(name),
 	}
 }
 

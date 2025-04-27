@@ -3,17 +3,17 @@ package builder
 import (
 	"github.com/goexl/gox"
 	"github.com/harluo/boot/internal/internal/callback"
+	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/kernel"
-	"github.com/harluo/boot/internal/internal/param"
 	kernel2 "github.com/harluo/config/internal/kernel"
 )
 
 type Config[T any] struct {
-	param *param.Config
+	param *config.Config
 	from  *T
 }
 
-func NewConfig[T any](param *param.Config, from *T) *Config[T] {
+func NewConfig[T any](param *config.Config, from *T) *Config[T] {
 	return &Config[T]{
 		param: param,
 		from:  from,

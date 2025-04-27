@@ -5,23 +5,20 @@ import (
 	"os"
 
 	"github.com/harluo/boot/internal"
-	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/internal/command"
+	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/constant"
-	"github.com/harluo/boot/internal/internal/param"
 	"github.com/olekukonko/tablewriter"
 )
-
-var _ application.Command = (*Info)(nil)
 
 // Info 描述一个打印版本信息的命令
 type Info struct {
 	*command.Default
 }
 
-func NewInfo() *Info {
+func newInfo() *Info {
 	return &Info{
-		Default: command.NewDefault(&param.Command{
+		Default: command.NewDefault(&config.Command{
 			Name:  constant.CommandInfo,
 			Usage: `打印应用程序信息`,
 			Aliases: []string{

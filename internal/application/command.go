@@ -7,8 +7,6 @@ import (
 // Command 描述一个可以被执行的命令
 type Command interface {
 	Parameter
-	Stopper
-	Lifecycle
 
 	// Run 执行命令
 	Run(ctx context.Context) error

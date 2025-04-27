@@ -1,4 +1,4 @@
-package runtime
+package core
 
 import (
 	"github.com/goexl/gox/field"
@@ -13,7 +13,7 @@ type Shell struct {
 	logger log.Logger
 }
 
-func NewShell() (shell *Shell) {
+func newShell() (shell *Shell) {
 	shell = new(Shell)
 	shell.App = cli.NewApp()
 	shell.App.EnableBashCompletion = true

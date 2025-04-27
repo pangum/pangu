@@ -1,11 +1,11 @@
 package builder
 
 import (
-	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/config"
 )
 
 type Help struct {
-	params      *param.Help
+	params      *config.Help
 	application *Application
 }
 

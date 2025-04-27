@@ -5,14 +5,14 @@ import (
 	"github.com/harluo/boot/internal/builder/internal/function"
 	"github.com/harluo/boot/internal/builder/internal/once"
 	"github.com/harluo/boot/internal/core"
+	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/kernel"
-	"github.com/harluo/boot/internal/internal/param"
 )
 
 var shadow *Application
 
 type Application struct {
-	params  *param.Application
+	params  *config.Application
 	timeout *Timeout
 	banner  *Banner
 	help    *Help
@@ -28,7 +28,7 @@ func NewApplication() (application *Application) {
 
 func newApplication() {
 	shadow = new(Application)
-	shadow.params = param.NewApplication()
+	shadow.params = config.NewApplication()
 
 	// !预创建，保证单例
 	shadow.timeout = newTimeout(shadow)

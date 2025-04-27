@@ -1,11 +1,11 @@
 package builder
 
 import (
-	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/config"
 )
 
 type Code struct {
-	params      *param.Code
+	params      *config.Code
 	application *Application
 }
 

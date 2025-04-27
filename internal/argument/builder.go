@@ -1,6 +1,7 @@
 package argument
 
 import (
+	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/constraint"
 )
 
@@ -16,7 +17,7 @@ func New[T constraint.Argument](name string, target *T) *Builder[T] {
 	}
 }
 
-func (b *Builder[T]) Build() *Default[T] {
+func (b *Builder[T]) Build() application.Argument {
 	return b.argument
 }
 

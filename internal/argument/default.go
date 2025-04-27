@@ -3,14 +3,11 @@ package argument
 import (
 	"time"
 
-	"github.com/goexl/gox"
 	"github.com/harluo/boot/internal/application"
 	"github.com/harluo/boot/internal/constraint"
 	"github.com/harluo/boot/internal/runtime"
 	"github.com/urfave/cli/v2"
 )
-
-var _ application.Argument = (*Default[int])(nil)
 
 type Default[T constraint.Argument] struct {
 	// 名称
@@ -35,8 +32,6 @@ type Default[T constraint.Argument] struct {
 	text string
 	// 动作
 	action Action[T]
-
-	_ gox.Pointerized
 }
 
 func NewDefault[T constraint.Argument](name string, target *T) *Default[T] {

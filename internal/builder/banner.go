@@ -2,11 +2,11 @@ package builder
 
 import (
 	"github.com/harluo/boot/internal/internal/banner"
-	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/config"
 )
 
 type Banner struct {
-	params      *param.Banner
+	params      *config.Banner
 	application *Application
 }
 

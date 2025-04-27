@@ -4,16 +4,16 @@ import (
 	"context"
 
 	"github.com/harluo/boot/internal/application"
-	"github.com/harluo/boot/internal/internal/param"
+	"github.com/harluo/boot/internal/internal/config"
 )
 
 // Default 命令基础
 // 可以通过匿名继承的方式快速创建命令
 type Default struct {
-	params *param.Command
+	params *config.Command
 }
 
-func NewDefault(params *param.Command) *Default {
+func NewDefault(params *config.Command) *Default {
 	return &Default{
 		params: params,
 	}
