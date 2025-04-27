@@ -107,36 +107,46 @@ func (a *Application) finally(err *error) {
 
 func (a *Application) addCommand(command application.Command) error {
 	return a.container.Dependency().Get(func(shell *core.Shell) {
-		appended := new(cli.Command)
-		appended.Name = command.Name()
-		appended.Action = a.action(command)
-
-		// 通过反射设置非必须参数，减少编码成本
-		typer := core.NewTyper(command)
-		appended.Aliases = typer.Aliases()
-		appended.Usage = typer.Usage()
-		appended.Description = typer.Description()
-		appended.Category = typer.Category()
-		appended.Hidden = typer.Hidden()
-		appended.Action = a.action(command)
-		if converted, ok := command.(kernel.Subcommands); ok {
-			appended.Subcommands = converted.Subcommands().Cli()
-		}
-		if converted, ok := command.(kernel.Arguments); ok {
-			appended.Flags = converted.Arguments().Flags()
-		}
-
-		// 生命周期方法
-		if converted, ok := command.(application.Before); ok {
-			a.befores = append(a.befores, converted)
-		}
-		if converted, ok := command.(application.After); ok {
-			a.afters = append(a.afters, converted)
-		}
-		if converted, ok := command.(application.Stopper); ok {
-			a.stoppers = append(a.stoppers, converted)
-		}
+		shell.Commands = append(shell.Commands, a.convertCommand(command))
 	}).Build().Build().Inject()
+}
+
+func (a *Application) convertCommand(command application.Command) (appended *cli.Command) {
+	appended = new(cli.Command)
+	appended.Name = command.Name()
+	appended.Action = a.action(command)
+
+	// 通过反射设置非必须参数，减少编码成本
+	typer := core.NewTyper(command)
+	appended.Aliases = typer.Aliases()
+	appended.Usage = typer.Usage()
+	appended.Description = typer.Description()
+	appended.Category = typer.Category()
+	appended.Hidden = typer.Hidden()
+	appended.Action = a.action(command)
+	if converted, ok := command.(kernel.Subcommands); ok {
+		for _, subcommand := range converted.Subcommands() {
+			appended.Subcommands = append(appended.Subcommands, a.convertCommand(subcommand))
+		}
+	}
+	if converted, ok := command.(kernel.Arguments); ok {
+		for _, argument := range converted.Arguments() {
+			appended.Flags = append(appended.Flags, core.NewArgument(argument).Flag())
+		}
+	}
+
+	// 生命周期方法
+	if converted, ok := command.(application.Before); ok {
+		a.befores = append(a.befores, converted)
+	}
+	if converted, ok := command.(application.After); ok {
+		a.afters = append(a.afters, converted)
+	}
+	if converted, ok := command.(application.Stopper); ok {
+		a.stoppers = append(a.stoppers, converted)
+	}
+
+	return
 }
 
 func (a *Application) addArguments(get get.Arguments) error {

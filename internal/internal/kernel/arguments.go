@@ -5,5 +5,5 @@ import (
 )
 
 type Arguments interface {
-	Arguments() application.Arguments
+	Arguments() []application.Argument
 }

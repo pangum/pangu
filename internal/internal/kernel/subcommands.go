@@ -5,5 +5,5 @@ import (
 )
 
 type Subcommands interface {
-	Subcommands() application.Commands
+	Subcommands() []application.Command
 }
