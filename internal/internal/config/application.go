@@ -3,8 +3,8 @@ package config
 import (
 	"sync"
 
+	"github.com/harluo/boot/internal/internal/application"
 	"github.com/harluo/boot/internal/internal/constant"
-	"github.com/harluo/boot/internal/internal/core"
 )
 
 var once sync.Once
@@ -32,7 +32,7 @@ type Application struct {
 	// 版权
 	Copyright string
 	// 作者
-	Authors core.Authors
+	Authors application.Authors
 	// 元数据
 	Metadata map[string]any
 }
@@ -58,7 +58,7 @@ func newApplication() *Application {
 		Usage:       "一个使用github.com/harluo/boot构建的应用程序",
 
 		Copyright: constant.Copyright,
-		Authors: core.Authors{{
+		Authors: application.Authors{{
 			Name:  constant.AuthorName,
 			Email: constant.AuthorEmail,
 		}},

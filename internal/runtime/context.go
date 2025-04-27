@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/goexl/gox"
-	"github.com/harluo/boot/internal/internal/core"
 	"github.com/urfave/cli/v2"
 )
 
@@ -41,10 +40,6 @@ func (c *Context) String(key string) string {
 
 func (c *Context) Set(key string, value string) error {
 	return c.context.Set(key, value)
-}
-
-func (c *Context) Arguments() core.Arguments {
-	return c.context.Args()
 }
 
 func (c *Context) Value(key any) any {

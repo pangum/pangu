@@ -5,8 +5,8 @@ import (
 	"github.com/harluo/boot/internal/builder/internal/function"
 	"github.com/harluo/boot/internal/builder/internal/once"
 	"github.com/harluo/boot/internal/core"
+	"github.com/harluo/boot/internal/internal/application"
 	"github.com/harluo/boot/internal/internal/config"
-	core2 "github.com/harluo/boot/internal/internal/core"
 )
 
 var shadow *Application
@@ -52,7 +52,7 @@ func (a *Application) Invalidate() *Application {
 
 func (a *Application) Author(name string, email string) *Application {
 	return a.set(func() {
-		a.params.Authors = append(a.params.Authors, core2.NewAuthor(name, email))
+		a.params.Authors = append(a.params.Authors, application.NewAuthor(name, email))
 	})
 }
 

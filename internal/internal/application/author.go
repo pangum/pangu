@@ -1,4 +1,4 @@
-package core
+package application
 
 type Author struct {
 	Name  string
