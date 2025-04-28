@@ -5,5 +5,5 @@ import (
 )
 
 type Initializer interface {
-	Initialize(ctx context.Context) error
+	Initialize(context.Context) error
 }
