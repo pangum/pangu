@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/harluo/boot/internal/application"
-	"github.com/harluo/boot/internal/internal/kernel"
+	"github.com/harluo/boot/internal/internal/checker"
 )
 
 type Typer struct {
@@ -17,84 +17,84 @@ func NewTyper(value any) *Typer {
 	}
 }
 
-func (t *Typer) Usage() (usage string) {
-	if convert, ok := t.value.(kernel.Usage); ok {
-		usage = convert.Usage()
+func (t *Typer) Usage() (value string) {
+	if convert, ok := t.value.(checker.Usage); ok {
+		value = convert.Usage()
 	}
 
 	return
 }
 
-func (t *Typer) Aliases() (aliases []string) {
-	if convert, ok := t.value.(kernel.Aliases); ok {
-		aliases = convert.Aliases()
+func (t *Typer) Aliases() (value []string) {
+	if convert, ok := t.value.(checker.Aliases); ok {
+		value = convert.Aliases()
 	}
 
 	return
 }
 
-func (t *Typer) Text() (text string) {
-	if convert, ok := t.value.(kernel.Text); ok {
-		text = convert.Text()
+func (t *Typer) Text() (value string) {
+	if convert, ok := t.value.(checker.Text); ok {
+		value = convert.Text()
 	}
 
 	return
 }
 
 func (t *Typer) Description() (value string) {
-	if description, dlk := t.value.(kernel.Description); dlk {
+	if description, dlk := t.value.(checker.Description); dlk {
 		value = description.Description()
-	} else if desc, dsk := t.value.(kernel.Desc); dsk {
+	} else if desc, dsk := t.value.(checker.Desc); dsk {
 		value = desc.Desc()
 	}
 
 	return
 }
 
-func (t *Typer) Category() (category string) {
-	if convert, ok := t.value.(kernel.Category); ok {
-		category = convert.Category()
+func (t *Typer) Category() (value string) {
+	if convert, ok := t.value.(checker.Category); ok {
+		value = convert.Category()
 	}
 
 	return
 }
 
-func (t *Typer) Required() (required bool) {
-	if convert, ok := t.value.(kernel.Required); ok {
-		required = convert.Required()
+func (t *Typer) Required() (value bool) {
+	if convert, ok := t.value.(checker.Required); ok {
+		value = convert.Required()
 	}
 
 	return
 }
 
-func (t *Typer) Hidden() (hidden bool) {
-	if convert, ok := t.value.(kernel.Hidden); ok {
-		hidden = convert.Hidden()
+func (t *Typer) Hidden() (value bool) {
+	if convert, ok := t.value.(checker.Hidden); ok {
+		value = convert.Hidden()
 	}
 
 	return
 }
 
-func (t *Typer) Addable() (addable bool) {
-	if convert, ok := t.value.(kernel.Addable); ok {
-		addable = convert.Addable()
+func (t *Typer) Addable() (value bool) {
+	if convert, ok := t.value.(checker.Addable); ok {
+		value = convert.Addable()
 	}
 
 	return
 }
 
-func (t *Typer) Default() (defaults any) {
-	if convert, ok := t.value.(kernel.Default); ok {
-		defaults = convert.Default()
+func (t *Typer) Default(callback func(value any)) {
+	if convert, ok := t.value.(checker.Default); ok {
+		callback(convert.Default())
 	}
 
 	return
 }
 
 func (t *Typer) Environments() (value []string) {
-	if environments, elk := t.value.(kernel.Environments); elk {
+	if environments, elk := t.value.(checker.Environments); elk {
 		value = environments.Environments()
-	} else if envs, esk := t.value.(kernel.Envs); esk {
+	} else if envs, esk := t.value.(checker.Envs); esk {
 		value = envs.Envs()
 	}
 
@@ -102,24 +102,32 @@ func (t *Typer) Environments() (value []string) {
 }
 
 func (t *Typer) Arguments() (value []application.Argument) {
-	if environments, alk := t.value.(kernel.Arguments); alk {
-		value = environments.Arguments()
+	if arguments, alk := t.value.(checker.Arguments); alk {
+		value = arguments.Arguments()
+	}
+
+	return
+}
+
+func (t *Typer) Commands() (value []application.Command) {
+	if commands, ck := t.value.(checker.Commands); ck {
+		value = commands.Commands()
 	}
 
 	return
 }
 
 func (t *Typer) Subcommands() (value []application.Command) {
-	if environments, slk := t.value.(kernel.Subcommands); slk {
-		value = environments.Subcommands()
+	if subcommands, sk := t.value.(checker.Subcommands); sk {
+		value = subcommands.Commands()
 	}
 
 	return
 }
 
-func (t *Typer) Run() (run func(context.Context) error) {
-	if convert, ok := t.value.(kernel.Run); ok {
-		run = convert.Run
+func (t *Typer) Run(ctx context.Context) (err error) {
+	if convert, ok := t.value.(checker.Run); ok {
+		err = convert.Run(ctx)
 	}
 
 	return

@@ -1,4 +1,4 @@
-package kernel
+package checker
 
 type Envs interface {
 	Envs() []string

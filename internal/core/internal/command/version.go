@@ -7,26 +7,30 @@ import (
 	"strings"
 
 	"github.com/harluo/boot/internal"
-	"github.com/harluo/boot/internal/internal/command"
-	"github.com/harluo/boot/internal/internal/config"
-	"github.com/harluo/boot/internal/internal/constant"
 )
 
-// Version 描述一个打印版本信息的命令
 type Version struct {
-	*command.Default
+	// 无字段
 }
 
 func newVersion() *Version {
 	return &Version{
-		Default: command.NewDefault(&config.Command{
-			Name:  constant.CommandVersion,
-			Usage: `打印应用程序版本`,
-			Aliases: []string{
-				`v`,
-				`ver`,
-			},
-		}),
+		// 无字段
+	}
+}
+
+func (v *Version) Name() string {
+	return "version"
+}
+
+func (v *Version) Usage() string {
+	return `打印应用程序版本`
+}
+
+func (v *Version) Aliases() []string {
+	return []string{
+		"v",
+		"ver",
 	}
 }
 

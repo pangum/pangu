@@ -1,4 +1,4 @@
-package kernel
+package checker
 
 type Description interface {
 	Description() string

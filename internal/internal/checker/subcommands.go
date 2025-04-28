@@ -1,9 +1,9 @@
-package kernel
+package checker
 
 import (
 	"github.com/harluo/boot/internal/application"
 )
 
 type Subcommands interface {
-	Subcommands() []application.Command
+	Commands() []application.Command
 }

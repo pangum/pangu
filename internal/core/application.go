@@ -78,18 +78,6 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	}
 }
 
-// Add 添加各种组件到系统中
-func (a *Application) Add(required application.Command, optionals ...application.Command) (err error) {
-	for _, _command := range append([]application.Command{required}, optionals...) {
-		err = a.addCommand(_command)
-		if nil != err {
-			break
-		}
-	}
-
-	return
-}
-
 func (a *Application) finally(err *error) {
 	if finally := recover(); nil != finally {
 		fmt.Println(gox.Stack(constant.ApplicationStacktrace, constant.ApplicationSkip))
@@ -102,12 +90,6 @@ func (a *Application) finally(err *error) {
 		fmt.Println((*err).Error())
 		os.Exit(a.params.Code.Failed)
 	}
-}
-
-func (a *Application) addCommand(command application.Command) error {
-	return a.container.Dependency().Get(func(shell *core.Shell) {
-		shell.Commands = append(shell.Commands, a.convertCommand(command))
-	}).Build().Build().Inject()
 }
 
 func (a *Application) convertCommand(command application.Command) (appended *cli.Command) {
@@ -144,12 +126,30 @@ func (a *Application) convertCommand(command application.Command) (appended *cli
 	return
 }
 
-func (a *Application) addArguments(get get.Arguments) error {
+func (a *Application) addArguments(booter Booter, get get.Arguments) error {
 	return a.container.Dependency().Get(func(shell *core.Shell) {
 		for _, argument := range get.Arguments {
 			shell.Flags = append(shell.Flags, core.NewArgument(argument).Flag())
 		}
+		for _, argument := range core.NewTyper(booter).Arguments() {
+			shell.Flags = append(shell.Flags, core.NewArgument(argument).Flag())
+		}
 	}).Build().Build().Inject()
+}
+
+func (a *Application) addCommands(shell *core.Shell, booter Booter, get get.Commands) {
+	for _, cmd := range get.Commands {
+		shell.Commands = append(shell.Commands, a.convertCommand(cmd))
+	}
+	for _, cmd := range core.NewTyper(booter).Commands() {
+		shell.Commands = append(shell.Commands, a.convertCommand(cmd))
+	}
+}
+
+func (a *Application) setupBootAction(shell *core.Shell, booter Booter) {
+	shell.Action = func(ctx *cli.Context) error {
+		return booter.Boot(runtime.NewContext(ctx))
+	}
 }
 
 func (a *Application) boot() (err error) {
@@ -194,11 +194,11 @@ func (a *Application) initialize(ctx context.Context) func(get.Initializers) err
 	}
 }
 
-func (a *Application) startup(ctx context.Context) func(Starter) error {
-	return func(starter Starter) (err error) {
-		if bse := a.beforeStater(ctx, starter); nil != bse { // 生命周期方法
+func (a *Application) startup(ctx context.Context) func(Booter) error {
+	return func(booter Booter) (err error) {
+		if bse := a.beforeStater(ctx, booter); nil != bse { // 生命周期方法
 			err = bse
-		} else if se := starter.Startup(a); nil != se { // 加载用户启动器并做好配置
+		} else if se := booter.Boot(ctx); nil != se { // 启动应用
 			err = se
 		} else if cbe := a.before(ctx); nil != cbe { // 执行命令生命周期方法
 			err = cbe
@@ -206,7 +206,7 @@ func (a *Application) startup(ctx context.Context) func(Starter) error {
 			err = ple
 		} else if cae := a.after(ctx); nil != cae { // 执行命令生命周期方法
 			err = cae
-		} else if ase := a.afterStater(ctx, starter); nil != ase { // 执行命令生命周期方法
+		} else if ase := a.afterStater(ctx, booter); nil != ase { // 执行命令生命周期方法
 			err = ase
 		}
 
@@ -245,17 +245,6 @@ func (a *Application) createShell() (err error) {
 
 	// 配置应用
 	err = a.container.Dependency().Get(a.setupShell).Build().Build().Inject()
-
-	return
-}
-
-func (a *Application) addCommands(get get.Commands) (err error) {
-	for _, _command := range get.Commands {
-		err = a.addCommand(_command)
-		if nil != err {
-			break
-		}
-	}
 
 	return
 }
@@ -330,7 +319,7 @@ func (a *Application) verify(bootstrap runtime.Constructor) (err error) {
 	} else if 0 == typ.NumIn() { // 构造方法必须有依赖项
 		name := runtime.FuncForPC(reflect.ValueOf(bootstrap).Pointer()).Name()
 		err = exception.New().Message(message.BootstrapMustHasDependencies).Field(field.New("bootstrap", name)).Build()
-	} else if 1 != typ.NumOut() || reflect.TypeOf((*Starter)(nil)).Elem() != typ.Out(constant.IndexFirst) {
+	} else if 1 != typ.NumOut() || reflect.TypeOf((*Booter)(nil)).Elem() != typ.Out(constant.IndexFirst) {
 		// 只能返回一个类型为Bootstrap返回值
 		err = exception.New().Message(message.BootstrapMustReturnBootstrap).Build()
 	}
@@ -364,7 +353,7 @@ func (a *Application) setLogger(shell *core.Shell) {
 	shell.Logger(a.logger)
 }
 
-func (a *Application) beforeStater(ctx context.Context, stater Starter) (err error) {
+func (a *Application) beforeStater(ctx context.Context, stater Booter) (err error) {
 	if converted, ok := stater.(application.Before); ok {
 		err = converted.Before(ctx)
 	}
@@ -404,7 +393,7 @@ func (a *Application) after(ctx context.Context) (err error) {
 	return
 }
 
-func (a *Application) afterStater(ctx context.Context, stater Starter) (err error) {
+func (a *Application) afterStater(ctx context.Context, stater Booter) (err error) {
 	if converted, ok := stater.(application.After); ok {
 		err = converted.After(ctx)
 	}

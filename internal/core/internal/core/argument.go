@@ -64,14 +64,16 @@ func (a *Argument) bool() (flag *cli.BoolFlag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(bool)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(bool)
+	})
 
 	target := a.argument.Target().(*bool)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, values bool) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -86,14 +88,16 @@ func (a *Argument) duration() (flag *cli.DurationFlag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(time.Duration)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(time.Duration)
+	})
 
 	target := a.argument.Target().(*time.Duration)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, values time.Duration) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -108,14 +112,16 @@ func (a *Argument) float64() (flag *cli.Float64Flag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(float64)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(float64)
+	})
 
 	target := a.argument.Target().(*float64)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, values float64) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -131,12 +137,15 @@ func (a *Argument) float64Slice() (flag *cli.Float64SliceFlag) {
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
 
-	defaults := a.typer.Default().([]float64)
+	defaults := make([]float64, 0)
+	a.typer.Default(func(value any) {
+		defaults = value.([]float64)
+	})
 	flag.Value = cli.NewFloat64Slice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []float64) (err error) {
 		_target := a.argument.Target().(*[]float64)
 		*_target = values
-		err = a.typer.Run()(runtime.NewContext(ctx))
+		err = a.typer.Run(runtime.NewContext(ctx))
 		if a.typer.Addable() {
 			*_target = append(*_target, defaults...)
 		}
@@ -156,14 +165,16 @@ func (a *Argument) int() (flag *cli.IntFlag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(int)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(int)
+	})
 
 	target := a.argument.Target().(*int)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, values int) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -179,12 +190,15 @@ func (a *Argument) intSlice() (flag *cli.IntSliceFlag) {
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
 
-	defaults := a.typer.Default().([]int)
+	defaults := make([]int, 0)
+	a.typer.Default(func(value any) {
+		defaults = value.([]int)
+	})
 	flag.Value = cli.NewIntSlice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []int) (err error) {
 		target := a.argument.Target().(*[]int)
 		*target = values
-		err = a.typer.Run()(runtime.NewContext(ctx))
+		err = a.typer.Run(runtime.NewContext(ctx))
 		if a.typer.Addable() {
 			*target = append(*target, defaults...)
 		}
@@ -204,14 +218,16 @@ func (a *Argument) int64() (flag *cli.Int64Flag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(int64)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(int64)
+	})
 
 	_target := a.argument.Target().(*int64)
 	if nil != _target {
 		flag.Destination = _target
 	}
 	flag.Action = func(ctx *cli.Context, values int64) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -227,12 +243,15 @@ func (a *Argument) int64Slice() (flag *cli.Int64SliceFlag) {
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
 
-	defaults := a.typer.Default().([]int64)
+	defaults := make([]int64, 0)
+	a.typer.Default(func(value any) {
+		defaults = value.([]int64)
+	})
 	flag.Value = cli.NewInt64Slice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []int64) (err error) {
 		_target := a.argument.Target().(*[]int64)
 		*_target = values
-		err = a.typer.Run()(runtime.NewContext(ctx))
+		err = a.typer.Run(runtime.NewContext(ctx))
 		if a.typer.Addable() {
 			*_target = append(*_target, defaults...)
 		}
@@ -252,14 +271,16 @@ func (a *Argument) string() (flag *cli.StringFlag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(string)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(string)
+	})
 
 	target := a.argument.Target().(*string)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, values string) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -275,12 +296,15 @@ func (a *Argument) stringSlice() (flag *cli.StringSliceFlag) {
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
 
-	defaults := a.typer.Default().([]string)
+	defaults := make([]string, 0)
+	a.typer.Default(func(value any) {
+		defaults = value.([]string)
+	})
 	flag.Value = cli.NewStringSlice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []string) (err error) {
 		target := a.argument.Target().(*[]string)
 		*target = values
-		err = a.typer.Run()(runtime.NewContext(ctx))
+		err = a.typer.Run(runtime.NewContext(ctx))
 		if a.typer.Addable() {
 			*target = append(*target, defaults...)
 		}
@@ -300,14 +324,16 @@ func (a *Argument) uint() (flag *cli.UintFlag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(uint)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(uint)
+	})
 
 	target := a.argument.Target().(*uint)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, _ uint) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -323,12 +349,15 @@ func (a *Argument) uintSlice() (flag *cli.UintSliceFlag) {
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
 
-	defaults := a.typer.Default().([]uint)
+	defaults := make([]uint, 0)
+	a.typer.Default(func(value any) {
+		defaults = value.([]uint)
+	})
 	flag.Value = cli.NewUintSlice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []uint) (err error) {
 		_target := a.argument.Target().(*[]uint)
 		*_target = values
-		err = a.typer.Run()(runtime.NewContext(ctx))
+		err = a.typer.Run(runtime.NewContext(ctx))
 		if a.typer.Addable() {
 			*_target = append(*_target, defaults...)
 		}
@@ -348,14 +377,16 @@ func (a *Argument) uint64() (flag *cli.Uint64Flag) {
 	flag.Required = a.typer.Required()
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
-	flag.Value = a.typer.Default().(uint64)
+	a.typer.Default(func(value any) {
+		flag.Value = value.(uint64)
+	})
 
 	target := a.argument.Target().(*uint64)
 	if nil != target {
 		flag.Destination = target
 	}
 	flag.Action = func(ctx *cli.Context, _ uint64) error {
-		return a.typer.Run()(runtime.NewContext(ctx))
+		return a.typer.Run(runtime.NewContext(ctx))
 	}
 
 	return
@@ -371,12 +402,15 @@ func (a *Argument) uint64Slice() (flag *cli.Uint64SliceFlag) {
 	flag.Hidden = a.typer.Hidden()
 	flag.EnvVars = a.typer.Environments()
 
-	defaults := a.typer.Default().([]uint64)
+	defaults := make([]uint64, 0)
+	a.typer.Default(func(value any) {
+		defaults = value.([]uint64)
+	})
 	flag.Value = cli.NewUint64Slice(defaults...)
 	flag.Action = func(ctx *cli.Context, values []uint64) (err error) {
 		target := a.argument.Target().(*[]uint64)
 		*target = values
-		err = a.typer.Run()(runtime.NewContext(ctx))
+		err = a.typer.Run(runtime.NewContext(ctx))
 		if a.typer.Addable() {
 			*target = append(*target, defaults...)
 		}
