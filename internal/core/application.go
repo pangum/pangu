@@ -19,6 +19,7 @@ import (
 	"github.com/harluo/boot/internal/core/internal/core"
 	"github.com/harluo/boot/internal/core/internal/get"
 	"github.com/harluo/boot/internal/core/internal/message"
+	"github.com/harluo/boot/internal/internal/checker"
 	"github.com/harluo/boot/internal/internal/config"
 	"github.com/harluo/boot/internal/internal/constant"
 	"github.com/harluo/boot/internal/runtime"
@@ -146,9 +147,13 @@ func (a *Application) addCommands(shell *core.Shell, booter Booter, get get.Comm
 	}
 }
 
-func (a *Application) setupBootAction(shell *core.Shell, booter Booter) {
-	shell.Action = func(ctx *cli.Context) error {
-		return booter.Boot(runtime.NewContext(ctx))
+func (a *Application) setupDefaultAction(shell *core.Shell, booter Booter) { // 没有任何命令时执行动作
+	shell.Action = func(ctx *cli.Context) (err error) {
+		if converted, ok := booter.(checker.Run); ok {
+			err = converted.Run(runtime.NewContext(ctx))
+		}
+
+		return
 	}
 }
 
@@ -164,8 +169,6 @@ func (a *Application) boot() (err error) {
 		err = aae
 	} else if ace := dependency.Get(a.addCommands).Build().Build().Inject(); nil != ace { // 增加命令
 		err = ace
-	} else if re := dependency.Get(a.run).Build().Build().Inject(); nil != re { // 执行整个程序
-		err = re
 	} else if bpe := a.params.Banner.Print(); nil != bpe { // 打印标志信息
 		err = bpe
 	} else if ie := dependency.Get(a.initialize(canceled)).Build().Build().Inject(); nil != ie { // 执行初始化方法
@@ -194,28 +197,26 @@ func (a *Application) initialize(ctx context.Context) func(get.Initializers) err
 	}
 }
 
-func (a *Application) startup(ctx context.Context) func(Booter) error {
-	return func(booter Booter) (err error) {
-		if bse := a.beforeStater(ctx, booter); nil != bse { // 生命周期方法
-			err = bse
+func (a *Application) startup(ctx context.Context) func(*core.Shell, Booter) error {
+	return func(shell *core.Shell, booter Booter) (err error) {
+		if bbe := a.beforeBooter(ctx, booter); nil != bbe { // 生命周期方法
+			err = bbe
 		} else if se := booter.Boot(ctx); nil != se { // 启动应用
 			err = se
 		} else if cbe := a.before(ctx); nil != cbe { // 执行命令生命周期方法
 			err = cbe
 		} else if ple := a.putLogger(); nil != ple { // 日志
 			err = ple
+		} else if re := shell.Run(os.Args); nil != re { // 执行整个程序
+			err = re
 		} else if cae := a.after(ctx); nil != cae { // 执行命令生命周期方法
 			err = cae
-		} else if ase := a.afterStater(ctx, booter); nil != ase { // 执行命令生命周期方法
-			err = ase
+		} else if abe := a.afterBooter(ctx, booter); nil != abe { // 执行命令生命周期方法
+			err = abe
 		}
 
 		return
 	}
-}
-
-func (a *Application) run(shell *core.Shell) error {
-	return shell.Run(os.Args)
 }
 
 func (a *Application) createShell() (err error) {
@@ -289,22 +290,18 @@ func (a *Application) putLogger() (err error) {
 	return
 }
 
-func (a *Application) getLogger(logger get.Logger) {
-	if nil != logger.Optional { // !只有在确实有外部日志器的情况下才允许覆盖
-		a.logger = logger.Optional
+func (a *Application) getLogger(get get.Logger) {
+	if nil != get.Logger { // !只有在确实有外部日志器的情况下才允许覆盖
+		a.logger = get.Logger
 	}
-}
-
-func (a *Application) getDefaultLogger() (logger log.Logger) {
-	logger = log.New().Apply()
-	if level, ok := os.LookupEnv(constant.EnvironmentLoggingLevel); ok {
-		logger.Enable(log.ParseLevel(level))
-	}
-
-	return
 }
 
 func (a *Application) supplyLogger() log.Logger {
+	a.logger = log.New().Apply()
+	if level, ok := os.LookupEnv(constant.EnvironmentLoggingLevel); ok {
+		a.logger.Enable(log.ParseLevel(level))
+	}
+
 	return a.logger
 }
 
@@ -353,7 +350,7 @@ func (a *Application) setLogger(shell *core.Shell) {
 	shell.Logger(a.logger)
 }
 
-func (a *Application) beforeStater(ctx context.Context, stater Booter) (err error) {
+func (a *Application) beforeBooter(ctx context.Context, stater Booter) (err error) {
 	if converted, ok := stater.(application.Before); ok {
 		err = converted.Before(ctx)
 	}
@@ -393,7 +390,7 @@ func (a *Application) after(ctx context.Context) (err error) {
 	return
 }
 
-func (a *Application) afterStater(ctx context.Context, stater Booter) (err error) {
+func (a *Application) afterBooter(ctx context.Context, stater Booter) (err error) {
 	if converted, ok := stater.(application.After); ok {
 		err = converted.After(ctx)
 	}

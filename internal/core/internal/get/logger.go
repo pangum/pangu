@@ -8,5 +8,5 @@ import (
 type Logger struct {
 	di.Get
 
-	Optional log.Logger `optional:"true"`
+	Logger log.Logger `optional:"true"`
 }
