@@ -104,7 +104,7 @@ func (a *Application) Help() *Help {
 	return a.help
 }
 
-func (a *Application) Get() *core.Application {
+func (a *Application) Instance() *core.Application {
 	return core.New(a.params)
 }
 
