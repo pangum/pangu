@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	di.New().Get().Dependency().Puts(
+	di.New().Instance().Put(
 		newInfo,
 		newVersion,
 		func(info *Info, version *Version) internal.Put {

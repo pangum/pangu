@@ -51,14 +51,14 @@ func create(params *config.Application) func() {
 	return func() {
 		shadow = new(Application)
 		shadow.params = params
-		shadow.container = di.New().Validate().Get()
+		shadow.container = di.New().Validate().Instance()
 
 		shadow.befores = make([]application.Before, 0)
 		shadow.afters = make([]application.After, 0)
 		shadow.stoppers = make([]application.Stopper, 0)
 
 		// ! 这个操作必须在创建的时候就执行，因为在后续插件启动时会寻找下面的依赖，而在这个时候启动方法还没有执行
-		shadow.container.Dependency().Puts(
+		shadow.container.Put(
 			shadow.putSelf, // 注入自身
 		).Invalidate().Build().Apply()
 	}
@@ -69,13 +69,12 @@ func (a *Application) Run(constructor runtime.Constructor) {
 	var err error
 	defer a.finally(&err)
 
-	dependency := a.container.Dependency()
 	if cae := a.createShell(); nil != cae { // 创建运行壳
 		err = cae
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加应用程序本身包含依赖，供后续应用启动执行
 		err = ape
 	} else {
-		err = dependency.Get(a.boot).Build().Build().Inject()
+		err = a.container.Get(a.boot).Build().Inject()
 	}
 }
 
@@ -128,14 +127,14 @@ func (a *Application) convertCommand(command application.Command) (appended *cli
 }
 
 func (a *Application) addArguments(booter Booter, get get.Arguments) error {
-	return a.container.Dependency().Get(func(shell *core.Shell) {
+	return a.container.Get(func(shell *core.Shell) {
 		for _, argument := range get.Arguments {
 			shell.Flags = append(shell.Flags, core.NewArgument(argument).Flag())
 		}
 		for _, argument := range core.NewTyper(booter).Arguments() {
 			shell.Flags = append(shell.Flags, core.NewArgument(argument).Flag())
 		}
-	}).Build().Build().Inject()
+	}).Build().Inject()
 }
 
 func (a *Application) addCommands(shell *core.Shell, booter Booter, get get.Commands) {
@@ -164,20 +163,19 @@ func (a *Application) boot() (err error) {
 	canceled, cancel := context.WithTimeout(context.Background(), a.params.Timeout.Startup)
 	defer cancel()
 
-	dependency := a.container.Dependency()
-	if aae := dependency.Get(a.addArguments).Build().Build().Inject(); nil != aae { // 增加参数
+	if aae := a.container.Get(a.addArguments).Build().Inject(); nil != aae { // 增加参数
 		err = aae
-	} else if ace := dependency.Get(a.addCommands).Build().Build().Inject(); nil != ace { // 增加命令
+	} else if ace := a.container.Get(a.addCommands).Build().Inject(); nil != ace { // 增加命令
 		err = ace
 	} else if bpe := a.params.Banner.Print(); nil != bpe { // 打印标志信息
 		err = bpe
-	} else if ie := dependency.Get(a.initialize(canceled)).Build().Build().Inject(); nil != ie { // 执行初始化方法
+	} else if ie := a.container.Get(a.initialize(canceled)).Build().Inject(); nil != ie { // 执行初始化方法
 		err = ie
-	} else if sle := dependency.Get(a.setLogger).Build().Build().Inject(); nil != sle { // 为执行壳设置日志器
+	} else if sle := a.container.Get(a.setLogger).Build().Inject(); nil != sle { // 为执行壳设置日志器
 		err = sle
 	} else if ple := a.putLogger(); nil != ple {
 		err = ple
-	} else if se := dependency.Get(a.startup(canceled)).Build().Build().Inject(); nil != se { // 执行初始化方法
+	} else if se := a.container.Get(a.startup(canceled)).Build().Inject(); nil != se { // 执行初始化方法
 		err = se
 	}
 
@@ -245,16 +243,15 @@ func (a *Application) createShell() (err error) {
 	cli.HelpFlag = help
 
 	// 配置应用
-	err = a.container.Dependency().Get(a.setupShell).Build().Build().Inject()
+	err = a.container.Get(a.setupShell).Build().Inject()
 
 	return
 }
 
 func (a *Application) addDependency(constructor runtime.Constructor) (err error) {
-	dependency := a.container.Dependency().Invalidate()
 	if ve := a.verify(constructor); nil != ve {
 		err = ve
-	} else if pce := dependency.Put(constructor).Build().Build().Inject(); nil != pce {
+	} else if pce := a.container.Put(constructor).Invalidate().Build().Inject(); nil != pce {
 		err = pce
 	}
 
@@ -272,9 +269,9 @@ func (a *Application) setupShell(shell *core.Shell) {
 }
 
 func (a *Application) versionPrinter(ctx *cli.Context) {
-	_ = a.container.Dependency().Get(func(info *command.Info) error {
+	_ = a.container.Get(func(info *command.Info) error {
 		return info.Run(runtime.NewContext(ctx))
-	}).Build().Build().Inject()
+	}).Build().Inject()
 }
 
 func (a *Application) putSelf() *Application {
@@ -282,9 +279,8 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (err error) {
-	dependency := a.container.Dependency()
-	if ge := dependency.Get(a.getLogger).Build().Build().Inject(); nil != ge {
-		err = dependency.Put(a.supplyLogger).Build().Build().Inject() // !当出错或未成功设置时，重置日志器
+	if ge := a.container.Get(a.getLogger).Build().Inject(); nil != ge {
+		err = a.container.Put(a.supplyLogger).Build().Inject() // !当出错或未成功设置时，重置日志器
 	}
 
 	return
