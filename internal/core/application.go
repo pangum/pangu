@@ -141,7 +141,7 @@ func (a *Application) addCommands(shell *core.Shell, booter Booter, get get.Comm
 	for _, cmd := range get.Commands {
 		shell.Commands = append(shell.Commands, a.convertCommand(cmd))
 	}
-	for _, cmd := range core.NewTyper(booter).Commands() {
+	for _, cmd := range core.NewTyper(booter).Subcommands() {
 		shell.Commands = append(shell.Commands, a.convertCommand(cmd))
 	}
 }
