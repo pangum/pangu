@@ -109,7 +109,7 @@ func (t *Typer) Arguments() (value []application.Argument) {
 	return
 }
 
-func (t *Typer) Subcommands() (value []application.Command) {
+func (t *Typer) Commands() (value []application.Command) {
 	if commands, ck := t.value.(checker.Commands); ck {
 		value = commands.Subcommands()
 	}
