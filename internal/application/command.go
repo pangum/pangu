@@ -9,5 +9,5 @@ type Command interface {
 	Parameter
 
 	// Run 执行命令
-	Run(ctx context.Context) error
+	Run(context.Context) error
 }

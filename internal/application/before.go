@@ -5,5 +5,5 @@ import (
 )
 
 type Before interface {
-	Before(ctx context.Context) error
+	Before(context.Context) error
 }

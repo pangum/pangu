@@ -5,5 +5,5 @@ import (
 )
 
 type After interface {
-	After(ctx context.Context) error
+	After(context.Context) error
 }
