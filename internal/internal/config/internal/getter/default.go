@@ -10,6 +10,6 @@ func NewDefault(get func(string) string) *Default {
 	}
 }
 
-func (g *Default) Get(key string) string {
+func (g *Default) Find(key string) string {
 	return g.get(key)
 }
