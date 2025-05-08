@@ -173,8 +173,6 @@ func (a *Application) boot() (err error) {
 		err = ie
 	} else if sle := a.container.Get(a.setLogger).Build().Inject(); nil != sle { // 为执行壳设置日志器
 		err = sle
-	} else if ple := a.putLogger(); nil != ple {
-		err = ple
 	} else if se := a.container.Get(a.startup(canceled)).Build().Inject(); nil != se { // 执行初始化方法
 		err = se
 	}
@@ -251,6 +249,8 @@ func (a *Application) createShell() (err error) {
 func (a *Application) addDependency(constructor runtime.Constructor) (err error) {
 	if ve := a.verify(constructor); nil != ve {
 		err = ve
+	} else if ple := a.putLogger(); nil != ple {
+		err = ple
 	} else if pce := a.container.Put(constructor).Invalidate().Build().Inject(); nil != pce {
 		err = pce
 	}
@@ -279,7 +279,7 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (err error) {
-	if ge := a.container.Get(a.getLogger).Build().Inject(); nil != ge {
+	if ge := a.container.Get(a.getLogger).Build().Inject(); nil != ge || nil == a.logger {
 		err = a.container.Put(a.supplyLogger).Build().Inject() // !当出错或未成功设置时，重置日志器
 	}
 
